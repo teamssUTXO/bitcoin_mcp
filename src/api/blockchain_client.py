@@ -1,6 +1,6 @@
 from typing import Optional
-from .client import APIClient
-from ..config import Config
+from src.api.client import APIClient
+from src.config import Config
 
 class BlockchainClient(APIClient):
     def __init__(self):
