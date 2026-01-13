@@ -1,0 +1,11 @@
+[project]
+name = "bitcoin-mcp"
+version = "0.1.0"
+description = "bitcoin mcp"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "functools",
+    "httpx",
+    "typing",
+]
