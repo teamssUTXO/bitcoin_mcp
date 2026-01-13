@@ -2,7 +2,7 @@ from typing import Optional
 from client import APIClient
 from ..config import Config
 
-class MempoolClient(APIClient):
+class BlockchainClient(APIClient):
     def __init__(self):
         super().__init__(Config.BLOCKCHAIN_INFO_API_URL)
     
