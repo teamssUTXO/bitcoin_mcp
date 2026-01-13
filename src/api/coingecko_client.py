@@ -1,5 +1,5 @@
 from typing import Optional
-from client import APIClient
+from .client import APIClient
 from ..config import Config
 
 class CoinGeckoClient(APIClient):
