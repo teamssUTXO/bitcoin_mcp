@@ -5,7 +5,8 @@ description = "bitcoin mcp"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "functools",
+    "fastmcp",
     "httpx",
+    "mcp[cli]>=1.25.0",
     "typing",
 ]
