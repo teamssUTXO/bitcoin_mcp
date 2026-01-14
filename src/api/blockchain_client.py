@@ -25,6 +25,24 @@ class BlockchainClient(APIClient):
 
 
     """
+    Renvoie le nombre de transactions sur 24h
+    Docs : https://www.blockchain.com/fr/explorer/api/q
+    """
+    def get_nb_tx_day(self) -> Optional[int]:
+        result = self.get("/q/24hrtransactioncount", ttl=60)
+        return int(result) if result else None
+
+
+    """
+    Renvoie le nombre de satoshis envoyés sur 24h
+    Docs : https://www.blockchain.com/fr/explorer/api/q
+    """
+    def get_nb_stc_day(self) -> Optional[int]:
+        result = self.get("/q/24hrbtcsent", ttl=60)
+        return int(result) if result else None
+
+
+    """
     Renvoie les stats actuels du réseau bitcoin
     Docs : https://blockchain.com/fr/explorer/api/blockchain_api
     """
@@ -33,8 +51,17 @@ class BlockchainClient(APIClient):
 
 
     """
-    Renvoie les infos d'une adresse bitcoin
+    Renvoie les infos du dernier bloc actuel
     Docs : https://blockchain.com/fr/explorer/api/blockchain_api
     """
-    def get_address_info(self, address: str) -> Optional[dict]:
-        return self.get(f"/address/{address}", ttl=60)
+    def get_lastest_block(self) -> Optional[dict]:
+        return self.get("/lastestblock", ttl=60)
+
+
+    """
+    Renvoie les infos d'une adresse
+    Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
+    """
+    def get_address_info(self, address) -> Optional[dict]:
+        return self.get(f"/rawaddr/{address}", ttl=60)
+

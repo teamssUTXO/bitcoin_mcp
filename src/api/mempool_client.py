@@ -2,7 +2,6 @@ from typing import Optional
 from src.api.client import APIClient
 from src.config import Config
 
-# ECRIRE LA PAGE DE DOC ASSOCIEE A L ENDPOINT
 class MempoolClient(APIClient):
     def __init__(self):
         super().__init__(Config.MEMPOOL_API_URL)
