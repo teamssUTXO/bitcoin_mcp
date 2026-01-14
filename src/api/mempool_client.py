@@ -36,10 +36,10 @@ class MempoolClient(APIClient):
 
     """
     Renvoie le ratio de frais de transactions recommandés
-    Docs : https://mempool.space/docs/api/rest#get-recommended-fees
+    Docs : https://mempool.space/docs/api/rest#get-recommended-fees-precise
     """
     def get_recommended_fees(self) -> Optional[dict]:
-        return self.get("/v1/fees/recommended", ttl=30)
+        return self.get("/v1/fees/recommended/precise", ttl=30)
 
 
     """
@@ -72,3 +72,17 @@ class MempoolClient(APIClient):
     """
     def get_block_info(self) -> Optional[dict]:
         return self.get("/v1/blocks", ttl=30)
+
+    """
+    Renvoie le classement des meilleures mempools depuis 3 mois
+    Docs : https://mempool.space/docs/api/rest#get-mining-pools
+    """
+    def get_mempools_rank(self) -> Optional[dict]:
+        return self.get("/v1/mining/pools/3m", ttl=30)
+
+    """
+    Renvoie le hashrate des meilleures mempools depuis 3 mois
+    Docs : https://mempool.space/docs/api/rest#get-mining-pools-hashrates
+    """
+    def get_hashrate_mempools(self) -> Optional[dict]:
+        return self.get("/v1/mining/hashrate/pools/3m", ttl=30)

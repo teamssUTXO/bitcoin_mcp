@@ -7,8 +7,8 @@ class Config:
     MEMPOOL_API_URL: str = "https://mempool.space/api"
     COINGECKO_API_URL: str = "https://api.coingecko.com/api/v3"
     BLOCKCHAIN_INFO_API_URL: str = "https://blockchain.info"
-    HIRO_API_URL: str = "https://api.hiro.so/ordinals/v1"
-    ALTERNATIVE_API_URL: str = "https://api.alternative.me/"
+    HIRO_API_URL: str = "https://api.hiro.so"
+    ALTERNATIVE_API_URL: str = "https://api.alternative.me"
     
     # # Timeouts in seconds
     # API_TIMEOUT: int = 5
