@@ -1,65 +1,91 @@
-from typing import Dict, Optional
-from src.api.mempool_client import MempoolClient
-from src.api.hiro_client import HiroClient
+from src.data.addresses_dataclasses import OverviewAddress, InfosAddress
+from typing import Optional
 
+from src.api.blockchain_client import BlockchainClient
+from src.api.mempool_client import MempoolClient
 
 class AddressAnalyzer:
+    """Analyseur d'adresses Bitcoin"""
+
     def __init__(self):
+        """
+        Initialise l'analyseur d'adresses.
+        """
+        self.blockchain = BlockchainClient()
         self.mempool = MempoolClient()
-        self.hiro = HiroClient()
-    
-    def analyze_address(self, address: str) -> Dict:
-        """Analyse complète d'une adresse Bitcoin"""
-        stats = self.mempool.get_address_info(address)
-        
-        if not stats:
-            return {"error": f"Could not retrieve data for {address}"}
-        
-        chain = stats.get('chain_stats', {})
-        mempool = stats.get('mempool_stats', {})
-        
-        # Calculs balance
-        balance_confirmed = (chain.get('funded_txo_sum', 0) - chain.get('spent_txo_sum', 0)) / 100_000_000
-        balance_unconfirmed = (mempool.get('funded_txo_sum', 0) - mempool.get('spent_txo_sum', 0)) / 100_000_000
-        total_balance = balance_confirmed + balance_unconfirmed
-        
-        total_received = chain.get('funded_txo_sum', 0) / 100_000_000
-        total_spent = chain.get('spent_txo_sum', 0) / 100_000_000
-        
-        # Type d'adresse
-        address_type = self._identify_address_type(address)
-        
-        # Assets Layer 2
-        ordinals = self.hiro.get_ordinals(address)
-        runes = self.hiro.get_runes(address)
-        
-        ordinals_count = ordinals.get('total', 0) if ordinals else 0
-        runes_count = runes.get('total', 0) if runes else 0
-        
-        return {
-            "address": address,
-            "address_type": address_type,
-            "balance_confirmed_btc": balance_confirmed,
-            "balance_unconfirmed_btc": balance_unconfirmed,
-            "balance_total_btc": total_balance,
-            "total_received_btc": total_received,
-            "total_spent_btc": total_spent,
-            "tx_count": chain.get('tx_count', 0),
-            "pending_tx_count": mempool.get('tx_count', 0),
-            "utxo_count": chain.get('funded_txo_count', 0) - chain.get('spent_txo_count', 0),
-            "ordinals_count": ordinals_count,
-            "runes_count": runes_count,
-            "has_assets": ordinals_count > 0 or runes_count > 0
-        }
-    
-    def _identify_address_type(self, address: str) -> str:
-        """Identifie le type d'adresse"""
-        if address.startswith("bc1q"):
-            return "SegWit (Bech32) - Native SegWit"
-        elif address.startswith("bc1p"):
-            return "Taproot (Bech32m) - Latest standard"
-        elif address.startswith("3"):
-            return "P2SH (Legacy SegWit wrapper)"
-        elif address.startswith("1"):
-            return "Legacy P2PKH (Old format)"
-        return "Unknown"
+
+    def get_address_info(self, address: str) -> Optional[str]:
+        """
+        Récupère les infos d'adresse depuis Mempool.space.
+
+        Args:
+            address: Adresse Bitcoin
+
+        Returns:
+            str: Infos formatées ou None en cas d'erreur
+        """
+        try:
+            data = self.mempool.get_address_info(address)
+            if not data:
+                return None
+
+            infos = InfosAddress.from_data(data)
+
+            result = (
+                f"=== Adresse Bitcoin ===\n"
+                f"Adresse: {address}\n"
+                f"Catégorie: {infos.category}\n"
+                f"\n💰 BALANCE:\n"
+                f"Confirmée: {infos.balance_btc:.8f} BTC\n"
+                f"En attente: {infos.mempool_balance:,} sat\n"
+                f"\n📊 ACTIVITÉ:\n"
+                f"Status: {infos.status}\n"
+                f"Total transactions: {infos.tx_count:,}\n"
+                f"TX en mempool: {infos.mempool_tx_count}\n"
+                f"Reçus: {infos.funded_txo_count:,} outputs ({infos.funded_txo_sum / 100_000_000:.8f} BTC)\n"
+                f"Dépensés: {infos.spent_txo_count:,} outputs ({infos.spent_txo_sum / 100_000_000:.8f} BTC)"
+            )
+            return result
+
+        except KeyError as e:
+            print(f"Erreur type: 02 - Clé manquante: {e}")
+            return None
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
+
+    def get_address_info_overview(self, address: str) -> Optional[str]:
+        """
+        Récupère les infos d'adresse depuis Blockchain.com.
+
+        Args:
+            address: Adresse Bitcoin en base58 ou hash160
+
+        Returns:
+            str: Infos formatées ou None en cas d'erreur
+        """
+        try:
+            data = self.blockchain.get_address_info(address)
+            if not data:
+                return None
+
+            infos = OverviewAddress.from_data(data)
+
+            result = (
+                f"=== Adresse Bitcoin ===\n"
+                f"Adresse: {address}\n"
+                f"\n💰 BALANCE:\n"
+                f"Solde actuel: {infos.balance_btc:.8f} BTC\n"
+                f"\n📊 HISTORIQUE:\n"
+                f"Total reçu: {infos.received_btc:.8f} BTC\n"
+                f"Total envoyé: {infos.sent_btc:.8f} BTC\n"
+                f"Nombre de transactions: {infos.n_tx:,}"
+            )
+            return result
+
+        except KeyError as e:
+            print(f"Erreur type: 02 - Clé manquante: {e}")
+            return None
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
