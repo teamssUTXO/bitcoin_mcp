@@ -2,39 +2,73 @@ from typing import Optional
 from src.api.client import APIClient
 from src.config import Config
 
+# ECRIRE LA PAGE DE DOC ASSOCIEE A L ENDPOINT
 class MempoolClient(APIClient):
     def __init__(self):
         super().__init__(Config.MEMPOOL_API_URL)
     
-    """Renvoie la hauteur du bloc actuel"""
-    def get_block_tip_height(self) -> Optional[dict]:
-        return self.get("/blocks/tip/height", ttl=10)
-    
-    """Renvoie la hauteur du dernier bloc"""
-    def get_block_height(self) -> Optional[dict]:
-        return self.get("/block-height")
+    """
+    Renvoie la hauteur du dernier bloc
+    Docs : https://mempool.space/docs/api/rest#get-block-tip-height
+    """
+    def get_block_tip_height(self) -> Optional[int]:
+        result = self.get("/blocks/tip/height", ttl=10)
         return int(result) if result else None
-    
-    """Renvoie le ratio de frais de transactions recommandés"""
+
+
+    """
+    Renvoie le hash du dernier bloc
+    Docs : https://mempool.space/docs/api/rest#get-block-tip-hash
+    """
+    def get_block_tip_hash(self) -> Optional[int]:
+        result = self.get("/blocks/tip/hash", ttl=10)
+        return int(result) if result else None
+
+
+    """
+    Renvoie le hash d'un bloc dont la hauteur est passé en paramètre
+    Docs : https://mempool.space/docs/api/rest#get-block-height
+    """
+    def get_block_height(self, height) -> Optional[int]:
+        result = self.get(f"/block-height/{height}", ttl=10)
+        return int(result) if result else None
+
+
+    """
+    Renvoie le ratio de frais de transactions recommandés
+    Docs : https://mempool.space/docs/api/rest#get-recommended-fees
+    """
     def get_recommended_fees(self) -> Optional[dict]:
         return self.get("/v1/fees/recommended", ttl=30)
-    
-    """Renvoie des infos sur la mempool"""
+
+
+    """
+    Renvoie des infos sur la mempool
+    Docs : https://mempool.space/docs/api/rest#get-mempool
+    """
     def get_mempool_info(self) -> Optional[dict]:
         return self.get("/mempool", ttl=30)
-    
-    """Renvoie les infos d'une adresse bitcoin"""
+
+
+    """
+    Renvoie les infos d'une adresse bitcoin
+    Docs : https://mempool.space/docs/api/rest#get-address
+    """
     def get_address_info(self, address: str) -> Optional[dict]:
         return self.get(f"/address/{address}", ttl=60)
-    
-    """Renvoie des infos sur le block miné par la mempool (backlog)"""
-    def get_mempool_block_info(self) -> Optional[dict]:
-        return self.get("/mempool/blocks", ttl=30)
-    
-    """Renvoie des infos sur une transaction"""
+
+
+    """
+    Renvoie des infos sur une transaction
+    Docs : https://mempool.space/docs/api/rest#get-transaction
+    """
     def get_tx_info(self, txid: str) -> Optional[dict]:
         return self.get(f"/tx/{txid}", ttl=30)
-    
-    """Renvoie des infos sur le bloc actuel"""
+
+
+    """
+    Renvoie des infos sur les 10 derniers blocs
+    Docs : https://mempool.space/docs/api/rest#get-blocks
+    """
     def get_block_info(self) -> Optional[dict]:
         return self.get("/v1/blocks", ttl=30)
