@@ -6,14 +6,13 @@ class MempoolClient(APIClient):
     def __init__(self):
         super().__init__(Config.MEMPOOL_API_URL)
     
-    """Hauteur du bloc actuel"""
-    def get_block_tip_height(self) -> Optional[int]:
-        result = self.get("/blocks/tip/height", ttl=10)
-        return int(result) if result else None
+    """Renvoie la hauteur du bloc actuel"""
+    def get_block_tip_height(self) -> Optional[dict]:
+        return self.get("/blocks/tip/height", ttl=10)
     
-    """Hauteur du dernier bloc"""
-    def get_block_height(self) -> Optional[int]:
-        result = self.get("/block-height")
+    """Renvoie la hauteur du dernier bloc"""
+    def get_block_height(self) -> Optional[dict]:
+        return self.get("/block-height")
         return int(result) if result else None
     
     """Renvoie le ratio de frais de transactions recommandés"""
