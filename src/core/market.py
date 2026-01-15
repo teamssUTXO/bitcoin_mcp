@@ -34,10 +34,10 @@ class MarketAnalyzer:
 
             # TODO: faire le return par IA
             result = (
-                f"Capitalisation totale: ${infos["market_cap"]:,.0f}\n"
-                f"Volume 24h: ${infos["volume_24h"]:,.0f}\n"
-                f"Dominance BTC: {infos["btc_dominance"]:.2f}%\n"
-                f"Cryptos actives: {infos["active_cryptos"]}"
+                f"Capitalisation totale: ${infos.nb_markets:,.0f}\n"
+                f"Volume 24h: ${infos.volume_24h:,.0f}\n"
+                f"Dominance BTC: {infos.btc_dominance:.2f}%\n"
+                f"Cryptos actives: {infos.active_cryptos}"
             )
             return result
 
