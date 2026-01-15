@@ -1,0 +1,12 @@
+{
+  "main": {
+    "command": "path\\to\\uv.EXE",
+    "args": [
+      "run",
+      "mcp",
+      "python",
+      "-m",
+      "path\\to\\main.py"
+    ]
+  }
+}
