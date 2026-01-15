@@ -24,6 +24,6 @@ class CoinGeckoClient(APIClient):
     """"
     Renvoie des informations générales sur le bitcoin
     Docs : https://docs.coingecko.com/reference/coins-id"""
-    def get_market_data(self) -> Optional[dict]:
+    def get_btc_market_data(self) -> Optional[dict]:
         return self.get("/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false", ttl=45)
     
