@@ -121,3 +121,28 @@ class BitcoinMarket:
     @staticmethod
     def price_before(current_price: float, pct_change: float) -> float:
         return current_price / (1 + pct_change / 100)
+
+@dataclass
+class BitcoinMarketSentiment:
+    # Infos principales
+    fg_data: list
+    sentiment_votes_up_percentage: float
+    sentiment_votes_down_percentage: float
+
+    def __post_init__(self):
+        # définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
+        for i in range(1, 8):
+            setattr(self, f"fg_data_{i}d",
+                [
+                    self.fg_data[i]["value"],
+                    self.fg_data[i]["value_classification"]
+                ]
+            )
+
+    @classmethod
+    def from_data(cls, alternative_data: dict, coingecko_data: dict) -> 'BitcoinMarketSentiment':
+        return cls(
+            fg_data = alternative_data.get("data", []),
+            sentiment_votes_up_percentage = coingecko_data.get("sentiment_votes_up_percentage", 0),
+            sentiment_votes_down_percentage = coingecko_data.get("sentiment_votes_down_percentage", 0),
+        )
