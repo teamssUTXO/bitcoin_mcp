@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-
-SATOSHI = 100_000_000
+from src.config import Config
 
 @dataclass
 class InfosAddress:
@@ -12,7 +11,7 @@ class InfosAddress:
         self.funded_txo_sum = self.chain_stats["funded_txo_sum"]
         self.spent_txo_sum = self.chain_stats['spent_txo_sum']
 
-        self.balance_btc = (self.funded_txo_sum - self.spent_txo_sum) / SATOSHI
+        self.balance_btc = (self.funded_txo_sum - self.spent_txo_sum) / Config.SATOSHI
 
         self.tx_count = self.chain_stats['tx_count']
         self.funded_txo_count = self.chain_stats['funded_txo_count']
@@ -56,9 +55,9 @@ class OverviewAddress:
     # txs: list = field(default_factory=list)
 
     def __post_init__(self):
-        self.balance_btc = self.final_balance / SATOSHI
-        self.received_btc = self.total_received / SATOSHI
-        self.sent_btc = self.total_sent / SATOSHI
+        self.balance_btc = self.final_balance / Config.SATOSHI
+        self.received_btc = self.total_received / Config.SATOSHI
+        self.sent_btc = self.total_sent / Config.SATOSHI
         # self.txs = [
         #     {
         #         "hash": tx.get("hash"),
