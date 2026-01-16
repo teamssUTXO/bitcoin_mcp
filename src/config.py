@@ -9,6 +9,8 @@ class Config:
     BLOCKCHAIN_INFO_API_URL: str = "https://blockchain.info"
     HIRO_API_URL: str = "https://api.hiro.so"
     ALTERNATIVE_API_URL: str = "https://api.alternative.me"
+
+    SATOSHI: int = 100_000_000
     
     # # Timeouts in seconds
     # API_TIMEOUT: int = 5
