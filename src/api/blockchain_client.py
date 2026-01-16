@@ -5,6 +5,9 @@ from src.config import Config
 class BlockchainClient(APIClient):
     def __init__(self):
         super().__init__(Config.BLOCKCHAIN_INFO_API_URL)
+
+
+    # === BITCOIN NETWORK INFORMATIONS ===
     
     """
     Renvoie le hashrate actuel du réseau bitcoin
@@ -23,6 +26,15 @@ class BlockchainClient(APIClient):
         result = self.get("/q/getdifficulty", ttl=30)
         return int(result) if result else None
 
+    """
+    Renvoie les stats actuels du réseau bitcoin
+    Docs : https://blockchain.com/fr/explorer/api/blockchain_api
+    """
+    def get_network_stats(self) -> Optional[dict]:
+        return self.get("/stats?format=json", ttl=30)
+
+
+    # === BITCOIN TRANSACTIONS INFORMATIONS ===
 
     """
     Renvoie le nombre de transactions sur 24h
@@ -42,21 +54,17 @@ class BlockchainClient(APIClient):
         return int(result) if result else None
 
 
-    """
-    Renvoie les stats actuels du réseau bitcoin
-    Docs : https://blockchain.com/fr/explorer/api/blockchain_api
-    """
-    def get_network_stats(self) -> Optional[dict]:
-        return self.get("/stats?format=json", ttl=30)
-
+    # === BITCOIN BLOCKS INFORMATIONS ===
 
     """
-    Renvoie les infos du dernier bloc actuel
+    Renvoie les infos du dernier bloc miné
     Docs : https://blockchain.com/fr/explorer/api/blockchain_api
     """
     def get_lastest_block(self) -> Optional[dict]:
         return self.get("/lastestblock", ttl=60)
 
+
+    # === BITCOIN ADDRESSES INFORMATIONS ===
 
     """
     Renvoie les infos d'une adresse
