@@ -1,43 +1,156 @@
-from typing import Dict, Optional
-from src.api.mempool_client import MempoolClient
-from src.api.blockchain_client import BlockchainClient
+from typing import Optional
 
+from api.mempool_client import MempoolClient
+from data.network_dataclasses import NetworkFees, NetworkHashrate, NetworkStats
+from src.api.blockchain_client import BlockchainClient
+from src.config import Config
 
 class NetworkAnalyzer:
+    """Analyseur du réseau Bitcoin"""
+
     def __init__(self):
+        """
+        Initialise l'analyseur réseau.
+        """
         self.mempool = MempoolClient()
         self.blockchain = BlockchainClient()
-    
-    def get_network_overview(self) -> Dict:
-        """Agrège les données réseau depuis plusieurs sources"""
-        block_height = self.mempool.get_block_tip_height()
-        hashrate = self.blockchain.get_network_hashrate()
-        difficulty = self.blockchain.get_network_difficulty()
+
+    def get_network_stats(self) -> Optional[str]:
+        """
+        Récupère les statistiques complètes du réseau Bitcoin.
+
+        Returns:
+            str: Statistiques réseau formatées ou None en cas d'erreur
+        """
+        try:
+            data = self.blockchain.get_network_stats()
+            if not data:
+                return None
+
+            infos = NetworkStats.from_data(data)
+
+            result = (
+                f"=== Statistiques Réseau Bitcoin ===\n"
+                f"Prix marché: ${infos.market_price_usd:,.2f}\n"
+                f"Hashrate: {infos.hash_rate / 1_000_000_000:.2f} TH/s\n"
+                f"Difficulté: {infos.difficulty:,.0f}\n"
+                f"Prochain ajustement: Bloc #{infos.nextretarget}\n"
+                f"\n=== Blocs ===\n"
+                f"Blocs minés (24h): {infos.n_blocks_mined}\n"
+                f"Total blocs: {infos.n_blocks_total:,}\n"
+                f"Temps entre blocs: {infos.minutes_between_blocks:.2f} min\n"
+                f"Taille des blocs: {infos.blocks_size:,} bytes\n"
+                f"\n=== Transactions ===\n"
+                f"Transactions (24h): {infos.n_tx:,}\n"
+                f"BTC envoyés (estimé): {infos.estimated_btc_sent:,.2f} BTC\n"
+                f"Volume transactions: ${infos.estimated_transaction_volume_usd:,.0f}\n"
+                f"\n=== Mining ===\n"
+                f"BTC minés (24h): {infos.n_btc_mined / 100_000_000:.2f} BTC\n"
+                f"Frais totaux: {infos.total_fees_btc / 100_000_000:.8f} BTC\n"
+                f"Revenus mineurs: {infos.miners_revenue_btc:.2f} BTC (${infos.miners_revenue_usd:,.0f})\n"
+                f"\n=== Supply ===\n"
+                f"BTC en circulation: {infos.totalbc:,.2f} BTC"
+            )
+            return result
+
+        except KeyError as e:
+            print(f"Erreur type: 02 - Clé manquante: {e}")
+            return None
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
 
 
-        
-        circulating_supply = self._calculate_supply(block_height) if block_height else 0
-        remaining = 21_000_000 - circulating_supply
-        
-        return {
-            "block_height": block_height,
-            "hashrate_eh": hashrate / 1_000_000 if hashrate else None,
-            "difficulty_t": difficulty / 1_000_000_000_000 if difficulty else None,
-            "circulating_supply": circulating_supply,
-            "remaining_supply": remaining,
-            "percent_mined": (circulating_supply / 21_000_000) * 100 if circulating_supply else 0
-        }
+    def get_network_recommended_fees(self) -> Optional[str]:
+        """
+        Récupère les frais de transaction recommandés.
 
-    @staticmethod
-    def _calculate_supply(self, block_height: int) -> float:
-        """Calcule le supply circulant basé sur la hauteur de bloc"""
-        halving = block_height // 210000
-        supply = 0
-        reward = 50
-        
-        for _ in range(halving):
-            supply += 210000 * reward
-            reward /= 2
-        
-        supply += (block_height % 210000) * reward
-        return supply
+        Returns:
+            str: Frais recommandés formatés ou None en cas d'erreur
+        """
+        try:
+            fees = self.mempool.get_recommended_fees()
+            if not fees:
+                return None
+
+            tx_size = 250 # taille de transaction standard
+            infos = NetworkFees.from_data(fees)
+
+            costs = {
+                'Rapide (~10 min)': (infos.fastest * tx_size) / Config.SATOSHI,
+                'Demi-heure': (infos.half_hour * tx_size) / Config.SATOSHI,
+                'Standard (~1h)': (infos.hour * tx_size) / Config.SATOSHI,
+                'Économique': (infos.economy * tx_size) / Config.SATOSHI
+            }
+
+            result = (
+                f"=== Frais Recommandés (sat/vB) ===\n"
+                f"Plus rapide: {infos.fastest} sat/vB (~10 min); (~{list(costs.values())[0]} BTC)\n"
+                f"Demi-heure: {infos.half_hour} sat/vB (~30 min) (~{list(costs.values())[1]} BTC)\n"
+                f"Une heure: {infos.hour} sat/vB (~60 min) (~{list(costs.values())[2]} BTC)\n"
+                f"Économique: {infos.economy} sat/vB (~{list(costs.values())[3]} BTC)\n"
+                f"Minimum: {infos.minimum} sat/vB (~{list(costs.values())[4]} BTC)"
+            )
+
+            return result
+
+
+        except KeyError as e:
+            print(f"Erreur type: 02 - Clé manquante: {e}")
+            return None
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
+
+
+    def get_network_health(self) -> Optional[str]:
+        """
+        Évalue la santé globale du réseau Bitcoin.
+
+        Returns:
+            str: Analyse de santé du réseau ou None en cas d'erreur
+        """
+        try:
+            stats = self.blockchain.get_network_stats()
+            if not stats:
+                return None
+
+            infos = NetworkStats.from_data(stats)
+
+            # Évaluation de la santé
+            health_score = 100
+            issues = []
+
+            # Temps entre blocs (optimal: ~10 min)
+            if infos.minutes_between_blocks > 15:
+                health_score -= 20
+                issues.append(f"Blocs lents ({infos.minutes_between_blocks:.1f} min)")
+            elif infos.minutes_between_blocks < 5:
+                health_score -= 10
+                issues.append(f"Blocs rapides ({infos.minutes_between_blocks:.1f} min)")
+
+            # Hashrate (doit être élevé pour la sécurité)
+            if infos.hash_rate < 100_000_000_000:  # < 100 TH/s
+                health_score -= 30
+                issues.append("Hashrate faible")
+
+            # Volume de transactions
+            if infos.n_tx < 100_000:
+                health_score -= 15
+                issues.append("Faible volume de transactions")
+
+            status = "Excellent" if health_score >= 90 else \
+                "Bon" if health_score >= 70 else \
+                    "Moyen" if health_score >= 50 else "Faible"
+
+            result = f"État du réseau: {status} ({health_score}/100)\n"
+            if issues:
+                result += "Points d'attention: " + ", ".join(issues)
+            else:
+                result += "Aucun problème détecté"
+
+            return result
+
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None

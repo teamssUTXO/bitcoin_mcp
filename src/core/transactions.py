@@ -1,89 +1,192 @@
-from typing import Dict, Optional
+from typing import Optional
+
+from data.transactions_dataclasses import TransactionsAddress
 from src.api.mempool_client import MempoolClient
-from src.api.coingecko_client import CoinGeckoClient
+from src.api.blockchain_client import BlockchainClient
+from src.data.transactions_dataclasses import TransactionInfo, TxInOut
 
 
+# TODO : remplacer les calculs dans post_init par @property
 class TransactionAnalyzer:
+    """Analyseur de transactions Bitcoin"""
+
     def __init__(self):
+        """
+        Initialise l'analyseur de transactions.
+        """
         self.mempool = MempoolClient()
-        self.coingecko = CoinGeckoClient()
-    
-    def get_fee_analysis(self) -> Dict:
-        """Analyse complète des frais de transaction"""
-        fees = self.mempool.get_recommended_fees()
-        mempool_info = self.mempool.get_mempool_info()
-        btc_price = self.coingecko.get_bitcoin_price()
-        
-        if not fees:
-            return {"error": "Fee data unavailable"}
-        
-        # Calcul coût en USD pour tx typique (250 vBytes)
-        typical_size = 250
-        costs_usd = {}
-        
-        if btc_price:
-            for priority, sat_vb in fees.items():
-                sats = sat_vb * typical_size
-                btc = sats / 100_000_000
-                costs_usd[priority] = btc * btc_price
-        
-        # Niveau de congestion
-        congestion = "NORMAL"
-        if mempool_info:
-            vbytes = mempool_info.get('vBytes', 0)
-            if vbytes > 100_000_000:
-                congestion = "SEVERE"
-            elif vbytes > 50_000_000:
-                congestion = "MODERATE"
-        
-        return {
-            "fee_rates": fees,
-            "costs_usd": costs_usd,
-            "typical_tx_size_vbytes": typical_size,
-            "congestion_level": congestion,
-            "mempool_size_mb": mempool_info.get('vBytes', 0) / 1_000_000 if mempool_info else None,
-            "pending_tx_count": mempool_info.get('count', 0) if mempool_info else None
-        }
-    
-    def get_transaction_details(self, txid: str) -> Dict:
-        """Récupère les détails d'une transaction"""
-        tx = self.mempool.get_transaction(txid)
-        
-        if not tx:
-            return {"error": f"Transaction {txid} not found"}
-        
-        # Vérifier confirmation
-        is_confirmed = 'status' in tx and tx['status'].get('confirmed', False)
-        
-        if is_confirmed:
-            block_height = tx['status']['block_height']
-            tip_height = self.mempool.get_block_tip_height()
-            confirmations = tip_height - block_height + 1 if tip_height else 0
-        else:
-            confirmations = 0
-        
-        # Calculs
-        fee_sats = tx.get('fee', 0)
-        vsize = tx.get('vsize', tx.get('size', 0))
-        fee_rate = (fee_sats / vsize) if vsize > 0 else 0
-        
-        # RBF detection
-        rbf_enabled = any(
-            inp.get('sequence', 0xffffffff) < 0xfffffffe 
-            for inp in tx.get('vin', [])
-        )
-        
-        return {
-            "txid": txid,
-            "is_confirmed": is_confirmed,
-            "confirmations": confirmations,
-            "block_height": tx['status'].get('block_height') if is_confirmed else None,
-            "fee_sats": fee_sats,
-            "fee_rate_sat_vb": fee_rate,
-            "size_bytes": tx.get('size', 0),
-            "vsize_vbytes": vsize,
-            "weight": tx.get('weight', 0),
-            "inputs_count": len(tx.get('vin', [])),
-            "outputs_count": len(tx.get('vout', [])),
-            "rbf_enabled": rbf_enabled
-        }
+        self.blockchain = BlockchainClient()
+
+    def get_tx_info(self, txid: str) -> Optional[str]:
+        """
+        Récupère les informations détaillées sur une transaction.
+
+        Args:
+            txid: Identifiant de la transaction
+
+        Returns:
+            str: Infos de transaction formatées ou None en cas d'erreur
+        """
+        try:
+            data = self.mempool.get_tx_info(txid)
+            if not data:
+                return None
+
+            infos = TransactionInfo.from_data(data)
+
+            #TODO : Faire le rapport par IA
+            result = (
+                # f"=== Transaction ===\n"
+                # f"TXID: {txid}\n"
+                # f"Status: {infos.confirmed}\n"
+                # f"Bloc: #{infos.infosblock_height} | {infos.block_hash} | {infos.date_str}\n"
+                # f"\n=== Détails ===\n"
+                # f"Taille: {infos.size} bytes | Weight: {infos.weight}\n"
+                # f"Inputs: {infos.vin_count} | Outputs: {infos.vout_count}\n"
+                # f"Montant total: {infos.total_output_btc:.8f} BTC\n"
+                # f"Frais: {infos.fee:,} sat ({infos.fee_rate:.2f} sat/vB)\n"
+                # f"Version: {infos.version} | Locktime: {infos.locktime}"
+            )
+            return result
+
+        except KeyError as e:
+            print(f"Erreur type: 02 - Clé manquante: {e}")
+            return None
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
+
+
+    def get_tx_inputs_outputs(self, txid: str) -> Optional[str]:
+        """
+        Récupère les détails des inputs et outputs d'une transaction.
+
+        Args:
+            txid: Identifiant de la transaction
+
+        Returns:
+            str: Détails inputs/outputs ou None en cas d'erreur
+        """
+        try:
+            data = self.mempool.get_tx_info(txid)
+            if not data:
+                return None
+
+            infos = TxInOut.from_data(data)
+
+            # TODO : Faire le rapport par IA
+            result = (
+                # f"=== Transaction ===\n"
+                # f"TXID: {txid}\n"
+                # f"Status: {infos.confirmed}\n"
+                # f"Bloc: #{infos.infosblock_height} | {infos.block_hash} | {infos.date_str}\n"
+                # f"\n=== Détails ===\n"
+                # f"Taille: {infos.size} bytes | Weight: {infos.weight}\n"
+                # f"Inputs: {infos.vin_count} | Outputs: {infos.vout_count}\n"
+                # f"Montant total: {infos.total_output_btc:.8f} BTC\n"
+                # f"Frais: {infos.fee:,} sat ({infos.fee_rate:.2f} sat/vB)\n"
+                # f"Version: {infos.version} | Locktime: {infos.locktime}"
+            )
+            return result
+
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
+
+
+    """
+    Renvoie les transactions d'une adresse
+    Docs : 
+    """
+    def get_address_transactions(self, address: str) -> Optional[str]:
+        """
+        Récupère les transactions d'une addresse
+
+        Args:
+            address: Adresse Bitcoin
+
+        Returns:
+            str: Renvoie les id des transactions de l'adresse
+        """
+        try:
+            data = self.blockchain.get_address_info(address)
+            if not data:
+                return None
+
+            infos = TransactionsAddress.from_data(data)
+
+            result = ""
+            for i in range(infos.len_txs):
+                result += f"TXID : {infos.txs_hash[i]}\n"
+                result += f"Date : {infos.txs_date[i]}\n"
+                result += f"Montant envoyé : {infos.amount_sent[i]} sats\n"
+                result += "Destinations :\n"
+
+                for addr, value in infos.destinations[i]:
+                    result += f"  → {addr} : {value} sats\n"
+                result += "\n"
+
+            return result
+
+
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
+
+    # TODO: à implémenter dans le core puis dans le tool
+    def estimate_tx_cost(self, tx_size_vb: int, priority: str = "medium") -> Optional[str]:
+        """
+        Estime le coût d'une transaction selon sa taille et priorité.
+
+        Args:
+            tx_size_vb: Taille de la transaction en vBytes
+            priority: Priorité ('fastest', 'half_hour', 'hour', 'economy')
+
+        Returns:
+            str: Estimation du coût ou None en cas d'erreur
+        """
+        try:
+            fees = self.mempool.get_recommended_fees()
+            if not fees:
+                return None
+
+            # Mapping des priorités
+            priority_map = {
+                'fastest': 'fastestFee',
+                'half_hour': 'halfHourFee',
+                'hour': 'hourFee',
+                'economy': 'economyFee',
+                'medium': 'hourFee'
+            }
+
+            fee_key = priority_map.get(priority.lower(), 'hourFee')
+            fee_rate = fees.get(fee_key, 0)
+
+            # Calcul du coût en satoshis
+            cost_sat = tx_size_vb * fee_rate
+
+            # Conversion en BTC
+            cost_btc = cost_sat / 100_000_000
+
+            # Estimation du temps de confirmation
+            time_estimates = {
+                'fastestFee': '~10 min',
+                'halfHourFee': '~30 min',
+                'hourFee': '~60 min',
+                'economyFee': '> 2h'
+            }
+            time_estimate = time_estimates.get(fee_key, '~60 min')
+
+            result = (
+                f"=== Estimation Coût Transaction ===\n"
+                f"Taille: {tx_size_vb} vBytes\n"
+                f"Priorité: {priority}\n"
+                f"Taux: {fee_rate} sat/vB\n"
+                f"Coût total: {cost_sat:,} sat ({cost_btc:.8f} BTC)\n"
+                f"Confirmation estimée: {time_estimate}"
+            )
+            return result
+
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
