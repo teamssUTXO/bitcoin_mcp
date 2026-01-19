@@ -1,5 +1,5 @@
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
@@ -24,20 +24,20 @@ class BlockAnalyzer:
             str: Résumé du dernier bloc ou None en cas d'erreur
         """
         try:
-            block = self.blockchain.get_latest_block()
+            block: dict = self.blockchain.get_latest_block()
             if not block:
                 return None
 
-            infos = LatestBlock.from_data(block)
+            infos: LatestBlock = LatestBlock.from_data(block)
 
 
-            date_str = datetime.fromtimestamp(infos.timestamp).strftime('%Y-%m-%d %H:%M:%S') if infos.timestamp else 'N/A'
+            date_str: str = datetime.fromtimestamp(infos.timestamp).strftime('%Y-%m-%d %H:%M:%S') if infos.timestamp else 'N/A'
 
             # Calcul du temps écoulé
-            time_ago = datetime.now() - datetime.fromtimestamp(infos.timestamp) if infos.timestamp else None
-            time_ago_str = f"{int(time_ago.total_seconds() / 60)} minutes" if time_ago else "N/A"
+            time_ago: timedelta = datetime.now() - datetime.fromtimestamp(infos.timestamp) if infos.timestamp else None
+            time_ago_str: str = f"{int(time_ago.total_seconds() / 60)} minutes" if time_ago else "N/A"
 
-            result = (
+            result: str = (
                 f"=== Dernier Bloc Miné ===\n"
                 f"Hauteur: #{infos.height:,}\n"
                 f"Hash: {infos.hash}\n"
@@ -61,7 +61,7 @@ class BlockAnalyzer:
             str: Hash du bloc ou None en cas d'erreur
         """
         try:
-            block_hash = self.mempool.get_block_height(height)
+            block_hash: int = self.mempool.get_block_height(height)
             if not block_hash:
                 return None
 
@@ -79,13 +79,13 @@ class BlockAnalyzer:
             str: Infos des derniers blocs formatées ou None en cas d'erreur
         """
         try:
-            blocks = self.mempool.get_blocks_info()
+            blocks: list = self.mempool.get_blocks_info()
             if not blocks:
                 return None
 
-            infos = LatestsBlocks.from_data(blocks)
+            infos: LatestsBlocks = LatestsBlocks.from_data(blocks)
 
-            result_lines = ["=== 10 Derniers Blocs ==="]
+            result_lines: list = ["=== 10 Derniers Blocs ==="]
 
             for i in range(len(blocks)):
                 result_lines.append(
@@ -98,8 +98,6 @@ class BlockAnalyzer:
                     f"Récompense: {infos.rewards[i]:,} sats\n"
                     f"Pool: {infos.pools_slug[i]}\n"
                     f"Nonce: {infos.nonces[i]}"
-
-                    
                 )
 
             return "\n".join(result_lines)
@@ -119,25 +117,25 @@ class BlockAnalyzer:
             str: Statistiques des blocs ou None en cas d'erreur
         """
         try:
-            blocks = self.mempool.get_blocks_info()
+            blocks: list = self.mempool.get_blocks_info()
             if not blocks:
                 return None
 
-            infos = LatestsBlocks.from_data(blocks)
+            infos: LatestsBlocks = LatestsBlocks.from_data(blocks)
 
-            total_tx = sum(infos.txs_count)
-            avg_tx = total_tx / len(blocks)
-            total_size = sum(infos.sizes)
-            avg_size = total_size / len(blocks)
+            total_tx: int = sum(infos.txs_count)
+            avg_tx: float = total_tx / len(blocks)
+            total_size: int = sum(infos.sizes)
+            avg_size: float = total_size / len(blocks)
 
             # Calcul du temps moyen entre blocs
             if len(infos.timestamps) >= 2:
-                time_diffs = [infos.timestamps[i] - infos.timestamps[i + 1] for i in range(len(infos.timestamps) - 1)]
-                avg_time = sum(time_diffs) / len(time_diffs) / 60  # en minutes
+                time_diffs: list = [infos.timestamps[i] - infos.timestamps[i + 1] for i in range(len(infos.timestamps) - 1)]
+                avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # en minutes
             else:
-                avg_time = 0
+                avg_time: int = 0
 
-            result = (
+            result: str = (
                 f"=== Statistiques (10 derniers blocs) ===\n"
                 f"Total transactions: {total_tx:,}\n"
                 f"Moyenne par bloc: {avg_tx:.0f} tx\n"

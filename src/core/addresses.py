@@ -25,13 +25,13 @@ class AddressAnalyzer:
             str: Infos formatées ou None en cas d'erreur
         """
         try:
-            data = self.mempool.get_address_info(address)
+            data: dict = self.mempool.get_address_info(address)
             if not data:
                 return None
 
-            infos = InfosAddress.from_data(data)
+            infos: InfosAddress = InfosAddress.from_data(data)
 
-            result = (
+            result: str = (
                 f"=== Adresse Bitcoin ===\n"
                 f"Adresse: {address}\n"
                 f"Catégorie: {infos.category}\n"
@@ -65,13 +65,13 @@ class AddressAnalyzer:
             str: Infos formatées ou None en cas d'erreur
         """
         try:
-            data = self.blockchain.get_address_info(address)
+            data: dict = self.blockchain.get_address_info(address)
             if not data:
                 return None
 
-            infos = OverviewAddress.from_data(data)
+            infos: OverviewAddress = OverviewAddress.from_data(data)
 
-            result = (
+            result: str = (
                 f"=== Adresse Bitcoin ===\n"
                 f"Adresse: {address}\n"
                 f"\n💰 BALANCE:\n"

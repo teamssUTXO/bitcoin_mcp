@@ -27,14 +27,14 @@ class MarketAnalyzer:
             str: Données formatées du marché global ou None en cas d'erreur
         """
         try:
-            data = self.coingecko.get_global_market_data()
+            data: dict = self.coingecko.get_global_market_data()
             if not data:
                 return None
 
-            infos = MarketOverview.from_data(data)
+            infos: MarketOverview = MarketOverview.from_data(data)
 
             # TODO: faire le return par IA
-            result = (
+            result: str = (
                 f"Capitalisation totale: ${infos.nb_markets:,.0f}\n"
                 f"Volume 24h: ${infos.volume_24h:,.0f}\n"
                 f"Dominance BTC: {infos.btc_dominance:.2f}%\n"
@@ -57,14 +57,14 @@ class MarketAnalyzer:
             str: Prix formaté du BTC ou None en cas d'erreur
         """
         try:
-            data = self.coingecko.get_btc_price_usd()
+            data: dict = self.coingecko.get_btc_price_usd()
             if not data:
                 return None
 
-            infos = BitcoinOverview.from_data(data)
+            infos: BitcoinOverview = BitcoinOverview.from_data(data)
 
             # TODO: faire le return par IA
-            result = (
+            result: str = (
                 f"Prix BTC: ${infos.usd:,.2f} USD"
                 f"Capitalisation totale: ${infos.market_cap:,.0f}\n"
                 f"Volume 24h: ${infos.volume_24h:,.0f}\n"
@@ -88,14 +88,14 @@ class MarketAnalyzer:
             str: Données de marché formatées ou None en cas d'erreur
         """
         try:
-            data = self.coingecko.get_btc_market_data()
+            data: dict = self.coingecko.get_btc_market_data()
             if not data:
                 return None
 
-            infos = BitcoinMarket.from_data(data)
+            infos: BitcoinMarket = BitcoinMarket.from_data(data)
 
             # TODO: faire le return par IA
-            result = (
+            result: str = (
                 f"Bitcoin (btc)\n"
                 f"Prix actuel: ${infos.current_price:,.2f}\n"
                 f"Capitalisation: ${infos.market_cap:,.0f}\n"
@@ -121,15 +121,15 @@ class MarketAnalyzer:
             str: Analyse de sentiment ou None en cas d'erreur
         """
         try:
-            alternative_data = self.alternative.get_fear_greed_index()
-            coingecko_data = self.coingecko.get_btc_market_data()
+            alternative_data: dict = self.alternative.get_fear_greed_index()
+            coingecko_data: dict = self.coingecko.get_btc_market_data()
             if not alternative_data | coingecko_data:
                 return None
 
-            infos = BitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
+            infos: BitcoinMarketSentiment = BitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
 
             # TODO: à faire avec l'IA
-            result = (
+            result: str = (
                 f"Market Sentiment (lastest 7 days):\n"
                 f"Prix actuel: ${infos.current_price:,.2f}\n"
                 f"Capitalisation: ${infos.market_cap:,.0f}\n"

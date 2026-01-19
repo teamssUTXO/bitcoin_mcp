@@ -22,24 +22,24 @@ class MiningPoolAnalyzer:
             str: Classement formaté ou None en cas d'erreur
         """
         try:
-            pools = self.mempool.get_mining_pools_rank()
+            pools: dict = self.mempool.get_mining_pools_rank()
             if not pools:
                 return None
 
-            infos = RankingMiningPools.from_data(pools)
+            infos: RankingMiningPools = RankingMiningPools.from_data(pools)
 
-            result = "=== Top Mining Pools (3 mois) ===\n"
+            result: str = "=== Top Mining Pools (3 mois) ===\n"
 
             for i, pool in enumerate(infos.pools, 1):
-                name = pool.get('name', 'Unknown')
-                block_count = pool.get('blockCount', 0)
-                percentage = (block_count / infos.total_blocks * 100) if infos.total_blocks > 0 else 0
+                name: str = pool.get('name', 'Unknown')
+                block_count: int = pool.get('blockCount', 0)
+                percentage: int = (block_count / infos.total_blocks * 100) if infos.total_blocks > 0 else 0
 
                 result += f"{i}. {name}\n"
                 result += f"   Blocs: {block_count:,} ({percentage:.2f}%)"
             result += f"\nTotal blocs: {infos.total_blocks:,}"
 
-            return str(result)
+            return result
 
         except KeyError as e:
             print(f"Erreur type: 02 - Clé manquante: {e}")
@@ -57,18 +57,18 @@ class MiningPoolAnalyzer:
             str: Hashrates formatés ou None en cas d'erreur
         """
         try:
-            data = self.mempool.get_mining_pools_hashrate()
+            data: dict = self.mempool.get_mining_pools_hashrate()
             if not data:
                 return None
 
-            infos = HashratesMiningPools
+            infos: HashratesMiningPools = HashratesMiningPools.from_data(data)
 
-            result = "=== Hashrates Mining Pools (3 mois) ===\n"
+            result: str = "=== Hashrates Mining Pools (3 mois) ===\n"
 
             for i, pool in enumerate(infos.pools, 1):
-                pool_id = pool['id']
-                hashrate_eh = pool['hashrate'] / 1_000_000_000_000_000_000  # EH/s
-                share = pool['share'] * 100
+                pool_id: int = pool['id']
+                hashrate_eh: int = pool['hashrate'] / 1_000_000_000_000_000_000  # EH/s
+                share: int = pool['share'] * 100
 
                 result += f"{i}. Pool #{pool_id}\n"
                 result += f"   Hashrate: {hashrate_eh:.2f} EH/s\n"
@@ -88,13 +88,13 @@ class MiningPoolAnalyzer:
             str: Infos du premier pool ou None en cas d'erreur
         """
         try:
-            pools = self.mempool.get_mining_pools_rank()
-            if not pools or len(pools) == 0:
+            pools: dict = self.mempool.get_mining_pools_rank()
+            if not pools:
                 return None
 
-            infos = TopMiningPool.from_data(pools)
+            infos: TopMiningPool = TopMiningPool.from_data(pools)
 
-            result = (
+            result: str = (
                 f"=== Pool #1 ===\n"
                 f"Nom: {infos.name}\n"
                 f"Slug: {infos.slug}\n"
@@ -119,12 +119,11 @@ class MiningPoolAnalyzer:
             str: Infos du pool ou None si non trouvé/erreur
         """
         try:
-            pool_slug = pool_slug.lower()
-            pool = self.mempool.get_mining_pool_info_by_slug(pool_slug)
+            pool: dict = self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
             if not pool:
                 return None
 
-            infos = MiningPoolBySlug.from_data(pool)
+            infos: MiningPoolBySlug = MiningPoolBySlug.from_data(pool)
 
             # TODO : faire avec l'IA
             result = (
@@ -148,11 +147,11 @@ class MiningPoolAnalyzer:
             str: Statistiques de mining ou None en cas d'erreur
         """
         try:
-            data = self.mempool.get_mining_pools_rank()
+            data: dict = self.mempool.get_mining_pools_rank()
             if not data:
                 return None
 
-            infos = RankingMiningPools.from_data(data)
+            infos: RankingMiningPools = RankingMiningPools.from_data(data)
 
             num_pools = len(infos.pools)
             avg_blocks_per_pool = infos.total_blocks / num_pools if num_pools > 0 else 0
