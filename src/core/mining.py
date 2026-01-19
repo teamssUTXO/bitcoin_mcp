@@ -1,6 +1,6 @@
 from typing import Optional
 
-from src.api.mempool_client import MempoolClient
+from src.api.mempool_client import get_mempool_client
 from src.data.mining_dataclasses import RankingMiningPools, HashratesMiningPools, TopMiningPool, MiningPoolBySlug
 
 
@@ -11,7 +11,7 @@ class MiningPoolAnalyzer:
         """
         Initialise l'analyseur de mining pools.
         """
-        self.mempool = MempoolClient() # le client mempool
+        self.mempool = get_mempool_client() # le client mempool
 
 
     def get_mining_pools_ranking(self) -> Optional[str]:

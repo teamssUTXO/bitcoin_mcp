@@ -23,3 +23,13 @@ class AlternativeClient(APIClient):
         """
         return self.get("/fng/?limit=7", ttl=30)
 
+# Singleton instance for the client
+_alternative_instance = None
+
+
+def get_alternative_client() -> AlternativeClient:
+    """Get or create the Elfa API client singleton instance."""
+    global _alternative_instance
+    if _alternative_instance is None:
+        _alternative_instance = AlternativeClient()
+    return _alternative_instance

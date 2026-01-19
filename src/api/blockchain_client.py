@@ -80,3 +80,13 @@ class BlockchainClient(APIClient):
         """
         return self.get(f"/rawaddr/{address}", ttl=60)
 
+# Singleton instance for the client
+_blockchain_instance = None
+
+
+def get_blockchain_client() -> BlockchainClient:
+    """Get or create the Elfa API client singleton instance."""
+    global _blockchain_instance
+    if _blockchain_instance is None:
+        _blockchain_instance = BlockchainClient()
+    return _blockchain_instance

@@ -103,3 +103,15 @@ class MempoolClient(APIClient):
         Docs : https://mempool.space/docs/api/rest#get-mempool
         """
         return self.get("/mempool", ttl=30)
+
+
+# Singleton instance for the client
+_mempool_instance = None
+
+
+def get_mempool_client() -> MempoolClient:
+    """Get or create the Elfa API client singleton instance."""
+    global _mempool_instance
+    if _mempool_instance is None:
+        _mempool_instance = MempoolClient()
+    return _mempool_instance

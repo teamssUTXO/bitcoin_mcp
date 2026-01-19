@@ -40,3 +40,15 @@ class CoinGeckoClient(APIClient):
         Docs : https://docs.coingecko.com/reference/simple-price
         """
         return self.get("/simple/price?ids=bitcoin&vs_currencies=usd", ttl=30)
+
+
+# Singleton instance for the client
+_coingecko_instance = None
+
+
+def get_coingecko_client() -> CoinGeckoClient:
+    """Get or create the Elfa API client singleton instance."""
+    global _coingecko_instance
+    if _coingecko_instance is None:
+        _coingecko_instance = CoinGeckoClient()
+    return _coingecko_instance

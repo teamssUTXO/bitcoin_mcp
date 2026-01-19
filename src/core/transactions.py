@@ -1,8 +1,8 @@
 from typing import Optional
 
 from data.transactions_dataclasses import TransactionsAddress
-from src.api.mempool_client import MempoolClient
-from src.api.blockchain_client import BlockchainClient
+from src.api.mempool_client import get_mempool_client
+from src.api.blockchain_client import get_blockchain_client
 from src.data.transactions_dataclasses import TransactionInfo, TxInOut
 
 
@@ -14,8 +14,8 @@ class TransactionAnalyzer:
         """
         Initialise l'analyseur de transactions.
         """
-        self.mempool = MempoolClient()
-        self.blockchain = BlockchainClient()
+        self.mempool = get_mempool_client()
+        self.blockchain = get_blockchain_client()
 
     def get_tx_info(self, txid: str) -> Optional[str]:
         """

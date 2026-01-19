@@ -1,8 +1,8 @@
 from typing import Optional
 from datetime import datetime
 
-from api.blockchain_client import BlockchainClient
-from src.api.mempool_client import MempoolClient
+from api.blockchain_client import get_blockchain_client
+from src.api.mempool_client import get_mempool_client
 
 from src.data.block_dataclasses import LatestBlock, LatestsBlocks
 
@@ -13,8 +13,8 @@ class BlockAnalyzer:
         """
         Initialise l'analyseur de blocs.
         """
-        self.mempool = MempoolClient()
-        self.blockchain = BlockchainClient()
+        self.mempool = get_mempool_client()
+        self.blockchain = get_blockchain_client()
 
     def get_latest_block_summary(self) -> Optional[str]:
         """

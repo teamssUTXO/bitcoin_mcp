@@ -1,10 +1,11 @@
 from typing import Optional
 
-from data.market_dataclasses import BitcoinOverview, BitcoinMarket, BitcoinMarketSentiment
-from src.api.coingecko_client import CoinGeckoClient
-from src.api.alternative_client import AlternativeClient
-
+from src.data.market_dataclasses import BitcoinOverview, BitcoinMarket, BitcoinMarketSentiment
 from src.data.market_dataclasses import MarketOverview
+
+from src.api.coingecko_client import get_coingecko_client
+from src.api.alternative_client import get_alternative_client
+
 
 # TODO: voir en bas
 
@@ -15,8 +16,8 @@ class MarketAnalyzer:
         """
         Initialise l'analyseur de marché.
         """
-        self.coingecko = CoinGeckoClient()
-        self.alternative = AlternativeClient()
+        self.coingecko = get_coingecko_client()
+        self.alternative = get_alternative_client()
 
     def get_global_cryptomarket_data(self) -> Optional[str]:
         """

@@ -1,8 +1,8 @@
 from typing import Optional
 
-from api.mempool_client import MempoolClient
-from data.network_dataclasses import NetworkFees, NetworkHashrate, NetworkStats
-from src.api.blockchain_client import BlockchainClient
+from api.mempool_client import get_mempool_client
+from data.network_dataclasses import NetworkFees, NetworkStats
+from src.api.blockchain_client import get_blockchain_client
 from src.config import Config
 
 class NetworkAnalyzer:
@@ -12,8 +12,8 @@ class NetworkAnalyzer:
         """
         Initialise l'analyseur réseau.
         """
-        self.mempool = MempoolClient()
-        self.blockchain = BlockchainClient()
+        self.mempool = get_mempool_client()
+        self.blockchain = get_blockchain_client()
 
     def get_network_stats(self) -> Optional[str]:
         """

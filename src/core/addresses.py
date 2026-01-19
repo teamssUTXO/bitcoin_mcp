@@ -1,8 +1,8 @@
 from src.data.addresses_dataclasses import OverviewAddress, InfosAddress
 from typing import Optional
 
-from src.api.blockchain_client import BlockchainClient
-from src.api.mempool_client import MempoolClient
+from src.api.blockchain_client import get_blockchain_client
+from src.api.mempool_client import get_mempool_client
 
 class AddressAnalyzer:
     """Analyseur d'adresses Bitcoin"""
@@ -11,8 +11,8 @@ class AddressAnalyzer:
         """
         Initialise l'analyseur d'adresses.
         """
-        self.blockchain = BlockchainClient()
-        self.mempool = MempoolClient()
+        self.blockchain = get_blockchain_client()
+        self.mempool = get_mempool_client()
 
     def get_address_info(self, address: str) -> Optional[str]:
         """
