@@ -23,13 +23,13 @@ class NetworkAnalyzer:
             str: Statistiques réseau formatées ou None en cas d'erreur
         """
         try:
-            data = self.blockchain.get_network_stats()
+            data: dict = self.blockchain.get_network_stats()
             if not data:
                 return None
 
-            infos = NetworkStats.from_data(data)
+            infos: NetworkStats = NetworkStats.from_data(data)
 
-            result = (
+            result: str = (
                 f"=== Statistiques Réseau Bitcoin ===\n"
                 f"Prix marché: ${infos.market_price_usd:,.2f}\n"
                 f"Hashrate: {infos.hash_rate / 1_000_000_000:.2f} TH/s\n"
@@ -69,21 +69,21 @@ class NetworkAnalyzer:
             str: Frais recommandés formatés ou None en cas d'erreur
         """
         try:
-            fees = self.mempool.get_recommended_fees()
+            fees: dict = self.mempool.get_recommended_fees()
             if not fees:
                 return None
 
             tx_size = 250 # taille de transaction standard
-            infos = NetworkFees.from_data(fees)
+            infos: NetworkFees = NetworkFees.from_data(fees)
 
-            costs = {
+            costs: dict = {
                 'Rapide (~10 min)': (infos.fastest * tx_size) / Config.SATOSHI,
                 'Demi-heure': (infos.half_hour * tx_size) / Config.SATOSHI,
                 'Standard (~1h)': (infos.hour * tx_size) / Config.SATOSHI,
                 'Économique': (infos.economy * tx_size) / Config.SATOSHI
             }
 
-            result = (
+            result: str = (
                 f"=== Frais Recommandés (sat/vB) ===\n"
                 f"Plus rapide: {infos.fastest} sat/vB (~10 min); (~{list(costs.values())[0]} BTC)\n"
                 f"Demi-heure: {infos.half_hour} sat/vB (~30 min) (~{list(costs.values())[1]} BTC)\n"
@@ -111,15 +111,15 @@ class NetworkAnalyzer:
             str: Analyse de santé du réseau ou None en cas d'erreur
         """
         try:
-            stats = self.blockchain.get_network_stats()
+            stats: dict = self.blockchain.get_network_stats()
             if not stats:
                 return None
 
-            infos = NetworkStats.from_data(stats)
+            infos: NetworkStats = NetworkStats.from_data(stats)
 
             # Évaluation de la santé
-            health_score = 100
-            issues = []
+            health_score: int = 100
+            issues: list = []
 
             # Temps entre blocs (optimal: ~10 min)
             if infos.minutes_between_blocks > 15:
@@ -139,11 +139,11 @@ class NetworkAnalyzer:
                 health_score -= 15
                 issues.append("Faible volume de transactions")
 
-            status = "Excellent" if health_score >= 90 else \
+            status: str = "Excellent" if health_score >= 90 else \
                 "Bon" if health_score >= 70 else \
                     "Moyen" if health_score >= 50 else "Faible"
 
-            result = f"État du réseau: {status} ({health_score}/100)\n"
+            result: str = f"État du réseau: {status} ({health_score}/100)\n"
             if issues:
                 result += "Points d'attention: " + ", ".join(issues)
             else:
