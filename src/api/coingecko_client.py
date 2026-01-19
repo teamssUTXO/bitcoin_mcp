@@ -40,4 +40,3 @@ class CoinGeckoClient(APIClient):
         Docs : https://docs.coingecko.com/reference/simple-price
         """
         return self.get("/simple/price?ids=bitcoin&vs_currencies=usd", ttl=30)
-

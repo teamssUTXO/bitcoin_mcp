@@ -6,8 +6,8 @@ class MempoolClient(APIClient):
     def __init__(self):
         super().__init__(Config.MEMPOOL_API_URL)
 
+
     # === BITCOIN BLOCKS INFORMATIONS ===
-    
 
     def get_block_tip_height(self) -> Optional[int]:
         """
@@ -33,7 +33,7 @@ class MempoolClient(APIClient):
         result = self.get(f"/block-height/{height}", ttl=10)
         return int(result) if result else None
 
-    def get_block_info(self) -> Optional[dict]:
+    def get_blocks_info(self) -> Optional[list[dict]]:
         """
         Renvoie des infos sur les 10 derniers blocs
         Docs : https://mempool.space/docs/api/rest#get-blocks
@@ -71,31 +71,31 @@ class MempoolClient(APIClient):
         return self.get(f"/tx/{txid}", ttl=30)
 
 
-    # === BITCOIN MEMPOLLS INFORMATIONS ===
+    # === BITCOIN MINING POOLS INFORMATIONS ===
 
-    def get_mempools_rank(self) -> Optional[dict]:
+    def get_mining_pools_rank(self) -> Optional[dict]:
         """
-        Renvoie le classement des meilleures mempools depuis 3 mois
+        Renvoie le classement des meilleures mining pools depuis 3 mois
         Docs : https://mempool.space/docs/api/rest#get-mining-pools
         """
         return self.get("/v1/mining/pools/3m", ttl=30)
 
-    def get_hashrate_mempools(self) -> Optional[dict]:
+    def get_mining_pools_hashrate(self) -> Optional[dict]:
         """
-        Renvoie le hashrate des meilleures mempools depuis 3 mois
-        Docs : https://mempool.space/docs/api/rest#get-mining-pools-hashrates
+        Renvoie le hashrate des meilleures mining pools depuis 3 mois
+        Docs : https://mempool.space/docs/api/rest#get-mining-pool-hashrates
         """
         return self.get("/v1/mining/hashrate/pools/3m", ttl=30)
 
-    def get_mempool_info_by_slug(self, slug: str) -> Optional[dict]:
+    def get_mining_pool_info_by_slug(self, slug: str) -> Optional[dict]:
         """
-        Renvoie les infos d'une mempool (via slug)
+        Renvoie les infos d'un mining pool (via slug)
         Docs : https://mempool.space/docs/api/rest#get-mining-pool
         """
         return self.get(f"/v1/mining/pool/{slug}", ttl=30)
 
 
-    # === BITCOIN NETWORK INFORMATIONS ===
+    # === BITCOIN NETWORK INFORMATIONS (MEMPOOL) ===
 
     def get_mempool_info(self) -> Optional[dict]:
         """

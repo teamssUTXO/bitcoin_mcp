@@ -7,8 +7,9 @@ class APIClient:
     """Client HTTP de base avec retry, timeout et cache"""
     
     def __init__(self, base_url: str, timeout: int = 5):
-        self.base_url = base_url
-        self.timeout = timeout
+        self.base_url: str = base_url
+
+        self.timeout: int = timeout
         self._cache: Dict[str, tuple] = {}
     
     def get(self, endpoint: str, ttl: int = 60) -> Optional[Dict[Any, Any]]:
