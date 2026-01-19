@@ -28,14 +28,14 @@ class TransactionAnalyzer:
             str: Infos de transaction formatées ou None en cas d'erreur
         """
         try:
-            data = self.mempool.get_tx_info(txid)
+            data: dict = self.mempool.get_tx_info(txid)
             if not data:
                 return None
 
-            infos = TransactionInfo.from_data(data)
+            infos: TransactionInfo = TransactionInfo.from_data(data)
 
             #TODO : Faire le rapport par IA
-            result = (
+            result: str = (""
                 # f"=== Transaction ===\n"
                 # f"TXID: {txid}\n"
                 # f"Status: {infos.confirmed}\n"
@@ -68,14 +68,14 @@ class TransactionAnalyzer:
             str: Détails inputs/outputs ou None en cas d'erreur
         """
         try:
-            data = self.mempool.get_tx_info(txid)
+            data: dict = self.mempool.get_tx_info(txid)
             if not data:
                 return None
 
-            infos = TxInOut.from_data(data)
+            infos: TxInOut = TxInOut.from_data(data)
 
             # TODO : Faire le rapport par IA
-            result = (
+            result: str = (""
                 # f"=== Transaction ===\n"
                 # f"TXID: {txid}\n"
                 # f"Status: {infos.confirmed}\n"
@@ -94,10 +94,6 @@ class TransactionAnalyzer:
             return None
 
 
-    """
-    Renvoie les transactions d'une adresse
-    Docs : 
-    """
     def get_address_transactions(self, address: str) -> Optional[str]:
         """
         Récupère les transactions d'une addresse
@@ -109,13 +105,13 @@ class TransactionAnalyzer:
             str: Renvoie les id des transactions de l'adresse
         """
         try:
-            data = self.blockchain.get_address_info(address)
+            data: dict = self.blockchain.get_address_info(address)
             if not data:
                 return None
 
-            infos = TransactionsAddress.from_data(data)
+            infos: TransactionsAddress = TransactionsAddress.from_data(data)
 
-            result = ""
+            result: str = ""
             for i in range(infos.len_txs):
                 result += f"TXID : {infos.txs_hash[i]}\n"
                 result += f"Date : {infos.txs_date[i]}\n"
@@ -128,64 +124,6 @@ class TransactionAnalyzer:
 
             return result
 
-
-        except Exception as e:
-            print(f"Erreur API: 01 - {e}")
-            return None
-
-    # TODO: à implémenter dans le core puis dans le tool
-    def estimate_tx_cost(self, tx_size_vb: int, priority: str = "medium") -> Optional[str]:
-        """
-        Estime le coût d'une transaction selon sa taille et priorité.
-
-        Args:
-            tx_size_vb: Taille de la transaction en vBytes
-            priority: Priorité ('fastest', 'half_hour', 'hour', 'economy')
-
-        Returns:
-            str: Estimation du coût ou None en cas d'erreur
-        """
-        try:
-            fees = self.mempool.get_recommended_fees()
-            if not fees:
-                return None
-
-            # Mapping des priorités
-            priority_map = {
-                'fastest': 'fastestFee',
-                'half_hour': 'halfHourFee',
-                'hour': 'hourFee',
-                'economy': 'economyFee',
-                'medium': 'hourFee'
-            }
-
-            fee_key = priority_map.get(priority.lower(), 'hourFee')
-            fee_rate = fees.get(fee_key, 0)
-
-            # Calcul du coût en satoshis
-            cost_sat = tx_size_vb * fee_rate
-
-            # Conversion en BTC
-            cost_btc = cost_sat / 100_000_000
-
-            # Estimation du temps de confirmation
-            time_estimates = {
-                'fastestFee': '~10 min',
-                'halfHourFee': '~30 min',
-                'hourFee': '~60 min',
-                'economyFee': '> 2h'
-            }
-            time_estimate = time_estimates.get(fee_key, '~60 min')
-
-            result = (
-                f"=== Estimation Coût Transaction ===\n"
-                f"Taille: {tx_size_vb} vBytes\n"
-                f"Priorité: {priority}\n"
-                f"Taux: {fee_rate} sat/vB\n"
-                f"Coût total: {cost_sat:,} sat ({cost_btc:.8f} BTC)\n"
-                f"Confirmation estimée: {time_estimate}"
-            )
-            return result
 
         except Exception as e:
             print(f"Erreur API: 01 - {e}")
