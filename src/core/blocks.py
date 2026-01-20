@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime, timedelta
 
-from api.blockchain_client import get_blockchain_client
+from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 
 from src.data.block_dataclasses import LatestBlock, LatestBlocks

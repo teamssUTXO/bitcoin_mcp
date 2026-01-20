@@ -1,15 +1,15 @@
 from typing import Optional
 from datetime import datetime
 
-from data.transactions_dataclasses import TransactionsAddress
 from src.api.mempool_client import get_mempool_client
 from src.api.blockchain_client import get_blockchain_client
+
 from src.data.transactions_dataclasses import TransactionInfo, TxInOut, TxOutput, TxInput
+from src.data.transactions_dataclasses import TransactionsAddress
 
 from src.config import Config
 
 
-# TODO : remplacer les calculs dans post_init par @property
 class TransactionAnalyzer:
     """Analyseur de transactions Bitcoin"""
 

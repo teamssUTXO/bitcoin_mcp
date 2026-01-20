@@ -1,10 +1,10 @@
 from typing import Optional
 
-from src.data.market_dataclasses import BitcoinOverview, BitcoinMarket, BitcoinMarketSentiment
-from src.data.market_dataclasses import MarketOverview
-
 from src.api.coingecko_client import get_coingecko_client
 from src.api.alternative_client import get_alternative_client
+
+from src.data.market_dataclasses import BitcoinOverview, BitcoinMarket, BitcoinMarketSentiment
+from src.data.market_dataclasses import MarketOverview
 
 
 class MarketAnalyzer:

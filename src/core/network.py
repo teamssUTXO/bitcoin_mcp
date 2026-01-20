@@ -1,11 +1,12 @@
 from typing import Optional
 
-from api.mempool_client import get_mempool_client
+from src.api.mempool_client import get_mempool_client
 from src.api.blockchain_client import get_blockchain_client
 
 from data.network_dataclasses import NetworkFees, NetworkStats
 
 from src.config import Config
+
 
 class NetworkAnalyzer:
     """Analyseur du réseau Bitcoin"""

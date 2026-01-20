@@ -1,6 +1,4 @@
-from dataclasses import dataclass, field
-from src.config import Config
-from datetime import datetime
+from dataclasses import dataclass
 
 
 @dataclass

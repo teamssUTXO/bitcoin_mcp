@@ -1,10 +1,12 @@
-from src.data.addresses_dataclasses import OverviewAddress, InfosAddress
 from typing import Optional
-
-from src.config import Config
 
 from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
+
+from src.data.addresses_dataclasses import OverviewAddress, InfosAddress
+
+from src.config import Config
+
 
 class AddressAnalyzer:
     """Analyseur d'adresses Bitcoin"""

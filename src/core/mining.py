@@ -1,6 +1,7 @@
 from typing import Optional
 
 from src.api.mempool_client import get_mempool_client
+
 from src.data.mining_dataclasses import RankingMiningPools, HashratesMiningPools, MiningPoolBySlug
 
 

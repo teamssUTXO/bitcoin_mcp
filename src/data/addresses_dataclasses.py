@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from src.config import Config
 
 @dataclass
 class InfosAddress:
