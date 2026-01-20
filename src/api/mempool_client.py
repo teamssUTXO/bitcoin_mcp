@@ -14,7 +14,7 @@ class MempoolClient(APIClient):
         Renvoie la hauteur du dernier bloc
         Docs : https://mempool.space/docs/api/rest#get-block-tip-height
         """
-        result = self.get("/blocks/tip/height", ttl=10)
+        result = self.get("/blocks/tip/height")
         return int(result) if result else None
 
     def get_block_tip_hash(self) -> Optional[int]:
@@ -22,7 +22,7 @@ class MempoolClient(APIClient):
         Renvoie le hash du dernier bloc
         Docs : https://mempool.space/docs/api/rest#get-block-tip-hash
         """
-        result = self.get("/blocks/tip/hash", ttl=10)
+        result = self.get("/blocks/tip/hash",)
         return int(result) if result else None
 
     def get_block_height(self, height) -> Optional[int]:
@@ -30,7 +30,7 @@ class MempoolClient(APIClient):
         Renvoie le hash d'un bloc dont la hauteur est passé en paramètre
         Docs : https://mempool.space/docs/api/rest#get-block-height
         """
-        result = self.get(f"/block-height/{height}", ttl=10)
+        result = self.get(f"/block-height/{height}")
         return int(result) if result else None
 
     def get_blocks_info(self) -> Optional[list[dict]]:
@@ -38,7 +38,7 @@ class MempoolClient(APIClient):
         Renvoie des infos sur les 10 derniers blocs
         Docs : https://mempool.space/docs/api/rest#get-blocks
         """
-        return self.get("/v1/blocks", ttl=30)
+        return self.get("/v1/blocks")
 
 
     # === BITCOIN FEES INFORMATIONS ===
@@ -48,7 +48,7 @@ class MempoolClient(APIClient):
         Renvoie le ratio de frais de transactions recommandés
         Docs : https://mempool.space/docs/api/rest#get-recommended-fees-precise
         """
-        return self.get("/v1/fees/recommended/precise", ttl=30)
+        return self.get("/v1/fees/recommended/precise")
 
 
     # === BITCOIN ADDRESSES INFORMATIONS ===
@@ -58,7 +58,7 @@ class MempoolClient(APIClient):
         Renvoie les infos d'une adresse bitcoin
         Docs : https://mempool.space/docs/api/rest#get-address
         """
-        return self.get(f"/address/{address}", ttl=60)
+        return self.get(f"/address/{address}")
 
 
     # === BITCOIN TRANSACTIONS INFORMATIONS ===
@@ -68,7 +68,7 @@ class MempoolClient(APIClient):
         Renvoie des infos sur une transaction
         Docs : https://mempool.space/docs/api/rest#get-transaction
         """
-        return self.get(f"/tx/{txid}", ttl=30)
+        return self.get(f"/tx/{txid}")
 
 
     # === BITCOIN MINING POOLS INFORMATIONS ===
@@ -78,21 +78,21 @@ class MempoolClient(APIClient):
         Renvoie le classement des meilleures mining pools depuis 3 mois
         Docs : https://mempool.space/docs/api/rest#get-mining-pools
         """
-        return self.get("/v1/mining/pools/3m", ttl=30)
+        return self.get("/v1/mining/pools/3m")
 
     def get_mining_pools_hashrate(self) -> Optional[dict]:
         """
         Renvoie le hashrate des meilleures mining pools depuis 3 mois
         Docs : https://mempool.space/docs/api/rest#get-mining-pool-hashrates
         """
-        return self.get("/v1/mining/hashrate/pools/3m", ttl=30)
+        return self.get("/v1/mining/hashrate/pools/3m")
 
     def get_mining_pool_info_by_slug(self, slug: str) -> Optional[dict]:
         """
         Renvoie les infos d'un mining pool (via slug)
         Docs : https://mempool.space/docs/api/rest#get-mining-pool
         """
-        return self.get(f"/v1/mining/pool/{slug}", ttl=30)
+        return self.get(f"/v1/mining/pool/{slug}")
 
 
     # === BITCOIN NETWORK INFORMATIONS (MEMPOOL) ===
@@ -102,7 +102,7 @@ class MempoolClient(APIClient):
         Renvoie des infos sur la mempool de mempool.space
         Docs : https://mempool.space/docs/api/rest#get-mempool
         """
-        return self.get("/mempool", ttl=30)
+        return self.get("/mempool")
 
 
 # Singleton instance for the client

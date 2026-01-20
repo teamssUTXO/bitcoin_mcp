@@ -7,7 +7,7 @@ from src.config import Config
 class APIClient:
     """Client HTTP de base avec retry, timeout et cache"""
     
-    def __init__(self, base_url: str, timeout: int = 5):
+    def __init__(self, base_url: str):
         self.base_url: str = base_url
 
         self.timeout: int = Config.API_TIMEOUT

@@ -14,14 +14,14 @@ class AlternativeClient(APIClient):
         Renvoie des infos sur le marché des crytomonnaies
         Docs : https://alternative.me/crypto/api/
         """
-        return self.get("/v2/global", ttl=30)
+        return self.get("/v2/global")
 
     def get_fear_greed_index(self) -> Optional[dict]:
         """
         Renvoie l'indice 'Fear & Greed' sur le marché crypto sur 7 jours
         Docs : https://alternative.me/crypto/fear-and-greed-index/#api
         """
-        return self.get("/fng/?limit=7", ttl=30)
+        return self.get("/fng/?limit=7")
 
 # Singleton instance for the client
 _alternative_instance = None
