@@ -18,14 +18,14 @@ def get_info_about_address(address: str) -> Optional[str]:
     return data
 
 
-def get_address_overview() -> Optional[str]:
+def get_address_overview(address: str) -> Optional[str]:
     """
     Use this to get more overview of an address
     """
 
     addresses_analyzer = get_addresses_analyser_client()
 
-    data: str = addresses_analyzer.get_address_info_overview()
+    data: str = addresses_analyzer.get_address_info_overview(address)
     return data
 
 

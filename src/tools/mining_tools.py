@@ -26,7 +26,7 @@ def get_mining_pools_hashrates_3month() -> Optional[str]:
     return data
 
 
-def get_top1_mining_pool(address: str) -> Optional[str]:
+def get_top1_mining_pool() -> Optional[str]:
     """
     Use this to get the top 1 pool actually
     """
