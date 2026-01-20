@@ -1,8 +1,10 @@
+from typing import Optional
+
 from mcp.server.fastmcp import FastMCP
 from src.core.transactions import get_transactions_analyser_client
 
 
-def get_bitcoin_transaction_infos(txid: str) -> str:
+def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
     """
     Use this to get information about a transaction
 
@@ -16,7 +18,7 @@ def get_bitcoin_transaction_infos(txid: str) -> str:
     return data
 
 
-def get_transaction_input_output(txid: str) -> str:
+def get_transaction_input_output(txid: str) -> Optional[str]:
     """
     Use this to get details input and output of a transaction
 
@@ -30,7 +32,7 @@ def get_transaction_input_output(txid: str) -> str:
     return data
 
 
-def get_transactions_of_address(address: str) -> str:
+def get_transactions_of_address(address: str) -> Optional[str]:
     """
     Use this to get address's transactions
 

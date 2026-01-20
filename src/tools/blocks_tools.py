@@ -1,8 +1,10 @@
+from typing import Optional
+
 from mcp.server.fastmcp import FastMCP
 from src.core.blocks import get_blocks_analyser_client
 
 
-def get_summary_of_latest_block() -> str:
+def get_summary_of_latest_block() -> Optional[str]:
     """
     Use this to get a summary of the latest block mined
     """
@@ -13,7 +15,7 @@ def get_summary_of_latest_block() -> str:
     return data
 
 
-def get_block_hash_with_height(height: int) -> str:
+def get_block_hash_with_height(height: int) -> Optional[str]:
     """
     Use this to get a block's hash with his height
 
@@ -27,7 +29,7 @@ def get_block_hash_with_height(height: int) -> str:
     return data
 
 
-def get_10_latest_blocks_informations() -> str:
+def get_10_latest_blocks_informations() -> Optional[str]:
     """
     Use this to get information and statistics about 10 latest blocks mined
     """

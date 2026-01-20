@@ -1,8 +1,10 @@
+from typing import Optional
+
 from mcp.server.fastmcp import FastMCP
 from src.core.market import get_market_analyser_client
 
 
-def get_cryptomarket_overview() -> str:
+def get_cryptomarket_overview() -> Optional[str]:
     """
     Use this to get cryptomarket overview
     """
@@ -13,7 +15,7 @@ def get_cryptomarket_overview() -> str:
     return data
 
 
-def get_bitcoin_price_usd() -> str:
+def get_bitcoin_price_usd() -> Optional[str]:
     """
     Use this to get bitcoin price usd and others little information
     """
@@ -24,7 +26,7 @@ def get_bitcoin_price_usd() -> str:
     return data
 
 
-def get_bitcoin_market_data() -> str:
+def get_bitcoin_market_data() -> Optional[str]:
     """
     Use this to get bitcoin market data (big report)
     """

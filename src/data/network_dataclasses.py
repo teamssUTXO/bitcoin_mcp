@@ -17,7 +17,7 @@ class NetworkStats:
         self.n_blocks_total = self.data.get("n_blocks_total", 0)
         self.estimated_transaction_volume_usd = self.data.get("estimated_transaction_volume_usd", 0)
         self.blocks_size = self.data.get("blocks_size", 0)
-        self.miners_revenue_usd = self.data.get("miners_revenues_usd", 0)
+        self.miners_revenues_usd = self.data.get("miners_revenues_usd", 0)
         self.nextretarget = self.data.get("nextretarget", 0)
         self.difficulty = self.data.get("difficulty", 0)
         self.estimated_btc_sent = self.data.get("estimated_btc_sent", 0)

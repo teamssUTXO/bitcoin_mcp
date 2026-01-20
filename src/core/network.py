@@ -35,7 +35,7 @@ class NetworkAnalyzer:
             result: str = (
                 f"=== Statistiques Réseau Bitcoin ===\n"
                 f"Prix marché: ${infos.market_price_usd:,.2f}\n"
-                f"Hashrate: {infos.hash_rate / 1_000_000_000:.2f} TH/s\n"
+                f"Hashrate: {infos.hash_rate / 1_000_000_000_000:.2f} TH/s\n"
                 f"Difficulté: {infos.difficulty:,.0f}\n"
                 f"Prochain ajustement: Bloc #{infos.nextretarget}\n"
                 f"\n=== Blocs ===\n"
@@ -50,7 +50,7 @@ class NetworkAnalyzer:
                 f"\n=== Mining ===\n"
                 f"BTC minés (24h): {infos.n_btc_mined / 100_000_000:.2f} BTC\n"
                 f"Frais totaux: {infos.total_fees_btc / 100_000_000:.8f} BTC\n"
-                f"Revenus mineurs: {infos.miners_revenue_btc:.2f} BTC (${infos.miners_revenue_usd:,.0f})\n"
+                f"Revenus mineurs: {infos.miners_revenue_btc:.2f} BTC (${infos.miners_revenues_usd:,.0f})\n"
                 f"\n=== Supply ===\n"
                 f"BTC en circulation: {infos.totalbc:,.2f} BTC"
             )
@@ -90,9 +90,8 @@ class NetworkAnalyzer:
                 f"=== Frais Recommandés (sat/vB) ===\n"
                 f"Plus rapide: {infos.fastest} sat/vB (~10 min); (~{list(costs.values())[0]} BTC)\n"
                 f"Demi-heure: {infos.half_hour} sat/vB (~30 min) (~{list(costs.values())[1]} BTC)\n"
-                f"Une heure: {infos.hour} sat/vB (~60 min) (~{list(costs.values())[2]} BTC)\n"
+                f"Standard: {infos.hour} sat/vB (~60 min) (~{list(costs.values())[2]} BTC)\n"
                 f"Économique: {infos.economy} sat/vB (~{list(costs.values())[3]} BTC)\n"
-                f"Minimum: {infos.minimum} sat/vB (~{list(costs.values())[4]} BTC)"
             )
 
             return result

@@ -1,7 +1,9 @@
+from typing import Optional
+
 from mcp.server.fastmcp import FastMCP
 from src.core.network import get_network_analyser_client
 
-def get_bitcoin_network_overview() -> str:
+def get_bitcoin_network_overview() -> Optional[str]:
     """
     Use this for general Bitcoin blockchain questions about current state, health, or status.
 
@@ -21,7 +23,7 @@ def get_bitcoin_network_overview() -> str:
     return data
 
 
-def get_bitcoin_network_recommended_fees() -> str:
+def get_bitcoin_network_recommended_fees() -> Optional[str]:
     """
     Use this to get bitcoin transactions recommended fees
     """
@@ -31,7 +33,7 @@ def get_bitcoin_network_recommended_fees() -> str:
     data: str = network_analyzer.get_network_recommended_fees()
     return data
 
-def get_bitcoin_network_health() -> str:
+def get_bitcoin_network_health() -> Optional[str]:
     """
     Use this to get the global bitcoin network health
     """

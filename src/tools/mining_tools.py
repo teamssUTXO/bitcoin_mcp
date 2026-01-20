@@ -1,8 +1,10 @@
+from typing import Optional
+
 from mcp.server.fastmcp import FastMCP
 from src.core.mining import get_mining_analyser_client
 
 
-def get_top_10_mining_pools_rank() -> str:
+def get_top_10_mining_pools_rank() -> Optional[str]:
     """
     Use this to get top 10 mining pools rank
     """
@@ -13,7 +15,7 @@ def get_top_10_mining_pools_rank() -> str:
     return data
 
 
-def get_mining_pools_hashrates_3month() -> str:
+def get_mining_pools_hashrates_3month() -> Optional[str]:
     """
     Use this to get top 10 mining pools hashrates 3month
     """
@@ -24,7 +26,7 @@ def get_mining_pools_hashrates_3month() -> str:
     return data
 
 
-def get_top1_mining_pool(address: str) -> str:
+def get_top1_mining_pool(address: str) -> Optional[str]:
     """
     Use this to get the top 1 pool actually
     """
@@ -34,7 +36,7 @@ def get_top1_mining_pool(address: str) -> str:
     data: str = mining_analyzer.get_top_pool()
     return data
 
-def get_mining_pool_by_slug(slug: str) -> str:
+def get_mining_pool_by_slug(slug: str) -> Optional[str]:
     """
     Use this to get information about a mining pool by slug
 

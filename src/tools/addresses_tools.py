@@ -1,8 +1,10 @@
+from typing import Optional
+
 from mcp.server.fastmcp import FastMCP
 from src.core.addresses import get_addresses_analyser_client
 
 
-def get_info_about_address(address: str) -> str:
+def get_info_about_address(address: str) -> Optional[str]:
     """
     Use this to get more information about an address
 
@@ -16,7 +18,7 @@ def get_info_about_address(address: str) -> str:
     return data
 
 
-def get_address_overview() -> str:
+def get_address_overview() -> Optional[str]:
     """
     Use this to get more overview of an address
     """
