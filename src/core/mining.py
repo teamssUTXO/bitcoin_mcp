@@ -59,7 +59,7 @@ class MiningPoolAnalyzer:
             str: Hashrates formatés ou None en cas d'erreur
         """
         try:
-            data: dict = self.mempool.get_mining_pools_hashrate()
+            data: list = self.mempool.get_mining_pools_hashrate()
             if not data:
                 return None
 
@@ -68,12 +68,16 @@ class MiningPoolAnalyzer:
             result: str = "=== Hashrates Mining Pools (3 mois) ===\n"
 
             for i, pool in enumerate(infos.pools, 1):
-                pool_id: int = pool['id']
-                hashrate_eh: int = pool['hashrate'] / 1_000_000_000_000_000_000  # EH/s
-                share: int = pool['share'] * 100
+                pool_id: int = pool.get('id', 0)
+                hashrate: int = pool.get('hashrate', 0)
+                if hashrate > 0:
+                    hashrate: float = hashrate / 1_000_000_000_000_000_000  # EH/s
+                share: float = (pool.get('share', 0))
+                if share > 0:
+                    share *= 100
 
                 result += f"{i}. Pool #{pool_id}\n"
-                result += f"   Hashrate: {hashrate_eh:.2f} EH/s\n"
+                result += f"   Hashrate: {hashrate:.2f} EH/s\n"
                 result += f"   Part du réseau: {share:.2f}%"
 
             return str(result)
@@ -147,16 +151,6 @@ class MiningPoolAnalyzer:
                 unit = u
             formatted_hashrate = f"{hr:.2f} {unit}"
 
-            if infos.block_count:
-                blocks_txt = "\n".join([f"  • {k}: {v:,}" for k, v in infos.block_count.items()])
-            else:
-                blocks_txt = "  • Données indisponibles"
-
-            if infos.block_share:
-                share_txt = "\n".join([f"  • {k}: {v}%" for k, v in infos.block_share.items()])
-            else:
-                share_txt = "  • Données indisponibles"
-
             if infos.addresses:
                 addr_list = "\n".join([f"  - {addr}" for addr in infos.addresses])
             else:
@@ -169,15 +163,13 @@ class MiningPoolAnalyzer:
                 f"\n"
                 f"--- Performance Technique ---\n"
                 f"Puissance (Hashrate): {formatted_hashrate}\n"
-                f"Santé des blocs (Health): {infos.block_health}%\n"
-                f"Récompenses totales: {infos.total_reward:,.4f}\n"
                 f"\n"
                 f"--- Statistiques de Blocs ---\n"
                 f"Nombre de blocs trouvés :\n"
-                f"{blocks_txt}\n"
+                f"{infos.block_count}\n"
                 f"\n"
                 f"Part du réseau (Block Share) :\n"
-                f"{share_txt}\n"
+                f"{infos.block_share}\n"
                 f"\n"
                 f"--- Adresses du Pool ---\n"
                 f"{addr_list}\n"

@@ -15,7 +15,7 @@ class MempoolClient(APIClient):
         Docs : https://mempool.space/docs/api/rest#get-block-tip-height
         """
         result = self.get("/blocks/tip/height")
-        return int(result) if result else None
+        return str(result) if result else None
 
     def get_block_tip_hash(self) -> Optional[int]:
         """
@@ -23,15 +23,15 @@ class MempoolClient(APIClient):
         Docs : https://mempool.space/docs/api/rest#get-block-tip-hash
         """
         result = self.get("/blocks/tip/hash",)
-        return int(result) if result else None
+        return str(result) if result else None
 
-    def get_block_height(self, height) -> Optional[int]:
+    def get_block_height(self, height: int) -> Optional[str]:
         """
         Renvoie le hash d'un bloc dont la hauteur est passé en paramètre
         Docs : https://mempool.space/docs/api/rest#get-block-height
         """
         result = self.get(f"/block-height/{height}")
-        return int(result) if result else None
+        return str(result) if result else None
 
     def get_blocks_info(self) -> Optional[list[dict]]:
         """
@@ -48,7 +48,7 @@ class MempoolClient(APIClient):
         Renvoie le ratio de frais de transactions recommandés
         Docs : https://mempool.space/docs/api/rest#get-recommended-fees-precise
         """
-        return self.get("/v1/fees/recommended/precise")
+        return self.get("/v1/fees/recommended")
 
 
     # === BITCOIN ADDRESSES INFORMATIONS ===
@@ -80,7 +80,7 @@ class MempoolClient(APIClient):
         """
         return self.get("/v1/mining/pools/3m")
 
-    def get_mining_pools_hashrate(self) -> Optional[dict]:
+    def get_mining_pools_hashrate(self) -> Optional[list]:
         """
         Renvoie le hashrate des meilleures mining pools depuis 3 mois
         Docs : https://mempool.space/docs/api/rest#get-mining-pool-hashrates

@@ -57,11 +57,9 @@ class NetworkAnalyzer:
             return result
 
         except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
+            return f"Erreur type: 02 - Clé manquante: {e}"
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
-            return None
+            return f"Erreur API: 02 - {e}"
 
 
     def get_network_recommended_fees(self) -> Optional[str]:
@@ -98,11 +96,9 @@ class NetworkAnalyzer:
 
 
         except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
+            return f"Erreur type: 02 - Clé manquante: {e}"
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
-            return None
+            return f"Erreur API: 01 - {e}"
 
 
     def get_network_health(self) -> Optional[str]:
@@ -154,8 +150,7 @@ class NetworkAnalyzer:
             return result
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
-            return None
+            return f"Erreur API: 01 - {e}"
 
 
 # Singleton instance for the analyzer

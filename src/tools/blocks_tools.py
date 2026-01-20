@@ -23,6 +23,9 @@ def get_block_hash_with_height(height: int) -> Optional[str]:
         height: block height (int)
     """
 
+    if not height:
+        return "no parameters"
+
     blocks_analyzer = get_blocks_analyser_client()
 
     data: str = blocks_analyzer.get_block_by_height(height)

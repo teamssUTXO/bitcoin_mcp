@@ -17,13 +17,13 @@ class RankingMiningPools:
 
 @dataclass
 class HashratesMiningPools:
-    data: dict
+    data: list
 
     def __post_init__(self):
-        self.pools: list = self.data.get("pools", [])[:10]
+        self.pools: list = self.data[:10]
 
     @classmethod
-    def from_data(cls, data: dict) -> HashratesMiningPools:
+    def from_data(cls, data: list) -> HashratesMiningPools:
         return cls(
             data = data
         )
@@ -49,11 +49,9 @@ class MiningPoolBySlug:
 
     def __post_init__(self):
         self.pool_infos = self.data.get("pool", {})
-        self.block_count = self.data.get('blockCount', {})
-        self.block_share = self.data.get('blockShare', {})
+        self.block_count = self.data.get('blockCount', {}).get("all", 0)
+        self.block_share = self.data.get('blockShare', {}).get("all", 0)
         self.hashrate = self.data.get("reportedHashrate") or self.data.get("estimatedHashrate", 0)
-        self.block_health = self.data.get('avgBlockHealth', 0)
-        self.total_reward = self.data.get("totalReward", 0)
 
         self.name = self.pool_infos.get('name', 'Unknown')
         self.link = self.pool_infos.get('link', "")

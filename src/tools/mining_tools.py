@@ -44,6 +44,9 @@ def get_mining_pool_by_slug(slug: str) -> Optional[str]:
         slug: slug of the mining pool
     """
 
+    if not slug:
+        return "no parameters"
+
     mining_analyzer = get_mining_analyser_client()
 
     data: str = mining_analyzer.get_pool_by_slug(slug)

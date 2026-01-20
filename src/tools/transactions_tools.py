@@ -12,6 +12,9 @@ def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
         txid: Transaction ID
     """
 
+    if not txid:
+        return "no parameters"
+
     transactions_analyzer = get_transactions_analyser_client()
 
     data: str = transactions_analyzer.get_tx_info(txid)
@@ -26,6 +29,9 @@ def get_transaction_input_output(txid: str) -> Optional[str]:
         txid: Transaction ID
     """
 
+    if not txid:
+        return "no parameters"
+
     transactions_analyzer = get_transactions_analyser_client()
 
     data: str = transactions_analyzer.get_tx_inputs_outputs(txid)
@@ -39,6 +45,9 @@ def get_transactions_of_address(address: str) -> Optional[str]:
     Args:
         address: Address to get transactions
     """
+
+    if not address:
+        return "no parameters"
 
     transactions_analyzer = get_transactions_analyser_client()
 
