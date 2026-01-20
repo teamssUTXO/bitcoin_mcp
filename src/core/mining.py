@@ -138,12 +138,50 @@ class MiningPoolAnalyzer:
 
             infos: MiningPoolBySlug = MiningPoolBySlug.from_data(data)
 
-            # TODO : faire avec l'IA
-            result = (""
-                # f"=== {name} ===\n"
-                # f"Classement: #{rank}\n"
-                # f"Blocs minés (3 mois): {block_count:,}\n"
-                # f"Part du réseau: {percentage:.2f}%"
+
+            hr = infos.hashrate
+            unit = "H/s"
+            for u in ["H/s", "KH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s"]:
+                if hr < 1000:
+                    break
+                hr /= 1000
+                unit = u
+            formatted_hashrate = f"{hr:.2f} {unit}"
+
+            if infos.block_count:
+                blocks_txt = "\n".join([f"  • {k}: {v:,}" for k, v in infos.block_count.items()])
+            else:
+                blocks_txt = "  • Données indisponibles"
+
+            if infos.block_share:
+                share_txt = "\n".join([f"  • {k}: {v}%" for k, v in infos.block_share.items()])
+            else:
+                share_txt = "  • Données indisponibles"
+
+            if infos.addresses:
+                addr_list = "\n".join([f"  - {addr}" for addr in infos.addresses])
+            else:
+                addr_list = "  - Aucune adresse listée"
+
+            result: str = (
+                f"=== Détails du Pool de Minage ===\n"
+                f"Nom: {infos.name}\n"
+                f"Site Web: {infos.link}\n"
+                f"\n"
+                f"--- Performance Technique ---\n"
+                f"Puissance (Hashrate): {formatted_hashrate}\n"
+                f"Santé des blocs (Health): {infos.block_health}%\n"
+                f"Récompenses totales: {infos.total_reward:,.4f}\n"
+                f"\n"
+                f"--- Statistiques de Blocs ---\n"
+                f"Nombre de blocs trouvés :\n"
+                f"{blocks_txt}\n"
+                f"\n"
+                f"Part du réseau (Block Share) :\n"
+                f"{share_txt}\n"
+                f"\n"
+                f"--- Adresses du Pool ---\n"
+                f"{addr_list}\n"
             )
             return result
 
@@ -178,15 +216,24 @@ class MiningPoolAnalyzer:
             bottom_pool = min(infos.pools, key=lambda x: x.get('blockCount', 0))
             bottom_pool_blocks = bottom_pool.get('blockCount', 0)
 
-            # TODO : à faire avec l'IA
-            result = ( ""
-                # f"=== Statistiques Mining (3 mois) ===\n"
-                # f"Nombre de pools: {num_pools}\n"
-                # f"Total blocs minés: {infos.total_blocks:,}\n"
-                # f"Moyenne par pool: {avg_blocks_per_pool:.0f} blocs\n"
-                # f"\n🏆 Pool #1: {top_pool_name} ({top_pool_blocks:,} blocs)\n"
-                # f"📉 Pool le moins actif: {bottom_pool_blocks:,} blocs"
+            dominance_percentage = (top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
+
+            result: str = (
+                f"=== Statistiques Globales du Minage (Bitcoin) ===\n"
+                f"Pools actifs recensés : {num_pools}\n"
+                f"Total de blocs minés : {total_blocks:,}\n"
+                f"Moyenne par pool : {avg_blocks_per_pool:,.2f} blocs\n"
+                f"\n"
+                f"--- Dominance du Réseau ---\n"
+                f"🏆 Leader actuel : {top_pool_name}\n"
+                f"   Volume : {top_pool_blocks:,} blocs\n"
+                f"   Dominance : {dominance_percentage:.2f}% du réseau\n"
+                f"\n"
+                f"--- Écart de Puissance ---\n"
+                f"Plus petit acteur : {bottom_pool_blocks} bloc(s)\n"
+                f"Ratio Leader/Moyenne : x{(top_pool_blocks / avg_blocks_per_pool):.1f}\n"
             )
+
             return result
 
         except Exception as e:

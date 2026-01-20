@@ -52,19 +52,33 @@ class TransactionAnalyzer:
             date_str = datetime.fromtimestamp(transaction_block_time).strftime(
                 '%Y-%m-%d %H:%M:%S') if transaction_block_time else 'Non confirmée'
 
-            #TODO : Faire le rapport par IA
-            result: str = (""
-                # f"=== Transaction ===\n"
-                # f"TXID: {txid}\n"
-                # f"Status: {infos.confirmed}\n"
-                # f"Bloc: #{infos.infosblock_height} | {infos.block_hash} | {infos.date_str}\n"
-                # f"\n=== Détails ===\n"
-                # f"Taille: {infos.size} bytes | Weight: {infos.weight}\n"
-                # f"Inputs: {infos.vin_count} | Outputs: {infos.vout_count}\n"
-                # f"Montant total: {infos.total_output_btc:.8f} BTC\n"
-                # f"Frais: {infos.fee:,} sat ({infos.fee_rate:.2f} sat/vB)\n"
-                # f"Version: {infos.version} | Locktime: {infos.locktime}"
+            total_sats_out = sum(out.get('value', 0) for out in infos.vout)
+            total_btc_out = total_sats_out / Config.SATOSHI
+
+            sat_per_byte = infos.fee / infos.size if infos.size > 0 else 0
+
+            status_icon = "✅" if infos.status.get("confirmed") else "⏳"
+
+            result: str = (
+                f"=== Transaction {status_icon} ===\n"
+                f"Statut: {transaction_status}\n"
+                f"Date: {date_str}\n"
+                f"\n"
+                f"--- Économie & Flux ---\n"
+                f"Montant Total: {total_btc_out:,.8f} BTC\n"
+                f"Frais payés: {fee_btc:,.8f} BTC\n"
+                f"Taux de frais: {sat_per_byte:.2f} sat/vB\n"
+                f"\n"
+                f"--- Structure Technique ---\n"
+                f"Taille: {infos.size:,} bytes\n"
+                f"Entrées (Inputs): {nb_inputs}\n"
+                f"Sorties (Outputs): {nb_outputs}\n"
+                f"\n"
+                f"--- Informations du Bloc ---\n"
+                f"Hauteur (Height): {transaction_block_height:,}\n"
+                f"Hash du bloc: {transaction_block_hash}\n"
             )
+
             return result
 
         except KeyError as e:
@@ -104,19 +118,50 @@ class TransactionAnalyzer:
             addresses_in: list = [i.address for i in inputs]
             addresses_out: list = [o.address for o in outputs]
 
-            # TODO : Faire le rapport par IA
-            result: str = (""
-                # f"=== Transaction ===\n"
-                # f"TXID: {txid}\n"
-                # f"Status: {infos.confirmed}\n"
-                # f"Bloc: #{infos.infosblock_height} | {infos.block_hash} | {infos.date_str}\n"
-                # f"\n=== Détails ===\n"
-                # f"Taille: {infos.size} bytes | Weight: {infos.weight}\n"
-                # f"Inputs: {infos.vin_count} | Outputs: {infos.vout_count}\n"
-                # f"Montant total: {infos.total_output_btc:.8f} BTC\n"
-                # f"Frais: {infos.fee:,} sat ({infos.fee_rate:.2f} sat/vB)\n"
-                # f"Version: {infos.version} | Locktime: {infos.locktime}"
+            fee_network = total_input_btc - total_output_btc
+
+            detailed_in_lines = []
+            for i in inputs:
+                addr = i.address if i.address else "SYSTEM (Coinbase/Mint)"
+                val = i.value / Config.SATOSHI
+                detailed_in_lines.append(f"  [IN]  {val:12.8f} BTC | Depuis: {addr}")
+
+            detailed_out_lines = []
+            for o in outputs:
+                addr = o.address if o.address else "DATA (OP_RETURN)"
+                val = o.value / Config.SATOSHI
+                detailed_out_lines.append(f"  [OUT] {val:12.8f} BTC | Vers:   {addr}")
+
+            clean_in_addrs = [a for a in addresses_in if a]
+            clean_out_addrs = [a for a in addresses_out if a]
+
+            list_in_txt = "\n".join(
+                [f"  - {a}" for a in clean_in_addrs]) if clean_in_addrs else "  - Aucune adresse publique (Coinbase)"
+            list_out_txt = "\n".join(
+                [f"  - {a}" for a in clean_out_addrs]) if clean_out_addrs else "  - Aucune adresse standard"
+
+            result: str = (
+                f"=== Analyse Complète de la Transaction ===\n"
+                f"--- Bilan Comptable ---\n"
+                f"Volume Entrant: {total_input_btc:,.8f} BTC\n"
+                f"Volume Sortant: {total_output_btc:,.8f} BTC\n"
+                f"Frais Réseau:   {fee_network:,.8f} BTC\n"
+                f"\n"
+                f"--- Flux Détaillé (UTXO) ---\n"
+                f"Mouvements Entrants :\n"
+                f"{chr(10).join(detailed_in_lines)}\n"
+                f"\n"
+                f"Mouvements Sortants :\n"
+                f"{chr(10).join(detailed_out_lines)}\n"
+                f"\n"
+                f"--- Carnet des Participants ---\n"
+                f"Liste des expéditeurs ({len(clean_in_addrs)}) :\n"
+                f"{list_in_txt}\n"
+                f"\n"
+                f"Liste des destinataires ({len(clean_out_addrs)}) :\n"
+                f"{list_out_txt}\n"
             )
+
             return result
 
         except Exception as e:
