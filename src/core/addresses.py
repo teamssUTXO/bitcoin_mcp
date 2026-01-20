@@ -136,3 +136,14 @@ class AddressAnalyzer:
         except Exception as e:
             print(f"Erreur API: 01 - {e}")
             return None
+
+
+# Singleton instance for the analyzer
+_addresses_analyser_instance = None
+
+def get_addresses_analyser_client() -> AddressAnalyzer:
+    """Get or create the Addresses Analyzer client singleton instance."""
+    global _addresses_analyser_instance
+    if _addresses_analyser_instance is None:
+        _addresses_analyser_instance = AddressAnalyzer()
+    return _addresses_analyser_instance

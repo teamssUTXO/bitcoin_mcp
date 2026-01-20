@@ -51,7 +51,6 @@ class MiningPoolAnalyzer:
             print(f"Erreur API: 01 - {e}")
             return None
 
-    @property
     def get_mining_pool_hashrates(self) -> Optional[str]:
         """
         Récupère les hashrates du top 10 des mining pools sur 3 mois.
@@ -239,3 +238,14 @@ class MiningPoolAnalyzer:
         except Exception as e:
             print(f"Erreur API: 01 - {e}")
             return None
+
+
+# Singleton instance for the analyzer
+_mining_analyser_instance = None
+
+def get_mining_analyser_client() -> MiningPoolAnalyzer:
+    """Get or create the Mining Pool Analyzer client singleton instance."""
+    global _mining_analyser_instance
+    if _mining_analyser_instance is None:
+        _mining_analyser_instance = MiningPoolAnalyzer()
+    return _mining_analyser_instance

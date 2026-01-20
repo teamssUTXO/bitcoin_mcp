@@ -84,8 +84,21 @@ class BlockAnalyzer:
 
             result_lines: list = ["=== 10 Derniers Blocs ==="]
 
+            total_tx: int = sum(infos.txs_count)
+            avg_tx: float = total_tx / len(data)
+            total_size: int = sum(infos.sizes)
+            avg_size: float = total_size / len(data)
+
+            if len(infos.timestamps) >= 2:
+                time_diffs: list = [infos.timestamps[i] - infos.timestamps[i + 1] for i in
+                                    range(len(infos.timestamps) - 1)]
+                avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # en minutes
+            else:
+                avg_time: int = 0
+
             for i in range(len(data)):
                 result_lines.append(
+                    f"=== Informations (10 derniers blocs) ===\n"
                     f"\nBloc #{infos.heights[i]:,} | ID: {infos.ids[i]}\n"
                     f"Date: {infos.timestamps[i]}\n"
                     f"Transactions: {infos.txs_count[i]:,}\n"
@@ -95,6 +108,11 @@ class BlockAnalyzer:
                     f"Récompense: {infos.rewards[i]:,} sats\n"
                     f"Pool: {infos.pools_slug[i]}\n"
                     f"Nonce: {infos.nonces[i]}"
+                    f"=== Statistiques (10 derniers blocs) ===\n"
+                    f"Total transactions: {total_tx:,}\n"
+                    f"Moyenne par bloc: {avg_tx:.0f} tx\n"
+                    f"Taille moyenne: {avg_size / 1_000_000:.2f} MB\n"
+                    f"Temps moyen entre blocs: {avg_time:.2f} min"
                 )
 
             return "\n".join(result_lines)
@@ -106,40 +124,13 @@ class BlockAnalyzer:
             print(f"Erreur API: 01 - {e}")
             return None
 
-    def get_block_stats(self) -> Optional[str]:
-        """
-        Calcule des statistiques sur les 10 derniers blocs.
 
-        Returns:
-            str: Statistiques des blocs ou None en cas d'erreur
-        """
-        try:
-            data: list = self.mempool.get_blocks_info()
-            if not data:
-                return None
+# Singleton instance for the analyzer
+_blocks_analyser_instance = None
 
-            infos: LatestBlocks = LatestBlocks.from_data(data)
-
-            total_tx: int = sum(infos.txs_count)
-            avg_tx: float = total_tx / len(data)
-            total_size: int = sum(infos.sizes)
-            avg_size: float = total_size / len(data)
-
-            if len(infos.timestamps) >= 2:
-                time_diffs: list = [infos.timestamps[i] - infos.timestamps[i + 1] for i in range(len(infos.timestamps) - 1)]
-                avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # en minutes
-            else:
-                avg_time: int = 0
-
-            result: str = (
-                f"=== Statistiques (10 derniers blocs) ===\n"
-                f"Total transactions: {total_tx:,}\n"
-                f"Moyenne par bloc: {avg_tx:.0f} tx\n"
-                f"Taille moyenne: {avg_size / 1_000_000:.2f} MB\n"
-                f"Temps moyen entre blocs: {avg_time:.2f} min"
-            )
-            return result
-
-        except Exception as e:
-            print(f"Erreur API: 01 - {e}")
-            return None
+def get_blocks_analyser_client() -> BlockAnalyzer:
+    """Get or create the Blocks Analyzer client singleton instance."""
+    global _blocks_analyser_instance
+    if _blocks_analyser_instance is None:
+        _blocks_analyser_instance = BlockAnalyzer()
+    return _blocks_analyser_instance

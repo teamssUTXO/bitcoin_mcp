@@ -226,3 +226,14 @@ class TransactionAnalyzer:
         except Exception as e:
             print(f"Erreur API: 01 - {e}")
             return None
+
+
+# Singleton instance for the analyzer
+_transactions_analyser_instance = None
+
+def get_transactions_analyser_client() -> TransactionAnalyzer:
+    """Get or create the Transactions Analyzer client singleton instance."""
+    global _transactions_analyser_instance
+    if _transactions_analyser_instance is None:
+        _transactions_analyser_instance = TransactionAnalyzer()
+    return _transactions_analyser_instance

@@ -157,3 +157,14 @@ class NetworkAnalyzer:
         except Exception as e:
             print(f"Erreur API: 01 - {e}")
             return None
+
+
+# Singleton instance for the analyzer
+_network_analyser_instance = None
+
+def get_network_analyser_client() -> NetworkAnalyzer:
+    """Get or create the Network Analyzer client singleton instance."""
+    global _network_analyser_instance
+    if _network_analyser_instance is None:
+        _network_analyser_instance = NetworkAnalyzer()
+    return _network_analyser_instance

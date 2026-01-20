@@ -224,3 +224,14 @@ class MarketAnalyzer:
         except Exception as e:
             print(f"Erreur API: 01 - {e}")
             return None
+
+
+# Singleton instance for the analyzer
+_market_analyser_instance = None
+
+def get_market_analyser_client() -> MarketAnalyzer:
+    """Get or create the Market Analyzer client singleton instance."""
+    global _market_analyser_instance
+    if _market_analyser_instance is None:
+        _market_analyser_instance = MarketAnalyzer()
+    return _market_analyser_instance
