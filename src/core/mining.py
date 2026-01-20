@@ -22,11 +22,11 @@ class MiningPoolAnalyzer:
             str: Classement formaté ou None en cas d'erreur
         """
         try:
-            pools: dict = self.mempool.get_mining_pools_rank()
-            if not pools:
+            data: dict = self.mempool.get_mining_pools_rank()
+            if not data:
                 return None
 
-            infos: RankingMiningPools = RankingMiningPools.from_data(pools)
+            infos: RankingMiningPools = RankingMiningPools.from_data(data)
 
             total_blocks = sum(p.get("blockCount", 0) for p in infos.top10_pools)
 
@@ -90,11 +90,11 @@ class MiningPoolAnalyzer:
             str: Infos du premier pool ou None en cas d'erreur
         """
         try:
-            pools: dict = self.mempool.get_mining_pools_rank()
-            if not pools:
+            data: dict = self.mempool.get_mining_pools_rank()
+            if not data:
                 return None
 
-            infos: RankingMiningPools = RankingMiningPools.from_data(pools)
+            infos: RankingMiningPools = RankingMiningPools.from_data(data)
 
             top_pool: dict = infos.pools[0]
 
@@ -131,13 +131,11 @@ class MiningPoolAnalyzer:
             str: Infos du pool ou None si non trouvé/erreur
         """
         try:
-            pool: dict = self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
-            if not pool:
+            data: dict = self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
+            if not data:
                 return None
 
-            infos: MiningPoolBySlug = MiningPoolBySlug.from_data(pool)
-
-
+            infos: MiningPoolBySlug = MiningPoolBySlug.from_data(data)
 
             # TODO : faire avec l'IA
             result = (""

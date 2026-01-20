@@ -71,12 +71,12 @@ class NetworkAnalyzer:
             str: Frais recommandés formatés ou None en cas d'erreur
         """
         try:
-            fees: dict = self.mempool.get_recommended_fees()
-            if not fees:
+            data: dict = self.mempool.get_recommended_fees()
+            if not data:
                 return None
 
             tx_size = 250 # taille de transaction standard
-            infos: NetworkFees = NetworkFees.from_data(fees)
+            infos: NetworkFees = NetworkFees.from_data(data)
 
             costs: dict = {
                 'Rapide (~10 min)': (infos.fastest * tx_size) / Config.SATOSHI,
@@ -113,11 +113,11 @@ class NetworkAnalyzer:
             str: Analyse de santé du réseau ou None en cas d'erreur
         """
         try:
-            stats: dict = self.blockchain.get_network_stats()
-            if not stats:
+            data: dict = self.blockchain.get_network_stats()
+            if not data:
                 return None
 
-            infos: NetworkStats = NetworkStats.from_data(stats)
+            infos: NetworkStats = NetworkStats.from_data(data)
 
             # Évaluation de la santé
             health_score: int = 100

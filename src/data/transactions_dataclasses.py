@@ -23,32 +23,35 @@ class TransactionInfo:
 
 @dataclass
 class TxInput:
-    txid: str
-    vout_index: int
-    address: str
-    value: int
+    data: dict
+
+    def __post_init__(self):
+        self.prev = self.data.get("prevout", {})
+
+        self.txid: str = self.data.get("txid", "")
+        self.vout_index: int = self.data.get("vout_index", 0)
+        self.address: str = self.prev.get("scriptpubkey_address", "")
+        self.value: int = self.prev.get("value", 0)
 
     @classmethod
     def from_data(cls, data: dict) -> 'TxInput':
-        prev = data.get("prevout", {})
         return cls(
-            txid = data.get('txid',""),
-            vout_index = data.get('vout_index',0),
-            address = prev.get('scriptpubkey_address',""),
-            value = prev.get('value',0)
+            data=data
         )
 
 
 @dataclass
 class TxOutput:
-    address: str
-    value: int
+    data: dict
+
+    def __post_init__(self):
+        self.address: str = self.data.get('scriptpubkey_address',"")
+        self.value: int = self.data.get('value',0)
 
     @classmethod
     def from_data(cls, data: dict) -> 'TxOutput':
         return cls(
-            address = data.get('scriptpubkey_address',""),
-            value = data.get('value',0)
+            data=data
         )
 
 
@@ -80,5 +83,3 @@ class TransactionsAddress:
         return cls(
             data=data,
         )
-
-

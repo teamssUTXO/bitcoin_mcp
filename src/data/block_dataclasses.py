@@ -34,7 +34,6 @@ class LatestBlocks:
         self.pools_slug = [block["pool"].get("slug", "Unknown") for block in self.data]
         self.nonces = [block.get("nonce", 0) for block in self.data]
 
-
     @classmethod
     def from_data(cls, data: list[dict]) -> LatestBlocks:
 

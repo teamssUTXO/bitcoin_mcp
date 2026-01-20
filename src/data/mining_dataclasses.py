@@ -37,12 +37,12 @@ class TopMiningPool:
     def __post_init__(self):
         self.pools: list = self.data.get("pools", [])
 
-
     @classmethod
     def from_data(cls, data: dict) -> TopMiningPool:
         return cls(
             data = data
         )
+
 
 @dataclass
 class MiningPoolBySlug:

@@ -34,20 +34,19 @@ class NetworkStats:
         )
 
 
-
 @dataclass
 class NetworkFees:
-    fees: dict
+    data: dict
 
     def __post_init__(self):
-        self.fastest = self.fees.get("fastestFee", 0)
-        self.half_hour = self.fees.get("halfHourFee", 0)
-        self.hour = self.fees.get("hourFee", 0)
-        self.economy = self.fees.get("economyFee", 0)
-        self.minimum = self.fees.get("minimumFee", 0)
+        self.fastest = self.data.get("fastestFee", 0)
+        self.half_hour = self.data.get("halfHourFee", 0)
+        self.hour = self.data.get("hourFee", 0)
+        self.economy = self.data.get("economyFee", 0)
+        self.minimum = self.data.get("minimumFee", 0)
 
     @classmethod
     def from_data(cls, data: dict) -> NetworkFees:
         return cls(
-            fees = data
+            data = data
         )

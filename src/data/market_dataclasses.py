@@ -82,7 +82,6 @@ class BitcoinMarket:
         self.price_change_percentage_200d = self.data.get("market_data", {}).get("price_change_percentage_200d_in_currency", {}).get("usd", 0)
         self.price_change_percentage_1y = self.data.get("market_data", {}).get("price_change_percentage_1y_in_currency", {}).get("usd", 0)
 
-
         self.price_1h_before = self.price_before(self.current_price, self.price_change_percentage_1h)
         self.price_24h_before = self.price_before(self.current_price, self.price_change_percentage_24h)
         self.price_7d_before = self.price_before(self.current_price, self.price_change_percentage_7d)
@@ -101,6 +100,7 @@ class BitcoinMarket:
     @staticmethod
     def price_before(current_price: float, pct_change: float) -> float:
         return current_price / (1 + pct_change / 100)
+
 
 @dataclass
 class BitcoinMarketSentiment:
