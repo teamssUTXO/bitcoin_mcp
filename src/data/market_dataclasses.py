@@ -2,20 +2,19 @@ from dataclasses import dataclass
 
 @dataclass
 class MarketOverview:
-    # Infos principales
     data: dict
 
     def __post_init__(self):
-        self.active_cryptocurrencies : int = self.data["active_cryptocurrencies"]
-        self.upcoming_icos : int = self.data["upcoming_icos"]
-        self.ongoing_icos : int = self.data["ongoing_icos"]
-        self.ended_icos : int = self.data["ended_icos"]
-        self.nb_markets : int = self.data["markets"]
-        self.market_cap_change_percentage: float = self.data["market_cap_change_percentage"]
+        self.active_cryptocurrencies : int = self.data.get("active_cryptocurrencies", 0)
+        self.upcoming_icos : int = self.data.get("upcoming_icos", 0)
+        self.ongoing_icos : int = self.data.get("ongoing_icos", 0)
+        self.ended_icos : int = self.data.get("ended_icos", 0)
+        self.nb_markets : int = self.data.get("markets", 0)
+        self.market_cap_change_percentage: float = self.data.get("market_cap_change_percentage", 0)
 
-        self.five_biggest_market_cap : dict = self.top5(self.data["total_market_cap"])
-        self.five_biggest_market_volume : dict = self.top5(self.data["total_volume"])
-        self.five_biggest_market_cap_percentage : dict = dict(list(self.data["market_cap_percentage"].items())[:5])
+        self.five_biggest_market_cap : dict = self.top5(self.data.get("total_market_cap", {}))
+        self.five_biggest_market_volume : dict = self.top5(self.data.get("total_volume", {}))
+        self.five_biggest_market_cap_percentage : dict = dict(list(self.data.get("market_cap_percentage", {}).items())[:5])
 
     @classmethod
     def from_data(cls, data: dict) -> 'MarketOverview':
@@ -30,92 +29,73 @@ class MarketOverview:
 
 @dataclass
 class BitcoinOverview:
-    # Infos principales
-    bitcoin: dict
+    data: dict
 
     def __post_init__(self):
-        self.usd : float = self.bitcoin["usd"]
-        self.usd_market_cap : float = self.bitcoin["usd_market_cap"]
-        self.usd_24h_vol : float = self.bitcoin["usd_24h_vol"]
-        self.usd_24h_change : float = self.bitcoin["usd_24h_change"]
+        self.usd : float = self.data.get("usd", 0)
+        self.usd_market_cap : float = self.data.get("usd_market_cap", 0)
+        self.usd_24h_vol : float = self.data.get("usd_24h_vol", 0)
+        self.usd_24h_change : float = self.data.get("usd_24h_change", 0)
 
     @classmethod
     def from_data(cls, data: dict) -> 'BitcoinOverview':
         return cls(
-            bitcoin = data
+            data = data
         )
 
 
 @dataclass
 class BitcoinMarket:
-    block_time_in_minutes: int
-    hashing_algorithm: str
-    description: str
-    white_paper_link: str
-    repo_github_link: str
-    genesis_date: str
-    market_cap: int
-    market_cap_rank: int
-    current_price: float
-    ath_price: float
-    ath_change_percentage: float
-    ath_date: str
-    atl_price: float
-    atl_change_percentage: float
-    atl_date: str
-    high_price_24h: float
-    low_price_24h: float
-    total_supply: float
-    max_supply: int
-    price_change_percentage_1h: float
-    price_change_percentage_24h: float
-    price_change_percentage_7d: float
-    price_change_percentage_14d: float
-    price_change_percentage_30d: float
-    price_change_percentage_60d: float
-    price_change_percentage_200d: float
-    price_change_percentage_1y: float
+    data: dict
 
     def __post_init__(self):
-        price_1h_before = self.price_before(self.current_price, self.price_change_percentage_1h)
-        price_24h_before = self.price_before(self.current_price, self.price_change_percentage_24h)
-        price_7d_before = self.price_before(self.current_price, self.price_change_percentage_7d)
-        price_14d_before = self.price_before(self.current_price, self.price_change_percentage_14d)
-        price_30d_before = self.price_before(self.current_price, self.price_change_percentage_30d)
-        price_60d_before = self.price_before(self.current_price, self.price_change_percentage_60d)
-        price_200d_before = self.price_before(self.current_price, self.price_change_percentage_200d)
-        price_1y_before = self.price_before(self.current_price, self.price_change_percentage_1y)
+        self.block_time_in_minutes = self.data.get("block_time_in_minutes", 0)
+        self.hashing_algorithm = self.data.get("hashing_algorithm", "")
+        self.description = self.data.get("description", "")
+        self.white_paper_link = self.data.get("links", {}).get("whitepaper", "")
+        self.repo_github_link = self.data.get("links", {}).get("repos_url", {}).get("github", [])[0]
+        self.genesis_date = self.data.get("genesis_date", "")
+        self.market_cap = self.data.get("market_data", {}).get("market_cap", {}).get("usd", 0)
+        self.market_cap_rank = self.data.get("market_cap_rank", 0)
+        self.current_price = self.data.get("market_data", {}).get("current_price", {}).get("usd", 0)
+
+        self.ath_price = self.data.get("market_data", {}).get("ath", {}).get("usd", 0)
+        self.ath_change_percentage = self.data.get("market_data", {}).get("ath_change_percentage", {}).get("usd", 0)
+        self.ath_date = self.data.get("market_data", {}).get("ath_date", {}).get("usd", 0)
+
+        self.atl_price = self.data.get("market_data", {}).get("atl", {}).get("usd", 0)
+        self.atl_change_percentage = self.data.get("market_data", {}).get("atl_change_percentage", {}).get("usd", 0)
+        self.atl_date = self.data.get("market_data", {}).get("atl_date", {}).get("usd", 0)
+
+        self.high_price_24h = self.data.get("market_price", {}).get("high_24h", 0)
+        self.low_price_24h = self.data.get("market_price", {}).get("low_24h", 0)
+
+        self.total_supply = self.data.get("market_data", {}).get("total_supply", 0)
+        self.max_supply = self.data.get("market_data", {}).get("max_supply", 0)
+
+        self.price_change_percentage_1h = self.data.get("market_data", {}).get("price_change_percentage_1h_in_currency",{}).get("usd", 0)
+        self.price_change_percentage_24h = self.data.get("market_data", {}).get("price_change_percentage_24h_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_7d = self.data.get("market_data", {}).get("price_change_percentage_7d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_14d = self.data.get("market_data", {}).get("price_change_percentage_14d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_30d = self.data.get("market_data", {}).get("price_change_percentage_30d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_60d = self.data.get("market_data", {}).get("price_change_percentage_60d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_200d = self.data.get("market_data", {}).get("price_change_percentage_200d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_1y = self.data.get("market_data", {}).get("price_change_percentage_1y_in_currency", {}).get("usd", 0)
+
+
+        self.price_1h_before = self.price_before(self.current_price, self.price_change_percentage_1h)
+        self.price_24h_before = self.price_before(self.current_price, self.price_change_percentage_24h)
+        self.price_7d_before = self.price_before(self.current_price, self.price_change_percentage_7d)
+        self.price_14d_before = self.price_before(self.current_price, self.price_change_percentage_14d)
+        self.price_30d_before = self.price_before(self.current_price, self.price_change_percentage_30d)
+        self.price_60d_before = self.price_before(self.current_price, self.price_change_percentage_60d)
+        self.price_200d_before = self.price_before(self.current_price, self.price_change_percentage_200d)
+        self.price_1y_before = self.price_before(self.current_price, self.price_change_percentage_1y)
 
     @classmethod
     def from_data(cls, data: dict) -> 'BitcoinMarket':
         return cls(
-            block_time_in_minutes = data.get("block_time_in_minutes", 0),
-            hashing_algorithm = data.get("hashing_algorithm", ""),
-            description = data.get("description", ""),
-            white_paper_link = data["links"].get("whitepaper", ""),
-            repo_github_link = data["links"]["repos_url"]["github"][1],
-            genesis_date = data.get("genesis_date", ""),
-            market_cap = data["market_data"]["market_cap"].get("usd", 0),
-            market_cap_rank = data.get("market_cap_rank", 0),
-            current_price = data["market_data"]["current_price"].get("usd", 0),
-            ath_price = data["market_data"]["ath"].get("usd", 0),
-            ath_change_percentage = data["market_data"]["ath_change_percentage"].get("usd", 0),
-            ath_date = data["market_data"]["ath_date"].get("usd", 0),
-            atl_price = data["market_data"]["atl"].get("usd", 0),
-            atl_change_percentage = data["market_data"]["atl_change_percentage"].get("usd", 0),
-            atl_date = data["market_data"]["atl_date"].get("usd", 0),
-            high_price_24h = data["market_price"].get("high_24h", 0),
-            low_price_24h = data["market_price"].get("low_24h", 0),
-            total_supply = data["market_data"].get("total_supply", 0),
-            max_supply = data["market_data"].get("max_supply", 0),
-            price_change_percentage_1h = data["market_data"]["price_change_percentage_1h_in_currency"].get("usd", 0),
-            price_change_percentage_24h = data["market_data"]["price_change_percentage_24h_in_currency"].get("usd", 0),
-            price_change_percentage_7d = data["market_data"]["price_change_percentage_7d_in_currency"].get("usd", 0),
-            price_change_percentage_14d = data["market_data"]["price_change_percentage_14d_in_currency"].get("usd", 0),
-            price_change_percentage_30d = data["market_data"]["price_change_percentage_30d_in_currency"].get("usd", 0),
-            price_change_percentage_60d = data["market_data"]["price_change_percentage_60d_in_currency"].get("usd", 0),
-            price_change_percentage_200d = data["market_data"]["price_change_percentage_200d_in_currency"].get("usd", 0),
-            price_change_percentage_1y = data["market_data"]["price_change_percentage_1y_in_currency"].get("usd", 0),
+            data=data,
         )
 
     @staticmethod
@@ -124,25 +104,17 @@ class BitcoinMarket:
 
 @dataclass
 class BitcoinMarketSentiment:
-    # Infos principales
-    fg_data: list
-    sentiment_votes_up_percentage: float
-    sentiment_votes_down_percentage: float
+    alternative_data: dict
+    coingecko_data: dict
 
     def __post_init__(self):
-        # définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
-        for i in range(1, 8):
-            setattr(self, f"fg_data_{i}d",
-                [
-                    self.fg_data[i]["value"],
-                    self.fg_data[i]["value_classification"]
-                ]
-            )
+        self.fg_data: list = self.alternative_data.get("data", [])
+        self.sentiment_votes_up_percentage: float = self.coingecko_data.get("sentiment_votes_up_percentage", 0)
+        self.sentiment_votes_down_percentage: float = self.coingecko_data.get("sentiment_votes_down_percentage", 0)
 
     @classmethod
     def from_data(cls, alternative_data: dict, coingecko_data: dict) -> 'BitcoinMarketSentiment':
         return cls(
-            fg_data = alternative_data.get("data", []),
-            sentiment_votes_up_percentage = coingecko_data.get("sentiment_votes_up_percentage", 0),
-            sentiment_votes_down_percentage = coingecko_data.get("sentiment_votes_down_percentage", 0),
+            alternative_data=alternative_data,
+            coingecko_data=coingecko_data
         )

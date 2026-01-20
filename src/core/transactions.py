@@ -1,9 +1,12 @@
 from typing import Optional
+from datetime import datetime
 
 from data.transactions_dataclasses import TransactionsAddress
 from src.api.mempool_client import get_mempool_client
 from src.api.blockchain_client import get_blockchain_client
-from src.data.transactions_dataclasses import TransactionInfo, TxInOut
+from src.data.transactions_dataclasses import TransactionInfo, TxInOut, TxOutput, TxInput
+
+from src.config import Config
 
 
 # TODO : remplacer les calculs dans post_init par @property
@@ -33,6 +36,21 @@ class TransactionAnalyzer:
                 return None
 
             infos: TransactionInfo = TransactionInfo.from_data(data)
+
+            nb_inputs = len(infos.vin)
+            nb_outputs = len(infos.vout)
+
+            fee_btc = infos.fee / Config.SATOSHI
+
+            fee_rate = fee_btc / infos.size if infos.size > 0 else 0
+
+            transaction_status = ("COMFIRMED" if infos.status.get("confirmed") else "UNCOMFIRMED")
+            transaction_block_time = infos.status.get('block_time', 0)
+            transaction_block_hash = infos.status.get('block_hash', '')
+            transaction_block_height = infos.status.get('block_height', 0)
+
+            date_str = datetime.fromtimestamp(transaction_block_time).strftime(
+                '%Y-%m-%d %H:%M:%S') if transaction_block_time else 'Non confirmée'
 
             #TODO : Faire le rapport par IA
             result: str = (""
@@ -74,6 +92,18 @@ class TransactionAnalyzer:
 
             infos: TxInOut = TxInOut.from_data(data)
 
+            inputs = [TxInput.from_data(v) for v in infos.vin]
+            outputs = [TxOutput.from_data(v) for v in infos.vout]
+
+            total_input_sats: int = sum(i.value for i in inputs)
+            total_output_sats: int = sum(o.value for o in outputs)
+
+            total_input_btc: float = total_input_sats / Config.SATOSHI
+            total_output_btc: float = total_output_sats / Config.SATOSHI
+
+            addresses_in: list = [i.address for i in inputs]
+            addresses_out: list = [o.address for o in outputs]
+
             # TODO : Faire le rapport par IA
             result: str = (""
                 # f"=== Transaction ===\n"
@@ -111,14 +141,37 @@ class TransactionAnalyzer:
 
             infos: TransactionsAddress = TransactionsAddress.from_data(data)
 
+            len_txs = len(infos.txs)
+
+            txs_hash = [tx["hash"] for tx in infos.txs]
+            txs_date = [datetime.fromtimestamp(tx["time"]) for tx in infos.txs]
+
+            amount_sent = [
+                sum(
+                    vin.get("prev_out", {}).get("value", 0)
+                    for vin in tx.get("inputs", [])
+                    if vin.get("prev_out", {}).get("addr") == address
+                )
+                for tx in infos.txs
+            ]
+
+            # Destinations (adresse + montant)
+            destinations = [
+                [
+                    (o.get("addr", ""), o.get("value", 0))
+                    for o in tx.get("out", [])
+                ]
+                for tx in infos.txs
+            ]
+
             result: str = ""
-            for i in range(infos.len_txs):
-                result += f"TXID : {infos.txs_hash[i]}\n"
-                result += f"Date : {infos.txs_date[i]}\n"
-                result += f"Montant envoyé : {infos.amount_sent[i]} sats\n"
+            for i in range(len_txs):
+                result += f"TXID : {txs_hash[i]}\n"
+                result += f"Date : {txs_date[i]}\n"
+                result += f"Montant envoyé : {amount_sent[i]} sats\n"
                 result += "Destinations :\n"
 
-                for addr, value in infos.destinations[i]:
+                for addr, value in destinations[i]:
                     result += f"  → {addr} : {value} sats\n"
                 result += "\n"
 

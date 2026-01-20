@@ -1,7 +1,7 @@
 from typing import Optional
 
 from src.api.mempool_client import get_mempool_client
-from src.data.mining_dataclasses import RankingMiningPools, HashratesMiningPools, TopMiningPool, MiningPoolBySlug
+from src.data.mining_dataclasses import RankingMiningPools, HashratesMiningPools, MiningPoolBySlug
 
 
 class MiningPoolAnalyzer:
@@ -28,16 +28,18 @@ class MiningPoolAnalyzer:
 
             infos: RankingMiningPools = RankingMiningPools.from_data(pools)
 
+            total_blocks = sum(p.get("blockCount", 0) for p in infos.top10_pools)
+
             result: str = "=== Top Mining Pools (3 mois) ===\n"
 
-            for i, pool in enumerate(infos.pools, 1):
+            for i, pool in enumerate(infos.top10_pools, 1):
                 name: str = pool.get('name', 'Unknown')
                 block_count: int = pool.get('blockCount', 0)
-                percentage: int = (block_count / infos.total_blocks * 100) if infos.total_blocks > 0 else 0
+                percentage: int = (block_count / total_blocks * 100) if total_blocks > 0 else 0
 
                 result += f"{i}. {name}\n"
                 result += f"   Blocs: {block_count:,} ({percentage:.2f}%)"
-            result += f"\nTotal blocs: {infos.total_blocks:,}"
+            result += f"\nTotal blocs: {total_blocks:,}"
 
             return result
 
@@ -92,15 +94,25 @@ class MiningPoolAnalyzer:
             if not pools:
                 return None
 
-            infos: TopMiningPool = TopMiningPool.from_data(pools)
+            infos: RankingMiningPools = RankingMiningPools.from_data(pools)
+
+            top_pool: dict = infos.pools[0]
+
+            top_pool_name: str = top_pool.get('name', 'Unknown')
+            top_pool_slug: str = top_pool.get('slug', 'Unknown')
+            top_pool_block_count: int = top_pool.get('blockCount', 0)
+            top_pool_link: str = top_pool.get('link', "")
+
+            total_blocks: int = sum(p.get('blockCount', 0) for p in infos.pools)
+            dominance_percentage = (top_pool_block_count / total_blocks * 100) if total_blocks > 0 else 0
 
             result: str = (
                 f"=== Pool #1 ===\n"
-                f"Nom: {infos.name}\n"
-                f"Slug: {infos.slug}\n"
-                f"Blocs minés (3 mois): {infos.block_count:,}\n"
-                f"Pourcentage de tout les blocs miné (3 mois): {infos.percentage:.2f}%\n"
-                f"Lien: {infos.link}\n"
+                f"Nom: {top_pool_name}\n"
+                f"Slug: {top_pool_slug}\n"
+                f"Blocs minés (3 mois): {top_pool_block_count:,}\n"
+                f"Pourcentage de tout les blocs miné (3 mois): {dominance_percentage:.2f}%\n"
+                f"Lien: {top_pool_link}\n"
             )
             return result
 
@@ -125,12 +137,14 @@ class MiningPoolAnalyzer:
 
             infos: MiningPoolBySlug = MiningPoolBySlug.from_data(pool)
 
+
+
             # TODO : faire avec l'IA
-            result = (
-                f"=== {name} ===\n"
-                f"Classement: #{rank}\n"
-                f"Blocs minés (3 mois): {block_count:,}\n"
-                f"Part du réseau: {percentage:.2f}%"
+            result = (""
+                # f"=== {name} ===\n"
+                # f"Classement: #{rank}\n"
+                # f"Blocs minés (3 mois): {block_count:,}\n"
+                # f"Part du réseau: {percentage:.2f}%"
             )
             return result
 
@@ -154,24 +168,25 @@ class MiningPoolAnalyzer:
             infos: RankingMiningPools = RankingMiningPools.from_data(data)
 
             num_pools = len(infos.pools)
-            avg_blocks_per_pool = infos.total_blocks / num_pools if num_pools > 0 else 0
 
-            # Pool le plus actif
+            total_blocks = sum(p.get("blockCount", 0) for p in infos.pools)
+            avg_blocks_per_pool = total_blocks / num_pools if num_pools > 0 else 0
+
             top_pool = max(infos.pools, key=lambda x: x.get('blockCount', 0))
             top_pool_name = top_pool.get('name', 'Unknown')
             top_pool_blocks = top_pool.get('blockCount', 0)
 
-            # Pool le moins actif
             bottom_pool = min(infos.pools, key=lambda x: x.get('blockCount', 0))
             bottom_pool_blocks = bottom_pool.get('blockCount', 0)
 
-            result = (
-                f"=== Statistiques Mining (3 mois) ===\n"
-                f"Nombre de pools: {num_pools}\n"
-                f"Total blocs minés: {infos.total_blocks:,}\n"
-                f"Moyenne par pool: {avg_blocks_per_pool:.0f} blocs\n"
-                f"\n🏆 Pool #1: {top_pool_name} ({top_pool_blocks:,} blocs)\n"
-                f"📉 Pool le moins actif: {bottom_pool_blocks:,} blocs"
+            # TODO : à faire avec l'IA
+            result = ( ""
+                # f"=== Statistiques Mining (3 mois) ===\n"
+                # f"Nombre de pools: {num_pools}\n"
+                # f"Total blocs minés: {infos.total_blocks:,}\n"
+                # f"Moyenne par pool: {avg_blocks_per_pool:.0f} blocs\n"
+                # f"\n🏆 Pool #1: {top_pool_name} ({top_pool_blocks:,} blocs)\n"
+                # f"📉 Pool le moins actif: {bottom_pool_blocks:,} blocs"
             )
             return result
 

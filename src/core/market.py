@@ -7,8 +7,6 @@ from src.api.coingecko_client import get_coingecko_client
 from src.api.alternative_client import get_alternative_client
 
 
-# TODO: voir en bas
-
 class MarketAnalyzer:
     """Analyseur du marché crypto"""
 
@@ -34,11 +32,11 @@ class MarketAnalyzer:
             infos: MarketOverview = MarketOverview.from_data(data)
 
             # TODO: faire le return par IA
-            result: str = (
-                f"Capitalisation totale: ${infos.nb_markets:,.0f}\n"
-                f"Volume 24h: ${infos.volume_24h:,.0f}\n"
-                f"Dominance BTC: {infos.btc_dominance:.2f}%\n"
-                f"Cryptos actives: {infos.active_cryptos}"
+            result: str = ( ""
+                # f"Capitalisation totale: ${infos.nb_markets:,.0f}\n"
+                # f"Volume 24h: ${infos.volume_24h:,.0f}\n"
+                # f"Dominance BTC: {infos.btc_dominance:.2f}%\n"
+                # f"Cryptos actives: {infos.active_cryptos}"
             )
             return result
 
@@ -64,12 +62,12 @@ class MarketAnalyzer:
             infos: BitcoinOverview = BitcoinOverview.from_data(data)
 
             # TODO: faire le return par IA
-            result: str = (
-                f"Prix BTC: ${infos.usd:,.2f} USD"
-                f"Capitalisation totale: ${infos.market_cap:,.0f}\n"
-                f"Volume 24h: ${infos.volume_24h:,.0f}\n"
-                f"Dominance BTC: {infos.btc_dominance:.2f}%\n"
-                f"Cryptos actives: {infos.active_cryptos}"
+            result: str = ( ""
+                # f"Prix BTC: ${infos.usd:,.2f} USD"
+                # f"Capitalisation totale: ${infos.market_cap:,.0f}\n"
+                # f"Volume 24h: ${infos.volume_24h:,.0f}\n"
+                # f"Dominance BTC: {infos.btc_dominance:.2f}%\n"
+                # f"Cryptos actives: {infos.active_cryptos}"
             )
             return result
 
@@ -95,13 +93,13 @@ class MarketAnalyzer:
             infos: BitcoinMarket = BitcoinMarket.from_data(data)
 
             # TODO: faire le return par IA
-            result: str = (
-                f"Bitcoin (btc)\n"
-                f"Prix actuel: ${infos.current_price:,.2f}\n"
-                f"Capitalisation: ${infos.market_cap:,.0f}\n"
-                f"Volume 24h: ${infos.volume_24h:,.0f}\n"
-                f"Variation 24h: {infos.price_change_24h:+.2f}%\n"
-                f"ATH: ${infos.ath_price:,.2f} | ATL: ${infos.atl_price:,.2f}"
+            result: str = ( ""
+                # f"Bitcoin (btc)\n"
+                # f"Prix actuel: ${infos.current_price:,.2f}\n"
+                # f"Capitalisation: ${infos.market_cap:,.0f}\n"
+                # f"Volume 24h: ${infos.volume_24h:,.0f}\n"
+                # f"Variation 24h: {infos.price_change_24h:+.2f}%\n"
+                # f"ATH: ${infos.ath_price:,.2f} | ATL: ${infos.atl_price:,.2f}"
             )
             return result
 
@@ -128,14 +126,23 @@ class MarketAnalyzer:
 
             infos: BitcoinMarketSentiment = BitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
 
+            # Définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
+            for i in range(1, 8):
+                setattr(self, f"fg_data_{i}d",
+                        [
+                            infos.fg_data[i]["value"],
+                            infos.fg_data[i]["value_classification"]
+                        ]
+                        )
+
             # TODO: à faire avec l'IA
-            result: str = (
-                f"Market Sentiment (lastest 7 days):\n"
-                f"Prix actuel: ${infos.current_price:,.2f}\n"
-                f"Capitalisation: ${infos.market_cap:,.0f}\n"
-                f"Volume 24h: ${infos.volume_24h:,.0f}\n"
-                f"Variation 24h: {infos.price_change_24h:+.2f}%\n"
-                f"ATH: ${infos.ath_price:,.2f} | ATL: ${infos.atl_price:,.2f}"
+            result: str = ( ""
+                # f"Market Sentiment (lastest 7 days):\n"
+                # f"Prix actuel: ${infos.current_price:,.2f}\n"
+                # f"Capitalisation: ${infos.market_cap:,.0f}\n"
+                # f"Volume 24h: ${infos.volume_24h:,.0f}\n"
+                # f"Variation 24h: {infos.price_change_24h:+.2f}%\n"
+                # f"ATH: ${infos.ath_price:,.2f} | ATL: ${infos.atl_price:,.2f}"
             )
 
         except KeyError as e:

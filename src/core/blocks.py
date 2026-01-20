@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 
-from src.data.block_dataclasses import LatestBlock, LatestsBlocks
+from src.data.block_dataclasses import LatestBlock, LatestBlocks
 
 class BlockAnalyzer:
     """Analyseur de blocs Bitcoin"""
@@ -24,16 +24,13 @@ class BlockAnalyzer:
             str: Résumé du dernier bloc ou None en cas d'erreur
         """
         try:
-            block: dict = self.blockchain.get_latest_block()
-            if not block:
+            data: dict = self.blockchain.get_latest_block()
+            if not data:
                 return None
 
-            infos: LatestBlock = LatestBlock.from_data(block)
-
+            infos: LatestBlock = LatestBlock.from_data(data)
 
             date_str: str = datetime.fromtimestamp(infos.timestamp).strftime('%Y-%m-%d %H:%M:%S') if infos.timestamp else 'N/A'
-
-            # Calcul du temps écoulé
             time_ago: timedelta = datetime.now() - datetime.fromtimestamp(infos.timestamp) if infos.timestamp else None
             time_ago_str: str = f"{int(time_ago.total_seconds() / 60)} minutes" if time_ago else "N/A"
 
@@ -79,15 +76,15 @@ class BlockAnalyzer:
             str: Infos des derniers blocs formatées ou None en cas d'erreur
         """
         try:
-            blocks: list = self.mempool.get_blocks_info()
-            if not blocks:
+            data: list = self.mempool.get_blocks_info()
+            if not data:
                 return None
 
-            infos: LatestsBlocks = LatestsBlocks.from_data(blocks)
+            infos: LatestBlocks = LatestBlocks.from_data(data)
 
             result_lines: list = ["=== 10 Derniers Blocs ==="]
 
-            for i in range(len(blocks)):
+            for i in range(len(data)):
                 result_lines.append(
                     f"\nBloc #{infos.heights[i]:,} | ID: {infos.ids[i]}\n"
                     f"Date: {infos.timestamps[i]}\n"
@@ -117,18 +114,17 @@ class BlockAnalyzer:
             str: Statistiques des blocs ou None en cas d'erreur
         """
         try:
-            blocks: list = self.mempool.get_blocks_info()
-            if not blocks:
+            data: list = self.mempool.get_blocks_info()
+            if not data:
                 return None
 
-            infos: LatestsBlocks = LatestsBlocks.from_data(blocks)
+            infos: LatestBlocks = LatestBlocks.from_data(data)
 
             total_tx: int = sum(infos.txs_count)
-            avg_tx: float = total_tx / len(blocks)
+            avg_tx: float = total_tx / len(data)
             total_size: int = sum(infos.sizes)
-            avg_size: float = total_size / len(blocks)
+            avg_size: float = total_size / len(data)
 
-            # Calcul du temps moyen entre blocs
             if len(infos.timestamps) >= 2:
                 time_diffs: list = [infos.timestamps[i] - infos.timestamps[i + 1] for i in range(len(infos.timestamps) - 1)]
                 avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # en minutes
