@@ -1,7 +1,8 @@
 import httpx
 from typing import Optional, Dict, Any
-from functools import lru_cache
 import time
+
+from src.config import Config
 
 class APIClient:
     """Client HTTP de base avec retry, timeout et cache"""
@@ -9,16 +10,17 @@ class APIClient:
     def __init__(self, base_url: str, timeout: int = 5):
         self.base_url: str = base_url
 
-        self.timeout: int = timeout
+        self.timeout: int = Config.API_TIMEOUT
+        self.ttl: int = Config.CACHE_TTL_TIME
         self._cache: Dict[str, tuple] = {}
     
-    def get(self, endpoint: str, ttl: int = 60) -> Optional[Dict[Any, Any]]:
+    def get(self, endpoint: str) -> Optional[Dict[Any, Any]]:
         """GET avec cache TTL"""
         cache_key = f"{self.base_url}{endpoint}"
         
         if cache_key in self._cache:
             data, timestamp = self._cache[cache_key]
-            if time.time() - timestamp < ttl:
+            if time.time() - timestamp < self.ttl:
                 return data
         
         try:

@@ -11,13 +11,11 @@ class Config:
     ALTERNATIVE_API_URL: str = "https://api.alternative.me"
 
     SATOSHI: int = 100_000_000
-    
-    # # Timeouts in seconds
-    # API_TIMEOUT: int = 5
-    # CACHE_TTL_SHORT: int = 30
-    # CACHE_TTL_MEDIUM: int = 60
-    # CACHE_TTL_LONG: int = 300
-    
+
+    # Timeouts in seconds
+    API_TIMEOUT: int = 5
+    CACHE_TTL_TIME: int = 30
+
     # # Features
     # ENABLE_CACHE: bool = True
     # ENABLE_RETRY: bool = True
