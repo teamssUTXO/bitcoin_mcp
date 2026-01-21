@@ -24,7 +24,7 @@ class CoinGeckoClient(APIClient):
         Top 7 trending NFTs
         Top 6 trending categories
         sorted by the most popular user searches
-        Docs : https://docs.coingecko.com/reference/coins-id
+        Docs : https://docs.coingecko.com/reference/trending-search
         """
         return self.get("/search/trending")
 

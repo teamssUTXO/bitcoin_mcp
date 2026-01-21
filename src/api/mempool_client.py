@@ -30,8 +30,7 @@ class MempoolClient(APIClient):
         Renvoie le hash d'un bloc dont la hauteur est passé en paramètre
         Docs : https://mempool.space/docs/api/rest#get-block-height
         """
-        result = self.get(f"/block-height/{height}")
-        return str(result) if result else None
+        return str(self.get(f"/block-height/{height}"))
 
     def get_blocks_info(self) -> Optional[list[dict]]:
         """
