@@ -118,3 +118,73 @@ class DataBitcoinMarketSentiment:
             alternative_data=alternative_data,
             coingecko_data=coingecko_data
         )
+
+
+@dataclass
+class DataTrendingCoins:
+    data: list
+
+    def __post_init__(self):
+        self.names: list = [item.get("item", {}).get("name", "") for item in self.data]
+        self.symbols: list = [item.get("item", {}).get("symbol", "") for item in self.data]
+
+        self.market_cap_ranks: list = [item.get("item", {}).get("market_cap_rank", "") for item in self.data]
+
+        self.ranks: list = [item.get("item", {}).get("score", "") for item in self.data]
+
+        self.prices: list = [item.get("item", {}).get("data", {}).get("price", 0) for item in self.data]
+        self.prices_changed: list = [item.get("item", {}).get("data", {}).get("price_change_percentage_24h", {}).get("usd", 0) for item in self.data]
+
+        self.market_caps: list = [item.get("item", {}).get("data", {}).get("market_cap", 0) for item in self.data]
+        self.total_volumes: list = [item.get("item", {}).get("data", {}).get("total_volume", 0) for item in self.data]
+
+        self.descriptions: list = [(item.get("item", {}).get("data", {}).get("content", {}) or {}).get("description", "description unavailable for this coin") for item in self.data]
+
+    @classmethod
+    def from_data(cls, data: dict) -> DataTrendingCoins:
+        return cls(
+            data=data.get("coins", [])  # on découpe en trois la donnée pour coins, categories et nft, plus opti
+        )
+
+
+@dataclass
+class DataTrendingCategories:
+    data: list
+
+    def __post_init__(self):
+        self.names: list = [item.get("name", "") for item in self.data]
+        self.n_coins_count: list = [item.get("coins_count", "") for item in self.data]
+
+        self.market_caps: list = [item.get("data", {}).get("market_cap", 0) for item in self.data]
+        self.total_volumes: list = [item.get("data", {}).get("total_volume", 0) for item in self.data]
+
+        self.market_caps_changed: list = [item.get("data", {}).get("market_cap_change_percentage_24h", {}).get("usd", 0) for item in self.data]
+
+    @classmethod
+    def from_data(cls, data: dict) -> DataTrendingCategories:
+        return cls(
+            data=data.get("categories", [])  # on découpe en trois la donnée pour coins, categories et nft, plus opti
+        )
+
+
+@dataclass
+class DataTrendingNFTs:
+    data: list
+
+    def __post_init__(self):
+        self.names: list = [item.get("name", "") for item in self.data]
+        self.symbols: list = [item.get("symbol", "") for item in self.data]
+
+        self.native_currencies: list = [item.get("native_currency_symbol", ""). upper() for item in self.data]
+
+        self.floor_prices: list = [item.get("data", {}).get("floor_price", "") for item in self.data]
+        self.floor_prices_24h_percentage_change: list = [item.get("data", {}).get("floor_price_in_usd_24h_percentage_change") for item in self.data]
+
+        self.h24_volumes: list = [item.get("data", {}).get("h24_volume", "") for item in self.data]
+        self.h24_avg_sell_price: list = [item.get("data", {}).get("h24_average_sale_price", "") for item in self.data]
+
+    @classmethod
+    def from_data(cls, data: dict) -> DataTrendingNFTs:
+        return cls(
+            data=data.get("nfts", [])  # on découpe en trois la donnée pour coins, categories et nft, plus opti
+        )

@@ -17,9 +17,13 @@ class CoinGeckoClient(APIClient):
         """
         return self.get("/global")
 
-    def get_trending_coins(self) -> Optional[dict]:
+    def get_market_trend(self) -> Optional[dict]:
         """
-        Renvoie des trending coins
+        Renvoie les tendances du marché des cryptomonnaies
+        Top 15 trending coins
+        Top 7 trending NFTs
+        Top 6 trending categories
+        sorted by the most popular user searches
         Docs : https://docs.coingecko.com/reference/coins-id
         """
         return self.get("/search/trending")
