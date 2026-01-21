@@ -4,8 +4,8 @@ from datetime import datetime
 from src.api.mempool_client import get_mempool_client
 from src.api.blockchain_client import get_blockchain_client
 
-from src.data.transactions_dataclasses import TransactionInfo, TxInOut, TxOutput, TxInput
-from src.data.transactions_dataclasses import TransactionsAddress
+from src.data.transactions_dataclasses import DataTransactionInfo, DataTxInOut, DataTxOutput, DataTxInput
+from src.data.transactions_dataclasses import DataTransactionsAddress
 
 from src.config import Config
 
@@ -35,7 +35,7 @@ class TransactionAnalyzer:
             if not data:
                 return None
 
-            infos: TransactionInfo = TransactionInfo.from_data(data)
+            infos: DataTransactionInfo = DataTransactionInfo.from_data(data)
 
             nb_inputs = len(infos.vin)
             nb_outputs = len(infos.vout)
@@ -104,10 +104,10 @@ class TransactionAnalyzer:
             if not data:
                 return None
 
-            infos: TxInOut = TxInOut.from_data(data)
+            infos: DataTxInOut = DataTxInOut.from_data(data)
 
-            inputs = [TxInput.from_data(v) for v in infos.vin]
-            outputs = [TxOutput.from_data(v) for v in infos.vout]
+            inputs = [DataTxInput.from_data(v) for v in infos.vin]
+            outputs = [DataTxOutput.from_data(v) for v in infos.vout]
 
             total_input_sats: int = sum(i.value for i in inputs)
             total_output_sats: int = sum(o.value for o in outputs)
@@ -184,7 +184,7 @@ class TransactionAnalyzer:
             if not data:
                 return None
 
-            infos: TransactionsAddress = TransactionsAddress.from_data(data)
+            infos: DataTransactionsAddress = DataTransactionsAddress.from_data(data)
 
             len_txs = len(infos.txs)
 

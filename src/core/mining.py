@@ -2,7 +2,7 @@ from typing import Optional
 
 from src.api.mempool_client import get_mempool_client
 
-from src.data.mining_dataclasses import RankingMiningPools, HashratesMiningPools, MiningPoolBySlug
+from src.data.mining_dataclasses import DataRankingMiningPools, DataHashratesMiningPools, DataMiningPoolBySlug
 
 
 class MiningPoolAnalyzer:
@@ -27,7 +27,7 @@ class MiningPoolAnalyzer:
             if not data:
                 return None
 
-            infos: RankingMiningPools = RankingMiningPools.from_data(data)
+            infos: DataRankingMiningPools = DataRankingMiningPools.from_data(data)
 
             total_blocks = sum(p.get("blockCount", 0) for p in infos.top10_pools)
 
@@ -63,7 +63,7 @@ class MiningPoolAnalyzer:
             if not data:
                 return None
 
-            infos: HashratesMiningPools = HashratesMiningPools.from_data(data)
+            infos: DataHashratesMiningPools = DataHashratesMiningPools.from_data(data)
 
             result: str = "=== Hashrates Mining Pools (3 mois) ===\n"
 
@@ -98,7 +98,7 @@ class MiningPoolAnalyzer:
             if not data:
                 return None
 
-            infos: RankingMiningPools = RankingMiningPools.from_data(data)
+            infos: DataRankingMiningPools = DataRankingMiningPools.from_data(data)
 
             top_pool: dict = infos.pools[0]
 
@@ -139,7 +139,7 @@ class MiningPoolAnalyzer:
             if not data:
                 return None
 
-            infos: MiningPoolBySlug = MiningPoolBySlug.from_data(data)
+            infos: DataMiningPoolBySlug = DataMiningPoolBySlug.from_data(data)
 
 
             hr = infos.hashrate
@@ -193,7 +193,7 @@ class MiningPoolAnalyzer:
             if not data:
                 return None
 
-            infos: RankingMiningPools = RankingMiningPools.from_data(data)
+            infos: DataRankingMiningPools = DataRankingMiningPools.from_data(data)
 
             num_pools = len(infos.pools)
 

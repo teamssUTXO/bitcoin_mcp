@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class TransactionInfo:
+class DataTransactionInfo:
     data: dict
 
     def __post_init__(self):
@@ -13,14 +13,14 @@ class TransactionInfo:
         self.status: dict = self.data.get("status", {})
 
     @classmethod
-    def from_data(cls, data: dict) -> 'TransactionInfo':
+    def from_data(cls, data: dict) -> DataTransactionInfo:
         return cls(
             data=data
         )
 
 
 @dataclass
-class TxInput:
+class DataTxInput:
     data: dict
 
     def __post_init__(self):
@@ -32,14 +32,14 @@ class TxInput:
         self.value: int = self.prev.get("value", 0)
 
     @classmethod
-    def from_data(cls, data: dict) -> 'TxInput':
+    def from_data(cls, data: dict) -> TxInput:
         return cls(
             data=data
         )
 
 
 @dataclass
-class TxOutput:
+class DataTxOutput:
     data: dict
 
     def __post_init__(self):
@@ -47,14 +47,14 @@ class TxOutput:
         self.value: int = self.data.get('value',0)
 
     @classmethod
-    def from_data(cls, data: dict) -> 'TxOutput':
+    def from_data(cls, data: dict) -> TxOutput:
         return cls(
             data=data
         )
 
 
 @dataclass
-class TxInOut:
+class DataTxInOut:
     data: dict
 
     def __post_init__(self):
@@ -63,21 +63,21 @@ class TxInOut:
 
 
     @classmethod
-    def from_data(cls, data: dict) -> 'TxInOut':
+    def from_data(cls, data: dict) -> TxInOut:
         return cls(
             data=data
         )
 
 
 @dataclass
-class TransactionsAddress:
+class DataTransactionsAddress:
     data: dict
 
     def __post_init__(self):
         self.txs: list = self.data.get("txs", [])
 
     @classmethod
-    def from_data(cls, data: dict) -> 'TransactionsAddress':
+    def from_data(cls, data: dict) -> DataTransactionsAddress:
         return cls(
             data=data,
         )

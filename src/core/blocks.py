@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 
-from src.data.block_dataclasses import LatestBlock, LatestBlocks
+from src.data.block_dataclasses import DataLatestBlock, DataLatestBlocks
 
 class BlockAnalyzer:
     """Analyseur de blocs Bitcoin"""
@@ -28,7 +28,7 @@ class BlockAnalyzer:
             if not data:
                 return None
 
-            infos: LatestBlock = LatestBlock.from_data(data)
+            infos: DataLatestBlock = DataLatestBlock.from_data(data)
 
             date_str: str = datetime.fromtimestamp(infos.timestamp).strftime('%Y-%m-%d %H:%M:%S') if infos.timestamp else 'N/A'
             time_ago: timedelta = datetime.now() - datetime.fromtimestamp(infos.timestamp) if infos.timestamp else None
@@ -80,7 +80,7 @@ class BlockAnalyzer:
             if not data:
                 return None
 
-            infos: LatestBlocks = LatestBlocks.from_data(data)
+            infos: DataLatestBlocks = DataLatestBlocks.from_data(data)
 
             result_lines: list = ["=== 10 Derniers Blocs ==="]
 

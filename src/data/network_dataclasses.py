@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class NetworkStats:
+class DataNetworkStats:
     data: dict
 
     def __post_init__(self):
@@ -27,14 +27,14 @@ class NetworkStats:
         self.trade_volume_usd = self.data.get("trade_volume_usd", 0)
 
     @classmethod
-    def from_data(cls, data: dict) -> NetworkStats:
+    def from_data(cls, data: dict) -> DataNetworkStats:
         return cls(
             data=data
         )
 
 
 @dataclass
-class NetworkFees:
+class DataNetworkFees:
     data: dict
 
     def __post_init__(self):
@@ -45,7 +45,7 @@ class NetworkFees:
         self.minimum = self.data.get("minimumFee", 0)
 
     @classmethod
-    def from_data(cls, data: dict) -> NetworkFees:
+    def from_data(cls, data: dict) -> DataNetworkFees:
         return cls(
             data = data
         )

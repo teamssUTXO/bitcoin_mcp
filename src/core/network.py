@@ -3,7 +3,7 @@ from typing import Optional
 from src.api.mempool_client import get_mempool_client
 from src.api.blockchain_client import get_blockchain_client
 
-from data.network_dataclasses import NetworkFees, NetworkStats
+from data.network_dataclasses import DataNetworkFees, DataNetworkStats
 
 from src.config import Config
 
@@ -30,7 +30,7 @@ class NetworkAnalyzer:
             if not data:
                 return None
 
-            infos: NetworkStats = NetworkStats.from_data(data)
+            infos: DataNetworkStats = DataNetworkStats.from_data(data)
 
             result: str = (
                 f"=== Statistiques Réseau Bitcoin ===\n"
@@ -75,7 +75,7 @@ class NetworkAnalyzer:
                 return None
 
             tx_size = 250 # taille de transaction standard
-            infos: NetworkFees = NetworkFees.from_data(data)
+            infos: DataNetworkFees = DataNetworkFees.from_data(data)
 
             costs: dict = {
                 'Rapide (~10 min)': (infos.fastest * tx_size) / Config.SATOSHI,
@@ -113,7 +113,7 @@ class NetworkAnalyzer:
             if not data:
                 return None
 
-            infos: NetworkStats = NetworkStats.from_data(data)
+            infos: DataNetworkStats = DataNetworkStats.from_data(data)
 
             # Évaluation de la santé
             health_score: int = 100

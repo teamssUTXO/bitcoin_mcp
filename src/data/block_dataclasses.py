@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class LatestBlock:
+class DataLatestBlock:
     data: dict
 
     def __post_init__(self):
@@ -11,14 +11,14 @@ class LatestBlock:
         self.height = self.data.get("height", 0)
 
     @classmethod
-    def from_data(cls, data: dict) -> LatestBlock:
+    def from_data(cls, data: dict) -> DataLatestBlock:
         return cls(
             data = data
         )
 
 
 @dataclass()
-class LatestBlocks:
+class DataLatestBlocks:
     data: list[dict]
 
     def __post_init__(self):
@@ -35,7 +35,7 @@ class LatestBlocks:
         self.nonces = [block.get("nonce", 0) for block in self.data]
 
     @classmethod
-    def from_data(cls, data: list[dict]) -> LatestBlocks:
+    def from_data(cls, data: list[dict]) -> DataLatestBlocks:
         return cls(
             data = data
         )

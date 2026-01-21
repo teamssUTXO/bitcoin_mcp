@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class RankingMiningPools:
+class DataRankingMiningPools:
     data: dict
 
     def __post_init__(self):
@@ -9,42 +9,42 @@ class RankingMiningPools:
         self.top10_pools: list = self.data.get("pools", [])[:10]
 
     @classmethod
-    def from_data(cls, data: dict) -> RankingMiningPools:
+    def from_data(cls, data: dict) -> DataRankingMiningPools:
         return cls(
             data = data,
         )
 
 
 @dataclass
-class HashratesMiningPools:
+class DataHashratesMiningPools:
     data: list
 
     def __post_init__(self):
         self.pools: list = self.data[:10]
 
     @classmethod
-    def from_data(cls, data: list) -> HashratesMiningPools:
+    def from_data(cls, data: list) -> DataHashratesMiningPools:
         return cls(
             data = data
         )
 
 
 @dataclass
-class TopMiningPool:
+class DataTopMiningPool:
     data: dict
 
     def __post_init__(self):
         self.pools: list = self.data.get("pools", [])
 
     @classmethod
-    def from_data(cls, data: dict) -> TopMiningPool:
+    def from_data(cls, data: dict) -> DataTopMiningPool:
         return cls(
             data = data
         )
 
 
 @dataclass
-class MiningPoolBySlug:
+class DataMiningPoolBySlug:
     data: dict
 
     def __post_init__(self):
@@ -58,7 +58,7 @@ class MiningPoolBySlug:
         self.addresses = self.pool_infos.get('addresses', [])
 
     @classmethod
-    def from_data(cls, data: dict) -> MiningPoolBySlug:
+    def from_data(cls, data: dict) -> DataMiningPoolBySlug:
         return cls(
             data = data
         )

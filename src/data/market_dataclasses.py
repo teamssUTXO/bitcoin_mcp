@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class MarketOverview:
+class DataMarketOverview:
     data: dict
 
     def __post_init__(self):
@@ -17,9 +17,9 @@ class MarketOverview:
         self.five_biggest_market_cap_percentage : dict = dict(list(self.data.get("market_cap_percentage", {}).items())[:5])
 
     @classmethod
-    def from_data(cls, data: dict) -> 'MarketOverview':
+    def from_data(cls, data: dict) -> DataMarketOverview:
         return cls(
-            data = data
+            data = data.get("data", {}) # car double wrap des données
         )
 
     @staticmethod
@@ -28,7 +28,7 @@ class MarketOverview:
 
 
 @dataclass
-class BitcoinOverview:
+class DataBitcoinOverview:
     data: dict
 
     def __post_init__(self):
@@ -38,14 +38,14 @@ class BitcoinOverview:
         self.usd_24h_change : float = self.data.get("usd_24h_change", 0)
 
     @classmethod
-    def from_data(cls, data: dict) -> 'BitcoinOverview':
+    def from_data(cls, data: dict) -> DataBitcoinOverview:
         return cls(
             data = data
         )
 
 
 @dataclass
-class BitcoinMarket:
+class DataBitcoinMarket:
     data: dict
 
     def __post_init__(self):
@@ -92,7 +92,7 @@ class BitcoinMarket:
         self.price_1y_before = self.price_before(self.current_price, self.price_change_percentage_1y)
 
     @classmethod
-    def from_data(cls, data: dict) -> 'BitcoinMarket':
+    def from_data(cls, data: dict) -> DataBitcoinMarket:
         return cls(
             data=data,
         )
@@ -103,7 +103,7 @@ class BitcoinMarket:
 
 
 @dataclass
-class BitcoinMarketSentiment:
+class DataBitcoinMarketSentiment:
     alternative_data: dict
     coingecko_data: dict
 
@@ -113,7 +113,7 @@ class BitcoinMarketSentiment:
         self.sentiment_votes_down_percentage: float = self.coingecko_data.get("sentiment_votes_down_percentage", 0)
 
     @classmethod
-    def from_data(cls, alternative_data: dict, coingecko_data: dict) -> 'BitcoinMarketSentiment':
+    def from_data(cls, alternative_data: dict, coingecko_data: dict) -> DataBitcoinMarketSentiment:
         return cls(
             alternative_data=alternative_data,
             coingecko_data=coingecko_data

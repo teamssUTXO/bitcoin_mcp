@@ -3,8 +3,8 @@ from typing import Optional
 from src.api.coingecko_client import get_coingecko_client
 from src.api.alternative_client import get_alternative_client
 
-from src.data.market_dataclasses import BitcoinOverview, BitcoinMarket, BitcoinMarketSentiment
-from src.data.market_dataclasses import MarketOverview
+from src.data.market_dataclasses import DataBitcoinOverview, DataBitcoinMarket, DataBitcoinMarketSentiment
+from src.data.market_dataclasses import DataMarketOverview
 
 
 class MarketAnalyzer:
@@ -29,7 +29,7 @@ class MarketAnalyzer:
             if not data:
                 return None
 
-            infos: MarketOverview = MarketOverview.from_data(data)
+            infos: DataMarketOverview = DataMarketOverview.from_data(data)
 
             fmt_cap = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_cap.items()])
             fmt_vol = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_volume.items()])
@@ -72,7 +72,7 @@ class MarketAnalyzer:
             if not data:
                 return None
 
-            infos: BitcoinOverview = BitcoinOverview.from_data(data)
+            infos: DataBitcoinOverview = DataBitcoinOverview.from_data(data)
 
             circulating_supply = infos.usd_market_cap / infos.usd if infos.usd else 0
             vol_cap_ratio = (infos.usd_24h_vol / infos.usd_market_cap) * 100 if infos.usd_market_cap else 0
@@ -112,7 +112,7 @@ class MarketAnalyzer:
             if not data:
                 return None
 
-            infos: BitcoinMarket = BitcoinMarket.from_data(data)
+            infos: DataBitcoinMarket = DataBitcoinMarket.from_data(data)
 
             if infos.max_supply and infos.max_supply > 0:
                 supply_minted_pct = (infos.total_supply / infos.max_supply) * 100
@@ -189,7 +189,56 @@ class MarketAnalyzer:
             if not alternative_data | coingecko_data:
                 return None
 
-            infos: BitcoinMarketSentiment = BitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
+            infos: DataBitcoinMarketSentiment = DataBitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
+
+            # Définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
+            fg_lines = []
+            for i in range(1, 8):
+                day_data = getattr(infos, f"fg_data_{i}d", ["N/A", "Inconnu"])
+                fg_lines.append(f"  J-{i}: {day_data[0]} - {day_data[1]}")
+            fg_history_txt = "\n".join(fg_lines)
+
+            sentiment_label = "Neutre"
+            if infos.sentiment_votes_up_percentage > infos.sentiment_votes_down_percentage:
+                sentiment_label = "🟢 Majorité Haussière (Bullish)"
+            elif infos.sentiment_votes_down_percentage > infos.sentiment_votes_up_percentage:
+                sentiment_label = "🔴 Majorité Baissière (Bearish)"
+
+            result: str = (
+                f"=== Psychologie & Sentiment du Marché ===\n"
+                f"--- Sentiment Communautaire (CoinGecko) ---\n"
+                f"Tendance: {sentiment_label}\n"
+                f"👍 Optimistes (Votes Up): {infos.sentiment_votes_up_percentage:.0f}%\n"
+                f"👎 Pessimistes (Votes Down): {infos.sentiment_votes_down_percentage:.0f}%\n"
+                f"\n"
+                f"--- Historique Fear & Greed (7 derniers jours) ---\n"
+                f"Indicateur de peur et d'avidité (Source: Alternative.me)\n"
+                f"{fg_history_txt}\n"
+            )
+
+            return result
+
+        except KeyError as e:
+            print(f"Erreur type: 02 - Clé manquante: {e}")
+            return None
+        except Exception as e:
+            print(f"Erreur API: 01 - {e}")
+            return None
+
+
+    def get_trending_coins(self) -> Optional[str]:
+        """
+        Recupère les coins en tendance
+
+        Returns:
+            str: Coins en tendance
+        """
+        try:
+            data: dict = self.coingecko.get_trending_coins()
+            if not data:
+                return None
+
+            infos: DataBitcoinMarketSentiment = DataBitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
 
             # Définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
             fg_lines = []

@@ -3,7 +3,7 @@ from typing import Optional
 from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 
-from src.data.addresses_dataclasses import OverviewAddress, InfosAddress
+from src.data.addresses_dataclasses import DataOverviewAddress, DataInfosAddress
 
 from src.config import Config
 
@@ -33,7 +33,7 @@ class AddressAnalyzer:
             if not data:
                 return None
 
-            infos: InfosAddress = InfosAddress.from_data(data)
+            infos: DataInfosAddress = DataInfosAddress.from_data(data)
 
             funded_txo_sum = infos.chain_stats["funded_txo_sum"]
             spent_txo_sum = infos.chain_stats['spent_txo_sum']
@@ -103,7 +103,7 @@ class AddressAnalyzer:
             if not data:
                 return None
 
-            infos: OverviewAddress = OverviewAddress.from_data(data)
+            infos: DataOverviewAddress = DataOverviewAddress.from_data(data)
 
             balance_btc = infos.final_balance / Config.SATOSHI
             received_btc = infos.total_received / Config.SATOSHI

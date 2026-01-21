@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class InfosAddress:
+class DataInfosAddress:
     data: dict
 
     def __post_init__(self):
@@ -9,14 +9,14 @@ class InfosAddress:
         self.mempool_stats: dict = self.data.get('mempool_stats', {})
 
     @classmethod
-    def from_data(cls, data: dict) -> 'InfosAddress':
+    def from_data(cls, data: dict) -> DataInfosAddress:
         return cls(
             data=data
         )
 
 
 @dataclass
-class OverviewAddress:
+class DataOverviewAddress:
     data: dict
 
     def __post_init__(self):
@@ -27,7 +27,7 @@ class OverviewAddress:
         self.txs: list = self.data.get('txs',[])
 
     @classmethod
-    def from_data(cls, data: dict) -> 'OverviewAddress':
+    def from_data(cls, data: dict) -> DataOverviewAddress:
         return cls(
             data=data
         )
