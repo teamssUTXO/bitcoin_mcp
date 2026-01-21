@@ -31,9 +31,9 @@ class MarketAnalyzer:
 
             infos: DataMarketOverview = DataMarketOverview.from_data(data)
 
-            fmt_cap = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_cap.items()])
-            fmt_vol = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_volume.items()])
-            fmt_dom = "\n".join([f"  - {k}: {v:.2f}%" for k, v in infos.five_biggest_market_cap_percentage.items()])
+            fmt_cap: str = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_cap.items()])
+            fmt_vol: str = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_volume.items()])
+            fmt_dom: str = "\n".join([f"  - {k}: {v:.2f}%" for k, v in infos.five_biggest_market_cap_percentage.items()])
 
             result: str = (
                 f"=== Vue d'ensemble du Marché ===\n"
@@ -74,9 +74,9 @@ class MarketAnalyzer:
 
             infos: DataBitcoinOverview = DataBitcoinOverview.from_data(data)
 
-            circulating_supply = infos.usd_market_cap / infos.usd if infos.usd else 0
-            vol_cap_ratio = (infos.usd_24h_vol / infos.usd_market_cap) * 100 if infos.usd_market_cap else 0
-            price_yesterday = infos.usd / (1 + (infos.usd_24h_change / 100))
+            circulating_supply: int = infos.usd_market_cap / infos.usd if infos.usd else 0
+            vol_cap_ratio: int = (infos.usd_24h_vol / infos.usd_market_cap) * 100 if infos.usd_market_cap else 0
+            price_yesterday: int = infos.usd / (1 + (infos.usd_24h_change / 100))
 
 
             result: str = (
@@ -115,17 +115,16 @@ class MarketAnalyzer:
             infos: DataBitcoinMarket = DataBitcoinMarket.from_data(data)
 
             if infos.max_supply and infos.max_supply > 0:
-                supply_minted_pct = (infos.total_supply / infos.max_supply) * 100
-                fdv = infos.max_supply * infos.current_price
-                supply_info = f"{supply_minted_pct:.2f}% minés sur {infos.max_supply:,.0f}"
-                fdv_info = f"${fdv:,.0f}"
+                supply_minted_pct: float = (infos.total_supply / infos.max_supply) * 100
+                fdv: int = infos.max_supply * infos.current_price
+                supply_info: str = f"{supply_minted_pct:.2f}% minés sur {infos.max_supply:,.0f}"
+                fdv_info: str = f"${fdv:,.0f}"
             else:
-                supply_info = "Offre illimitée ou inconnue"
-                fdv_info = "N/A"
+                supply_info: str = "Offre illimitée ou inconnue"
+                fdv_info: str = "N/A"
 
-            volatility_gap = infos.high_price_24h - infos.low_price_24h
-            volatility_pct = (volatility_gap / infos.low_price_24h * 100) if infos.low_price_24h else 0
-            short_desc = (infos.description[:150] + '...') if len(infos.description) > 150 else infos.description
+            volatility_gap: int = infos.high_price_24h - infos.low_price_24h
+            volatility_pct: int = (volatility_gap / infos.low_price_24h * 100) if infos.low_price_24h else 0
 
             result: str = (
                 f"=== Rapport Technique & Financier (Rang #{infos.market_cap_rank}) ===\n"
@@ -163,7 +162,7 @@ class MarketAnalyzer:
                 f"--- Informations & Liens ---\n"
                 f"GitHub: {infos.repo_github_link}\n"
                 f"Whitepaper: {infos.white_paper_link}\n"
-                f"Description: {short_desc}\n"
+                f"Description: {infos.description}\n"
             )
 
             return result
@@ -192,13 +191,13 @@ class MarketAnalyzer:
             infos: DataBitcoinMarketSentiment = DataBitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
 
             # Définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
-            fg_lines = []
+            fg_lines: list = []
             for i in range(1, 8):
-                day_data = getattr(infos, f"fg_data_{i}d", ["N/A", "Inconnu"])
+                day_data: list = getattr(infos, f"fg_data_{i}d", ["N/A", "Inconnu"])
                 fg_lines.append(f"  J-{i}: {day_data[0]} - {day_data[1]}")
-            fg_history_txt = "\n".join(fg_lines)
+            fg_history_txt: str = "\n".join(fg_lines)
 
-            sentiment_label = "Neutre"
+            sentiment_label: str = "Neutre"
             if infos.sentiment_votes_up_percentage > infos.sentiment_votes_down_percentage:
                 sentiment_label = "🟢 Majorité Haussière (Bullish)"
             elif infos.sentiment_votes_down_percentage > infos.sentiment_votes_up_percentage:

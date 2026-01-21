@@ -24,7 +24,7 @@ class DataTxInput:
     data: dict
 
     def __post_init__(self):
-        self.prev = self.data.get("prevout", {})
+        self.prev: dict = self.data.get("prevout", {})
 
         self.txid: str = self.data.get("txid", "")
         self.vout_index: int = self.data.get("vout_index", 0)
@@ -32,7 +32,7 @@ class DataTxInput:
         self.value: int = self.prev.get("value", 0)
 
     @classmethod
-    def from_data(cls, data: dict) -> TxInput:
+    def from_data(cls, data: dict) -> DataTxInput:
         return cls(
             data=data
         )
@@ -47,7 +47,7 @@ class DataTxOutput:
         self.value: int = self.data.get('value',0)
 
     @classmethod
-    def from_data(cls, data: dict) -> TxOutput:
+    def from_data(cls, data: dict) -> DataTxOutput:
         return cls(
             data=data
         )
@@ -63,7 +63,7 @@ class DataTxInOut:
 
 
     @classmethod
-    def from_data(cls, data: dict) -> TxInOut:
+    def from_data(cls, data: dict) -> DataTxInOut:
         return cls(
             data=data
         )

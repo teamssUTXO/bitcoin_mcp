@@ -37,27 +37,25 @@ class TransactionAnalyzer:
 
             infos: DataTransactionInfo = DataTransactionInfo.from_data(data)
 
-            nb_inputs = len(infos.vin)
-            nb_outputs = len(infos.vout)
+            nb_inputs: int = len(infos.vin)
+            nb_outputs: int = len(infos.vout)
 
-            fee_btc = infos.fee / Config.SATOSHI
+            fee_btc: float = infos.fee / Config.SATOSHI
 
-            fee_rate = fee_btc / infos.size if infos.size > 0 else 0
+            transaction_status: str = "COMFIRMED" if infos.status.get("confirmed") else "UNCOMFIRMED"
+            transaction_block_time: int = infos.status.get('block_time', 0)
+            transaction_block_hash: str = infos.status.get('block_hash', '')
+            transaction_block_height: int = infos.status.get('block_height', 0)
 
-            transaction_status = ("COMFIRMED" if infos.status.get("confirmed") else "UNCOMFIRMED")
-            transaction_block_time = infos.status.get('block_time', 0)
-            transaction_block_hash = infos.status.get('block_hash', '')
-            transaction_block_height = infos.status.get('block_height', 0)
-
-            date_str = datetime.fromtimestamp(transaction_block_time).strftime(
+            date_str: str = datetime.fromtimestamp(transaction_block_time).strftime(
                 '%Y-%m-%d %H:%M:%S') if transaction_block_time else 'Non confirmée'
 
-            total_sats_out = sum(out.get('value', 0) for out in infos.vout)
-            total_btc_out = total_sats_out / Config.SATOSHI
+            total_sats_out: int = sum(out.get('value', 0) for out in infos.vout)
+            total_btc_out: float = total_sats_out / Config.SATOSHI
 
-            sat_per_byte = infos.fee / infos.size if infos.size > 0 else 0
+            sat_per_byte: int = infos.fee / infos.size if infos.size > 0 else 0
 
-            status_icon = "✅" if infos.status.get("confirmed") else "⏳"
+            status_icon: str = "✅" if infos.status.get("confirmed") else "⏳"
 
             result: str = (
                 f"=== Transaction {status_icon} ===\n"
@@ -106,8 +104,8 @@ class TransactionAnalyzer:
 
             infos: DataTxInOut = DataTxInOut.from_data(data)
 
-            inputs = [DataTxInput.from_data(v) for v in infos.vin]
-            outputs = [DataTxOutput.from_data(v) for v in infos.vout]
+            inputs: list[DataTxInput] = [DataTxInput.from_data(v) for v in infos.vin]
+            outputs: list[DataTxOutput] = [DataTxOutput.from_data(v) for v in infos.vout]
 
             total_input_sats: int = sum(i.value for i in inputs)
             total_output_sats: int = sum(o.value for o in outputs)
@@ -118,27 +116,25 @@ class TransactionAnalyzer:
             addresses_in: list = [i.address for i in inputs]
             addresses_out: list = [o.address for o in outputs]
 
-            fee_network = total_input_btc - total_output_btc
+            fee_network: float = total_input_btc - total_output_btc
 
-            detailed_in_lines = []
+            detailed_in_lines: list = []
             for i in inputs:
-                addr = i.address if i.address else "SYSTEM (Coinbase/Mint)"
-                val = i.value / Config.SATOSHI
+                addr: str = i.address if i.address else "SYSTEM (Coinbase/Mint)"
+                val: float = i.value / Config.SATOSHI
                 detailed_in_lines.append(f"  [IN]  {val:12.8f} BTC | Depuis: {addr}")
 
-            detailed_out_lines = []
+            detailed_out_lines: list = []
             for o in outputs:
-                addr = o.address if o.address else "DATA (OP_RETURN)"
-                val = o.value / Config.SATOSHI
+                addr: str = o.address if o.address else "DATA (OP_RETURN)"
+                val: float = o.value / Config.SATOSHI
                 detailed_out_lines.append(f"  [OUT] {val:12.8f} BTC | Vers:   {addr}")
 
-            clean_in_addrs = [a for a in addresses_in if a]
-            clean_out_addrs = [a for a in addresses_out if a]
+            clean_in_addrs: list = [a for a in addresses_in if a]
+            clean_out_addrs: list = [a for a in addresses_out if a]
 
-            list_in_txt = "\n".join(
-                [f"  - {a}" for a in clean_in_addrs]) if clean_in_addrs else "  - Aucune adresse publique (Coinbase)"
-            list_out_txt = "\n".join(
-                [f"  - {a}" for a in clean_out_addrs]) if clean_out_addrs else "  - Aucune adresse standard"
+            list_in_txt: str = "\n".join([f"  - {a}" for a in clean_in_addrs]) if clean_in_addrs else "  - Aucune adresse publique (Coinbase)"
+            list_out_txt: str = "\n".join([f"  - {a}" for a in clean_out_addrs]) if clean_out_addrs else "  - Aucune adresse standard"
 
             result: str = (
                 f"=== Analyse Complète de la Transaction ===\n"
@@ -186,12 +182,12 @@ class TransactionAnalyzer:
 
             infos: DataTransactionsAddress = DataTransactionsAddress.from_data(data)
 
-            len_txs = len(infos.txs)
+            len_txs: int = len(infos.txs)
 
-            txs_hash = [tx["hash"] for tx in infos.txs]
-            txs_date = [datetime.fromtimestamp(tx["time"]) for tx in infos.txs]
+            txs_hash: list = [tx["hash"] for tx in infos.txs]
+            txs_date: list = [datetime.fromtimestamp(tx["time"]) for tx in infos.txs]
 
-            amount_sent = [
+            amount_sent: list = [
                 sum(
                     vin.get("prev_out", {}).get("value", 0)
                     for vin in tx.get("inputs", [])
@@ -201,7 +197,7 @@ class TransactionAnalyzer:
             ]
 
             # Destinations (adresse + montant)
-            destinations = [
+            destinations: list = [
                 [
                     (o.get("addr", ""), o.get("value", 0))
                     for o in tx.get("out", [])

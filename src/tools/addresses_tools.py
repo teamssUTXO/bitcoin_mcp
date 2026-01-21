@@ -1,6 +1,7 @@
 from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
+
 from src.core.addresses import get_addresses_analyser_client
 
 

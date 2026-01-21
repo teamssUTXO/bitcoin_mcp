@@ -32,10 +32,10 @@ class DataBitcoinOverview:
     data: dict
 
     def __post_init__(self):
-        self.usd : float = self.data.get("usd", 0)
-        self.usd_market_cap : float = self.data.get("usd_market_cap", 0)
-        self.usd_24h_vol : float = self.data.get("usd_24h_vol", 0)
-        self.usd_24h_change : float = self.data.get("usd_24h_change", 0)
+        self.usd : int = self.data.get("usd", 0)
+        self.usd_market_cap : int = self.data.get("usd_market_cap", 0)
+        self.usd_24h_vol : int = self.data.get("usd_24h_vol", 0)
+        self.usd_24h_change : int = self.data.get("usd_24h_change", 0)
 
     @classmethod
     def from_data(cls, data: dict) -> DataBitcoinOverview:
@@ -49,47 +49,47 @@ class DataBitcoinMarket:
     data: dict
 
     def __post_init__(self):
-        self.block_time_in_minutes = self.data.get("block_time_in_minutes", 0)
-        self.hashing_algorithm = self.data.get("hashing_algorithm", "")
-        self.description = self.data.get("description", "")
-        self.white_paper_link = self.data.get("links", {}).get("whitepaper", "")
-        self.repo_github_link = self.data.get("links", {}).get("repos_url", {}).get("github", [])[0]
-        self.genesis_date = self.data.get("genesis_date", "")
-        self.market_cap = self.data.get("market_data", {}).get("market_cap", {}).get("usd", 0)
-        self.market_cap_rank = self.data.get("market_cap_rank", 0)
-        self.current_price = self.data.get("market_data", {}).get("current_price", {}).get("usd", 0)
+        self.block_time_in_minutes: int = self.data.get("block_time_in_minutes", 0)
+        self.hashing_algorithm: str = self.data.get("hashing_algorithm", "")
+        self.description: str = self.data.get("description", "")
+        self.white_paper_link: str = self.data.get("links", {}).get("whitepaper", "")
+        self.repo_github_link: str = self.data.get("links", {}).get("repos_url", {}).get("github", [])[0]
+        self.genesis_date: str = self.data.get("genesis_date", "")
+        self.market_cap: int = self.data.get("market_data", {}).get("market_cap", {}).get("usd", 0)
+        self.market_cap_rank: int = self.data.get("market_cap_rank", 0)
+        self.current_price: int = self.data.get("market_data", {}).get("current_price", {}).get("usd", 0)
 
-        self.ath_price = self.data.get("market_data", {}).get("ath", {}).get("usd", 0)
-        self.ath_change_percentage = self.data.get("market_data", {}).get("ath_change_percentage", {}).get("usd", 0)
-        self.ath_date = self.data.get("market_data", {}).get("ath_date", {}).get("usd", 0)
+        self.ath_price: int = self.data.get("market_data", {}).get("ath", {}).get("usd", 0)
+        self.ath_change_percentage: int = self.data.get("market_data", {}).get("ath_change_percentage", {}).get("usd", 0)
+        self.ath_date: int = self.data.get("market_data", {}).get("ath_date", {}).get("usd", 0)
 
-        self.atl_price = self.data.get("market_data", {}).get("atl", {}).get("usd", 0)
-        self.atl_change_percentage = self.data.get("market_data", {}).get("atl_change_percentage", {}).get("usd", 0)
-        self.atl_date = self.data.get("market_data", {}).get("atl_date", {}).get("usd", 0)
+        self.atl_price: int = self.data.get("market_data", {}).get("atl", {}).get("usd", 0)
+        self.atl_change_percentage: int = self.data.get("market_data", {}).get("atl_change_percentage", {}).get("usd", 0)
+        self.atl_date: int = self.data.get("market_data", {}).get("atl_date", {}).get("usd", 0)
 
-        self.high_price_24h = self.data.get("market_price", {}).get("high_24h", 0)
-        self.low_price_24h = self.data.get("market_price", {}).get("low_24h", 0)
+        self.high_price_24h: int = self.data.get("market_price", {}).get("high_24h", 0)
+        self.low_price_24h: int = self.data.get("market_price", {}).get("low_24h", 0)
 
-        self.total_supply = self.data.get("market_data", {}).get("total_supply", 0)
-        self.max_supply = self.data.get("market_data", {}).get("max_supply", 0)
+        self.total_supply: int = self.data.get("market_data", {}).get("total_supply", 0)
+        self.max_supply: int = self.data.get("market_data", {}).get("max_supply", 0)
 
-        self.price_change_percentage_1h = self.data.get("market_data", {}).get("price_change_percentage_1h_in_currency",{}).get("usd", 0)
-        self.price_change_percentage_24h = self.data.get("market_data", {}).get("price_change_percentage_24h_in_currency", {}).get("usd", 0)
-        self.price_change_percentage_7d = self.data.get("market_data", {}).get("price_change_percentage_7d_in_currency", {}).get("usd", 0)
-        self.price_change_percentage_14d = self.data.get("market_data", {}).get("price_change_percentage_14d_in_currency", {}).get("usd", 0)
-        self.price_change_percentage_30d = self.data.get("market_data", {}).get("price_change_percentage_30d_in_currency", {}).get("usd", 0)
-        self.price_change_percentage_60d = self.data.get("market_data", {}).get("price_change_percentage_60d_in_currency", {}).get("usd", 0)
-        self.price_change_percentage_200d = self.data.get("market_data", {}).get("price_change_percentage_200d_in_currency", {}).get("usd", 0)
-        self.price_change_percentage_1y = self.data.get("market_data", {}).get("price_change_percentage_1y_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_1h: int = self.data.get("market_data", {}).get("price_change_percentage_1h_in_currency",{}).get("usd", 0)
+        self.price_change_percentage_24h: int = self.data.get("market_data", {}).get("price_change_percentage_24h_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_7d: int = self.data.get("market_data", {}).get("price_change_percentage_7d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_14d: int = self.data.get("market_data", {}).get("price_change_percentage_14d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_30d: int = self.data.get("market_data", {}).get("price_change_percentage_30d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_60d: int = self.data.get("market_data", {}).get("price_change_percentage_60d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_200d: int = self.data.get("market_data", {}).get("price_change_percentage_200d_in_currency", {}).get("usd", 0)
+        self.price_change_percentage_1y: int = self.data.get("market_data", {}).get("price_change_percentage_1y_in_currency", {}).get("usd", 0)
 
-        self.price_1h_before = self.price_before(self.current_price, self.price_change_percentage_1h)
-        self.price_24h_before = self.price_before(self.current_price, self.price_change_percentage_24h)
-        self.price_7d_before = self.price_before(self.current_price, self.price_change_percentage_7d)
-        self.price_14d_before = self.price_before(self.current_price, self.price_change_percentage_14d)
-        self.price_30d_before = self.price_before(self.current_price, self.price_change_percentage_30d)
-        self.price_60d_before = self.price_before(self.current_price, self.price_change_percentage_60d)
-        self.price_200d_before = self.price_before(self.current_price, self.price_change_percentage_200d)
-        self.price_1y_before = self.price_before(self.current_price, self.price_change_percentage_1y)
+        self.price_1h_before: float = self.price_before(self.current_price, self.price_change_percentage_1h)
+        self.price_24h_before: float = self.price_before(self.current_price, self.price_change_percentage_24h)
+        self.price_7d_before: float = self.price_before(self.current_price, self.price_change_percentage_7d)
+        self.price_14d_before: float = self.price_before(self.current_price, self.price_change_percentage_14d)
+        self.price_30d_before: float = self.price_before(self.current_price, self.price_change_percentage_30d)
+        self.price_60d_before: float = self.price_before(self.current_price, self.price_change_percentage_60d)
+        self.price_200d_before: float = self.price_before(self.current_price, self.price_change_percentage_200d)
+        self.price_1y_before: float = self.price_before(self.current_price, self.price_change_percentage_1y)
 
     @classmethod
     def from_data(cls, data: dict) -> DataBitcoinMarket:
@@ -98,7 +98,7 @@ class DataBitcoinMarket:
         )
 
     @staticmethod
-    def price_before(current_price: float, pct_change: float) -> float:
+    def price_before(current_price: int, pct_change: int) -> float:
         return current_price / (1 + pct_change / 100)
 
 
@@ -109,8 +109,8 @@ class DataBitcoinMarketSentiment:
 
     def __post_init__(self):
         self.fg_data: list = self.alternative_data.get("data", [])
-        self.sentiment_votes_up_percentage: float = self.coingecko_data.get("sentiment_votes_up_percentage", 0)
-        self.sentiment_votes_down_percentage: float = self.coingecko_data.get("sentiment_votes_down_percentage", 0)
+        self.sentiment_votes_up_percentage: int = self.coingecko_data.get("sentiment_votes_up_percentage", 0)
+        self.sentiment_votes_down_percentage: int = self.coingecko_data.get("sentiment_votes_down_percentage", 0)
 
     @classmethod
     def from_data(cls, alternative_data: dict, coingecko_data: dict) -> DataBitcoinMarketSentiment:

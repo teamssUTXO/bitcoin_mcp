@@ -74,7 +74,7 @@ class NetworkAnalyzer:
             if not data:
                 return None
 
-            tx_size = 250 # taille de transaction standard
+            tx_size: int = 250 # taille de transaction standard
             infos: DataNetworkFees = DataNetworkFees.from_data(data)
 
             costs: dict = {
@@ -115,11 +115,9 @@ class NetworkAnalyzer:
 
             infos: DataNetworkStats = DataNetworkStats.from_data(data)
 
-            # Évaluation de la santé
             health_score: int = 100
             issues: list = []
 
-            # Temps entre blocs (optimal: ~10 min)
             if infos.minutes_between_blocks > 15:
                 health_score -= 20
                 issues.append(f"Blocs lents ({infos.minutes_between_blocks:.1f} min)")
@@ -127,12 +125,10 @@ class NetworkAnalyzer:
                 health_score -= 10
                 issues.append(f"Blocs rapides ({infos.minutes_between_blocks:.1f} min)")
 
-            # Hashrate (doit être élevé pour la sécurité)
             if infos.hash_rate < 100_000_000_000:  # < 100 TH/s
                 health_score -= 30
                 issues.append("Hashrate faible")
 
-            # Volume de transactions
             if infos.n_tx < 100_000:
                 health_score -= 15
                 issues.append("Faible volume de transactions")

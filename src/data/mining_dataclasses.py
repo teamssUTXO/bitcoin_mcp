@@ -48,14 +48,14 @@ class DataMiningPoolBySlug:
     data: dict
 
     def __post_init__(self):
-        self.pool_infos = self.data.get("pool", {})
-        self.block_count = self.data.get('blockCount', {}).get("all", 0)
-        self.block_share = self.data.get('blockShare', {}).get("all", 0)
-        self.hashrate = self.data.get("reportedHashrate") or self.data.get("estimatedHashrate", 0)
+        self.pool_infos: dict = self.data.get("pool", {})
+        self.block_count: int = self.data.get('blockCount', {}).get("all", 0)
+        self.block_share: int = self.data.get('blockShare', {}).get("all", 0)
+        self.hashrate: int = self.data.get("reportedHashrate") or self.data.get("estimatedHashrate", 0)
 
-        self.name = self.pool_infos.get('name', 'Unknown')
-        self.link = self.pool_infos.get('link', "")
-        self.addresses = self.pool_infos.get('addresses', [])
+        self.name: str = self.pool_infos.get('name', 'Unknown')
+        self.link: str = self.pool_infos.get('link', "")
+        self.addresses: list = self.pool_infos.get('addresses', [])
 
     @classmethod
     def from_data(cls, data: dict) -> DataMiningPoolBySlug:

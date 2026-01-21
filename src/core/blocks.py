@@ -82,7 +82,7 @@ class BlockAnalyzer:
 
             infos: DataLatestBlocks = DataLatestBlocks.from_data(data)
 
-            result_lines: list = ["=== 10 Derniers Blocs ==="]
+            result: list = ["=== 10 Derniers Blocs ==="]
 
             total_tx: int = sum(infos.txs_count)
             avg_tx: float = total_tx / len(data)
@@ -97,7 +97,7 @@ class BlockAnalyzer:
                 avg_time: int = 0
 
             for i in range(len(data)):
-                result_lines.append(
+                result.append(
                     f"=== Informations (10 derniers blocs) ===\n"
                     f"\nBloc #{infos.heights[i]:,} | ID: {infos.ids[i]}\n"
                     f"Date: {infos.timestamps[i]}\n"
@@ -115,7 +115,7 @@ class BlockAnalyzer:
                     f"Temps moyen entre blocs: {avg_time:.2f} min"
                 )
 
-            return "\n".join(result_lines)
+            return "\n".join(result)
 
         except KeyError as e:
             print(f"Erreur type: 02 - Clé manquante: {e}")

@@ -1,6 +1,7 @@
 from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
+
 from src.core.market import get_market_analyser_client
 
 

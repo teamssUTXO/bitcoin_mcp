@@ -35,35 +35,35 @@ class AddressAnalyzer:
 
             infos: DataInfosAddress = DataInfosAddress.from_data(data)
 
-            funded_txo_sum = infos.chain_stats["funded_txo_sum"]
-            spent_txo_sum = infos.chain_stats['spent_txo_sum']
+            funded_txo_sum: int = infos.chain_stats.get("funded_txo_sum")
+            spent_txo_sum: int = infos.chain_stats.get('spent_txo_sum')
 
-            balance_btc = (funded_txo_sum - spent_txo_sum) / Config.SATOSHI
+            balance_btc: float = (funded_txo_sum - spent_txo_sum) / Config.SATOSHI
 
-            tx_count = infos.chain_stats['tx_count']
-            funded_txo_count = infos.chain_stats['funded_txo_count']
-            spent_txo_count = infos.chain_stats['spent_txo_count']
+            tx_count: int = infos.chain_stats.get('tx_count')
+            funded_txo_count: int = infos.chain_stats.get('funded_txo_count')
+            spent_txo_count: int = infos.chain_stats.get('spent_txo_count')
 
-            mempool_balance = infos.mempool_stats['funded_txo_sum'] - infos.mempool_stats['spent_txo_sum']
-            mempool_tx_count = infos.mempool_stats['tx_count']
+            mempool_balance: int = infos.mempool_stats.get('funded_txo_sum') - infos.mempool_stats.get('spent_txo_sum')
+            mempool_tx_count: int = infos.mempool_stats.get('tx_count')
 
             if balance_btc == 0 and tx_count > 0:
-                category = "Adresse vidée"
+                category: str = "Adresse vidée"
             elif balance_btc > 1:  # > 1 BTC
-                category = "Grande balance (> 1 BTC)"
+                category: str = "Grande balance (> 1 BTC)"
             elif balance_btc > 0.1:  # > 0.1 BTC
-                category = "Balance moyenne"
+                category: str = "Balance moyenne"
             elif balance_btc > 0:
-                category = "Petite balance (< 0.1 BTC)"
+                category: str = "Petite balance (< 0.1 BTC)"
             else:
-                category = "Adresse vide"
+                category: str = "Adresse vide"
 
             if mempool_tx_count > 0:
-                status = "ACTIVE - Transactions en cours"
+                status: str = "ACTIVE - Transactions en cours"
             elif balance_btc > 0:
-                status = "DORMANTE - Balance existante, aucune TX récente"
+                status: str = "DORMANTE - Balance existante, aucune TX récente"
             else:
-                status = "INACTIVE - Balance nulle"
+                status: str = "INACTIVE - Balance nulle"
 
             result: str = (
                 f"=== Adresse Bitcoin ===\n"
@@ -105,18 +105,9 @@ class AddressAnalyzer:
 
             infos: DataOverviewAddress = DataOverviewAddress.from_data(data)
 
-            balance_btc = infos.final_balance / Config.SATOSHI
-            received_btc = infos.total_received / Config.SATOSHI
-            sent_btc = infos.total_sent / Config.SATOSHI
-            # self.txs = [
-            #     {
-            #         "hash": tx.get("hash"),
-            #         "time": tx.get("time"),
-            #         "result": tx.get("result", 0),
-            #         "fee": tx.get("fee", 0),
-            #     }
-            #     for tx in self.txs
-            # ]
+            balance_btc: float = infos.final_balance / Config.SATOSHI
+            received_btc: float = infos.total_received / Config.SATOSHI
+            sent_btc: float = infos.total_sent / Config.SATOSHI
 
             result: str = (
                 f"=== Adresse Bitcoin ===\n"

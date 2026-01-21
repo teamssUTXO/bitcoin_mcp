@@ -108,7 +108,7 @@ class MiningPoolAnalyzer:
             top_pool_link: str = top_pool.get('link', "")
 
             total_blocks: int = sum(p.get('blockCount', 0) for p in infos.pools)
-            dominance_percentage = (top_pool_block_count / total_blocks * 100) if total_blocks > 0 else 0
+            dominance_percentage: float = (top_pool_block_count / total_blocks * 100) if total_blocks > 0 else 0
 
             result: str = (
                 f"=== Pool #1 ===\n"
@@ -141,20 +141,18 @@ class MiningPoolAnalyzer:
 
             infos: DataMiningPoolBySlug = DataMiningPoolBySlug.from_data(data)
 
-
-            hr = infos.hashrate
-            unit = "H/s"
+            unit: str = "H/s"
             for u in ["H/s", "KH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s"]:
-                if hr < 1000:
+                if infos.hashrate < 1000:
                     break
-                hr /= 1000
+                infos.hashrate /= 1000
                 unit = u
-            formatted_hashrate = f"{hr:.2f} {unit}"
+            formatted_hashrate: str = f"{infos.hashrate:.2f} {unit}"
 
             if infos.addresses:
-                addr_list = "\n".join([f"  - {addr}" for addr in infos.addresses])
+                addr_list: str = "\n".join([f"  - {addr}" for addr in infos.addresses])
             else:
-                addr_list = "  - Aucune adresse listée"
+                addr_list: str = "  - Aucune adresse listée"
 
             result: str = (
                 f"=== Détails du Pool de Minage ===\n"
@@ -195,19 +193,19 @@ class MiningPoolAnalyzer:
 
             infos: DataRankingMiningPools = DataRankingMiningPools.from_data(data)
 
-            num_pools = len(infos.pools)
+            num_pools: int = len(infos.pools)
 
-            total_blocks = sum(p.get("blockCount", 0) for p in infos.pools)
-            avg_blocks_per_pool = total_blocks / num_pools if num_pools > 0 else 0
+            total_blocks: int = sum(p.get("blockCount", 0) for p in infos.pools)
+            avg_blocks_per_pool: int = total_blocks / num_pools if num_pools > 0 else 0
 
-            top_pool = max(infos.pools, key=lambda x: x.get('blockCount', 0))
-            top_pool_name = top_pool.get('name', 'Unknown')
-            top_pool_blocks = top_pool.get('blockCount', 0)
+            top_pool: dict = max(infos.pools, key=lambda x: x.get('blockCount', 0))
+            top_pool_name: str = top_pool.get('name', 'Unknown')
+            top_pool_blocks: int = top_pool.get('blockCount', 0)
 
-            bottom_pool = min(infos.pools, key=lambda x: x.get('blockCount', 0))
-            bottom_pool_blocks = bottom_pool.get('blockCount', 0)
+            bottom_pool: dict = min(infos.pools, key=lambda x: x.get('blockCount', 0))
+            bottom_pool_blocks: int = bottom_pool.get('blockCount', 0)
 
-            dominance_percentage = (top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
+            dominance_percentage: int = (top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
 
             result: str = (
                 f"=== Statistiques Globales du Minage (Bitcoin) ===\n"

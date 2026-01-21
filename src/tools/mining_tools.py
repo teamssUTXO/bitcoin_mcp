@@ -1,6 +1,7 @@
 from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
+
 from src.core.mining import get_mining_analyser_client
 
 
