@@ -58,7 +58,7 @@ class BlockAnalyzer:
             str: Hash du bloc ou None en cas d'erreur
         """
         try:
-            block_hash: str = str(self.mempool.get_block_height(height))
+            block_hash: str = self.mempool.get_block_height(height)
             if not block_hash:
                 return None
 

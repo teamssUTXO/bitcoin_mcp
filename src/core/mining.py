@@ -38,9 +38,9 @@ class MiningPoolAnalyzer:
                 block_count: int = pool.get('blockCount', 0)
                 percentage: int = (block_count / total_blocks * 100) if total_blocks > 0 else 0
 
-                result += f"{i}. {name}\n"
-                result += f"   Blocs: {block_count:,} ({percentage:.2f}%)"
-            result += f"\nTotal blocs: {total_blocks:,}"
+                result += f"{name} #{i}\n"
+                result += f"   Blocs: {block_count:,} ({percentage:.2f}%)\n"
+            result += f"\nTotal blocs: {total_blocks:,}\n"
 
             return result
 
@@ -68,17 +68,18 @@ class MiningPoolAnalyzer:
             result: str = "=== Hashrates Mining Pools (3 mois) ===\n"
 
             for i, pool in enumerate(infos.pools, 1):
-                pool_id: int = pool.get('id', 0)
-                hashrate: int = pool.get('hashrate', 0)
+                pool_name: str = pool.get('poolName', "")
+                hashrate: int = pool.get('avgHashrate', 0)
                 if hashrate > 0:
                     hashrate: float = hashrate / 1_000_000_000_000_000_000  # EH/s
                 share: float = (pool.get('share', 0))
                 if share > 0:
                     share *= 100
 
-                result += f"{i}. Pool #{pool_id}\n"
+                result += f"Pool #{i}\n"
+                result += f"   Nom: {pool_name} EH/s\n"
                 result += f"   Hashrate: {hashrate:.2f} EH/s\n"
-                result += f"   Part du réseau: {share:.2f}%"
+                result += f"   Part du réseau: {share:.2f}%\n"
 
             return str(result)
 

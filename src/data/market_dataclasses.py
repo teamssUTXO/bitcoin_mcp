@@ -11,20 +11,13 @@ class DataMarketOverview:
         self.ended_icos : int = self.data.get("ended_icos", 0)
         self.nb_markets : int = self.data.get("markets", 0)
         self.market_cap_change_percentage: float = self.data.get("market_cap_change_percentage", 0)
-
-        self.five_biggest_market_cap : dict = self.top5(self.data.get("total_market_cap", {}))
-        self.five_biggest_market_volume : dict = self.top5(self.data.get("total_volume", {}))
-        self.five_biggest_market_cap_percentage : dict = dict(list(self.data.get("market_cap_percentage", {}).items())[:5])
+        self.market_cap_percentage: dict = self.data.get("market_cap_percentage", {})
 
     @classmethod
     def from_data(cls, data: dict) -> DataMarketOverview:
         return cls(
             data = data.get("data", {}) # car double wrap des données
         )
-
-    @staticmethod
-    def top5(data: dict) -> dict:
-        return dict(sorted(data.items(), key=lambda x: x[1], reverse=True)[:5])
 
 
 @dataclass

@@ -197,24 +197,25 @@ class TransactionAnalyzer:
             ]
 
             # Destinations (adresse + montant)
-            destinations: list = [
-                [
-                    (o.get("addr", ""), o.get("value", 0))
-                    for o in tx.get("out", [])
-                ]
-                for tx in infos.txs
-            ]
+            # Enlevé car trop de tokens
+            # destinations: list = [
+            #     [
+            #         (o.get("addr", ""), o.get("value", 0))
+            #         for o in tx.get("out", [])
+            #     ]
+            #     for tx in infos.txs
+            # ]
 
             result: str = ""
             for i in range(len_txs):
                 result += f"TXID : {txs_hash[i]}\n"
                 result += f"Date : {txs_date[i]}\n"
                 result += f"Montant envoyé : {amount_sent[i]} sats\n"
-                result += "Destinations :\n"
+                # result += "Destinations :\n"
 
-                for addr, value in destinations[i]:
-                    result += f"  → {addr} : {value} sats\n"
-                result += "\n"
+                # for addr, value in destinations[i]:
+                #     result += f"  → {addr} : {value} sats\n"
+                # result += "\n"
 
             return result
 

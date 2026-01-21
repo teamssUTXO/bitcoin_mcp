@@ -31,9 +31,21 @@ class MarketAnalyzer:
 
             infos: DataMarketOverview = DataMarketOverview.from_data(data)
 
-            fmt_cap: str = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_cap.items()])
-            fmt_vol: str = "\n".join([f"  - {k}: {v:,.0f}" for k, v in infos.five_biggest_market_volume.items()])
-            fmt_dom: str = "\n".join([f"  - {k}: {v:.2f}%" for k, v in infos.five_biggest_market_cap_percentage.items()])
+            market_cap: dict = {"usd": infos.data.get("total_market_cap", {}).get("usd", {}),
+                                     "eur": infos.data.get("total_market_cap", {}).get("eur", {}),
+                                     "btc": infos.data.get("total_market_cap", {}).get("btc", {}),
+                                    "eth": infos.data.get("total_market_cap", {}).get("eth", {})}
+
+            market_volume: dict = {"usd": infos.data.get("total_volume", {}).get("usd", {}),
+                                "eur": infos.data.get("total_volume", {}).get("eur", {}),
+                                "btc": infos.data.get("total_volume", {}).get("btc", {}),
+                                "eth": infos.data.get("total_volume", {}).get("eth", {})}
+
+            five_biggest_market_cap_percentage: dict = dict(list(infos.market_cap_percentage.items())[:5])
+
+            fmt_cap: str = "\n".join([f"  - {k}: {v:,.0f}" for k, v in market_cap.items()])
+            fmt_vol: str = "\n".join([f"  - {k}: {v:,.0f}" for k, v in market_volume.items()])
+            fmt_dom: str = "\n".join([f"  - {k}: {v:.2f}%" for k, v in five_biggest_market_cap_percentage.items()])
 
             result: str = (
                 f"=== Vue d'ensemble du Marché ===\n"
@@ -44,11 +56,11 @@ class MarketAnalyzer:
                 f"• À venir : {infos.upcoming_icos}\n"
                 f"• En cours : {infos.ongoing_icos}\n"
                 f"• Terminées : {infos.ended_icos}\n\n"
-                f"--- Top 5 Market Cap ---\n"
+                f"--- Market Cap ---\n"
                 f"{fmt_cap}\n\n"
-                f"--- Top 5 Volume ---\n"
+                f"--- Volume ---\n"
                 f"{fmt_vol}\n\n"
-                f"--- Dominance (Parts de marché) ---\n"
+                f"--- Top 5 Dominance (Parts de marché) ---\n"
                 f"{fmt_dom}\n"
             )
             return result
@@ -246,7 +258,7 @@ class MarketAnalyzer:
                     f"=== Coin {infos.names[i]} / {infos.symbols[i]} ===\n"
                     f"Rank (Trending): {infos.ranks[i]}\n"
                     f"Price: {infos.prices[i]:.8f} USD\n"
-                    f"Price 24h (yesterday): {(infos.prices[i] / (1 + (infos.prices_changed[i] / 100))):.2f} : {infos.prices_changed[i]:.2f}%\n"
+                    f"Price 24h (yesterday): {(infos.prices[i] / (1 + (infos.prices_changed[i] / 100))):.8f} USD ({"+" if infos.prices_changed[i] > 0 else ""}{infos.prices_changed[i]:.2f}%)\n"
                     f"Market Cap: {infos.market_caps[i]} USD\n"
                     f"Market Cap Rank: {infos.market_cap_ranks[i]}\n"
                     f"Total Volume: {infos.total_volumes[i]} USD\n"
@@ -283,7 +295,7 @@ class MarketAnalyzer:
                     f"=== Categorie Top {i+1} {infos.names[i]} ===\n"
                     f"Number of Coins : {infos.n_coins_count[i]}\n"
                     f"Market Cap: {infos.market_caps[i]} USD\n"
-                    f"market Cap 24h (yesterday): {(infos.market_caps[i] / (1 + (infos.market_caps_changed[i] / 100))):.2f} : {infos.market_caps_changed[i]:.2f}%\n"
+                    f"market Cap 24h (yesterday): {(infos.market_caps[i] / (1 + (infos.market_caps_changed[i] / 100)))} USD ({"+" if infos.market_caps_changed[i] > 0 else ""}{infos.market_caps_changed[i]:.2f}%)\n"
                     f"Total Volume: {infos.total_volumes[i]} USD\n"
                 )
 
@@ -318,8 +330,8 @@ class MarketAnalyzer:
                     f"Rank : {i+1}\n"
                     f"Currency : {infos.native_currencies[i]}\n"
                     f"Floor price: {infos.floor_prices[i]}\n"
-                    f"24h Change: {infos.floor_prices_24h_percentage_change[i]}%\n"
-                    f"24h Volume: {infos.h24_volumes[i]}\n"
+                    f"Floor Price Change in 24h: {infos.floor_prices_24h_percentage_change[i]:.2f}%\n"
+                    f"Volume in 24h: {infos.h24_volumes[i]}\n"
                     f"Average sale (24h): {infos.h24_avg_sell_price[i]}\n"
                 )
 
