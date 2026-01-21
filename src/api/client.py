@@ -29,8 +29,14 @@ class APIClient:
                 timeout=self.timeout
             )
             response.raise_for_status()
-            data = response.json()
+
+            try:
+                data = response.json()
+            except ValueError:
+                data = response.text
+
             self._cache[cache_key] = (data, time.time())
             return data
+
         except Exception:
             return None
