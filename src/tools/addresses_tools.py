@@ -7,10 +7,18 @@ from src.core.addresses import get_addresses_analyser_client
 
 def get_info_about_address(address: str) -> Optional[str]:
     """
-    Use this to get more information about an address
+    Use this to get comprehensive information about a Bitcoin address including balance, transaction activity, and spending patterns.
 
-    Args:
-        address: address of the address to analyzer
+    Returns detailed metrics in string format:
+    - Current confirmed and unconfirmed balance (in BTC and satoshis)
+    - Address category and status
+    - Total transaction count (confirmed + mempool)
+    - Received outputs count and total amount
+    - Spent outputs count and total amount
+
+    Accepts any Bitcoin address format (Legacy, SegWit, Bech32).
+
+    Use cases: When you need a complete snapshot of an address's financial activity and current state.
     """
 
     if not address:
@@ -24,10 +32,17 @@ def get_info_about_address(address: str) -> Optional[str]:
 
 def get_address_overview(address: str) -> Optional[str]:
     """
-    Use this to get more overview of an address
+    Use this to get a simplified overview of a Bitcoin address focusing on balance and cumulative transaction totals.
 
-    Args:
-        address: address to get an overview about it
+    Returns detailed metrics in string format:
+    - Current balance (in BTC)
+    - Total amount ever received (in BTC)
+    - Total amount ever sent (in BTC)
+    - Total number of transactions
+
+    Accepts any Bitcoin address format (Legacy, SegWit, Bech32).
+
+    Use cases: When you need a quick financial summary without granular details.
     """
 
     if not address:
@@ -40,7 +55,8 @@ def get_address_overview(address: str) -> Optional[str]:
 
 
 def register_addresses_tools(mcp: FastMCP):
-    """Enregistre tous les tools des adresses Bitcoin"""
+    """Registers all Bitcoin address tools"""
+    """"""
     mcp.add_tool(get_info_about_address)
     mcp.add_tool(get_address_overview)
 
