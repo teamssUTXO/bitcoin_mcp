@@ -12,13 +12,19 @@ class Config:
 
     SATOSHI: int = 100_000_000
 
-    # Timeouts in seconds
-    API_TIMEOUT: int = 5
-    CACHE_TTL_TIME: int = 30
+    # Retry & Cache
+    ENABLE_CACHE: bool = True
+    ENABLE_RETRY: bool = True
 
-    # # Features
-    # ENABLE_CACHE: bool = True
-    # ENABLE_RETRY: bool = True
-    # MAX_RETRIES: int = 3
+    # APIs Management
+
+    CACHE_TTL_TIME: int = 60
+    MAX_RETRIES: int = 3
+
+    # Timeout
+    API_CONNECT_TIMEOUT: int = 5.0
+    API_READ_TIMEOUT: int = 30.0
+    API_WRITE_TIMEOUT: int = 10.0
+    API_POOL_TIMEOUT: int = 5.0
 
 config = Config()
