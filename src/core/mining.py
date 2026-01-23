@@ -6,21 +6,25 @@ from src.data.mining_dataclasses import DataRankingMiningPools, DataHashratesMin
 
 
 class MiningPoolAnalyzer:
-    """Analyseur de mining pools"""
+    """Mining Pools Analyzer"""
 
     def __init__(self):
         """
-        Initialise l'analyseur de mining pools.
+        Initialize Mining Pools Analyzer.
         """
         self.mempool = get_mempool_client() # le client mempool
 
 
     def get_mining_pools_ranking(self) -> Optional[str]:
         """
-        Récupère le top 10 des mining pools sur 3 mois.
+        Retrieves the top 10 Bitcoin mining pools based on 3-month performance.
 
         Returns:
-            str: Classement formaté ou None en cas d'erreur
+            A Markdown formatted string including:
+            - A ranked list of the top 10 mining pools.
+            - Block count and network share percentage per pool.
+            - Total blocks mined by the top 10 pools combined.
+            Returns None if an API error occurs or data is empty.
         """
         try:
             data: dict = self.mempool.get_mining_pools_rank()
@@ -44,19 +48,20 @@ class MiningPoolAnalyzer:
 
             return result
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_mining_pool_hashrates(self) -> Optional[str]:
         """
-        Récupère les hashrates du top 10 des mining pools sur 3 mois.
+        Retrieves the estimated hashrate for the top 10 mining pools over 3 months.
 
         Returns:
-            str: Hashrates formatés ou None en cas d'erreur
+            A formatted string including:
+            - A ranked list of pools by hashrate.
+            - Average hashrate per pool expressed in EH/s (Exahashes per second).
+            - Each pool's percentage share of the total network hashrate.
+            Returns None if an API error occurs or data is empty.
         """
         try:
             data: list = self.mempool.get_mining_pools_hashrate()
@@ -82,15 +87,20 @@ class MiningPoolAnalyzer:
             return str(result)
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_top_pool(self) -> Optional[str]:
         """
-        Récupère les infos du pool de mining #1.
+        Retrieves detailed information for the #1 ranked Bitcoin mining pool.
 
         Returns:
-            str: Infos du premier pool ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Pool name and URL slug.
+            - Total blocks mined over the last 3 months.
+            - Network dominance percentage compared to all other pools.
+            - Official website link for the pool.
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.mempool.get_mining_pools_rank()
@@ -120,18 +130,23 @@ class MiningPoolAnalyzer:
             return result
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_pool_by_slug(self, pool_slug: str) -> Optional[str]:
         """
-        Recherche un mining pool spécifique par son nom.
+        Retrieves detailed information for a specific mining pool using its slug.
 
         Args:
-            pool_slug: Nom du pool recherché
+            pool_slug: The URL-friendly name (slug) of the mining pool.
 
         Returns:
-            str: Infos du pool ou None si non trouvé/erreur
+            A Markdown formatted string including:
+            - Pool name and official website link.
+            - Real-time technical performance (auto-scaled hashrate units).
+            - Block statistics (total blocks found and network share).
+            - A list of known Bitcoin addresses associated with the pool.
+            Returns None if the pool is not found or an API error occurs.
         """
         try:
             data: dict = self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
@@ -168,16 +183,20 @@ class MiningPoolAnalyzer:
             return result
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 
     def get_mining_statistics(self) -> Optional[str]:
         """
-        Récupère des statistiques générales sur le mining.
+        Retrieves global statistics and distribution metrics for Bitcoin mining.
 
         Returns:
-            str: Statistiques de mining ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Network overview (Active pools count and total blocks mined).
+            - Network dominance (Leader pool name and its percentage share).
+            - Power distribution (Comparison between the leader and average pools).
+            Returns None if an API error occurs or data is empty.
         """
         try:
             data: dict = self.mempool.get_mining_pools_rank()
@@ -216,7 +235,7 @@ class MiningPoolAnalyzer:
             return result
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 

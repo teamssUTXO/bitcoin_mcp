@@ -7,21 +7,25 @@ from src.api.mempool_client import get_mempool_client
 from src.data.block_dataclasses import DataLatestBlock, DataLatestBlocks
 
 class BlockAnalyzer:
-    """Analyseur de blocs Bitcoin"""
+    """Bitcoin Blocks Analyzer"""
 
     def __init__(self):
         """
-        Initialise l'analyseur de blocs.
+        Initialize Blocks Analyzer.
         """
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
     def get_latest_block_summary(self) -> Optional[str]:
         """
-        Récupère un résumé du dernier bloc miné.
+        Retrieves a summary of the most recently mined block.
 
         Returns:
-            str: Résumé du dernier bloc ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Block height and unique hash.
+            - Detailed timestamp (UTC and relative time).
+            - Internal block index.
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.blockchain.get_latest_block()
@@ -44,18 +48,19 @@ class BlockAnalyzer:
             return result
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_block_by_height(self, height: int) -> Optional[str]:
         """
-        Récupère le hash d'un bloc avec une hauteur donnée.
+        Retrieves the block hash for a specific block height.
 
         Args:
-            height: Hauteur du bloc recherché
+            height: The height of the block to search for.
 
         Returns:
-            str: Hash du bloc ou None en cas d'erreur
+            A formatted string containing the block height and its corresponding hash.
+            Returns None if the block is not found or an API error occurs.
         """
         try:
             block_hash: str = self.mempool.get_block_height(height)
@@ -65,15 +70,19 @@ class BlockAnalyzer:
             return f"Hash du bloc #{height:,}: {block_hash}"
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_latest_blocks_info(self) -> Optional[str]:
         """
-        Récupère les informations sur les 10 derniers blocs.
+        Retrieves detailed information and statistics for the last 10 mined blocks.
 
         Returns:
-            str: Infos des derniers blocs formatées ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Individual block details (Height, ID, Timestamp, TX count).
+            - Technical data per block (Size, Weight, Fees, Reward, Pool name).
+            - Aggregate statistics (Total/average transactions, average size, and average block time).
+            Returns None if an API error occurs or data is empty.
         """
         try:
             data: list = self.mempool.get_blocks_info()
@@ -82,7 +91,7 @@ class BlockAnalyzer:
 
             infos: DataLatestBlocks = DataLatestBlocks.from_data(data)
 
-            result: list = ["=== 10 Derniers Blocs ==="]
+            result: list = ["## Last 10 Blocks Details"]
 
             total_tx: int = sum(infos.txs_count)
             avg_tx: float = total_tx / len(data)
@@ -98,8 +107,7 @@ class BlockAnalyzer:
 
             for i in range(len(data)):
                 result.append(
-                    f"## Last 10 Blocks Details\n"
-                    f"Block {infos.heights[i]} | {infos.ids[i]}\n"
+                    f"#### Block {infos.heights[i]} | {infos.ids[i]}\n"
                     f"Time: {infos.timestamps[i]}\n"
                     f"Transactions: {infos.txs_count[i]}\n"
                     f"Size: {infos.sizes[i]:.2f} MB | Weight: {infos.weights[i]}\n"
@@ -116,11 +124,8 @@ class BlockAnalyzer:
 
             return "\n".join(result)
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 

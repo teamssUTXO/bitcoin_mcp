@@ -68,10 +68,6 @@ def get_bitcoin_network_recommended_fees() -> Optional[str]:
 
 def get_bitcoin_network_health() -> Optional[str]:
     """
-    Parfait ! Voici la définition optimisée pour get_bitcoin_network_health :
-
-    Outil MCP : get_bitcoin_network_health
-    description
     Use this to get a simplified health assessment of the Bitcoin network with a single score and status label.
 
     Returns a concise health summary in string format:

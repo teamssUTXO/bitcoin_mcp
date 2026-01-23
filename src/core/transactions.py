@@ -11,24 +11,29 @@ from src.config import Config
 
 
 class TransactionAnalyzer:
-    """Analyseur de transactions Bitcoin"""
+    """Bitcoin Transactions Analyzer"""
 
     def __init__(self):
         """
-        Initialise l'analyseur de transactions.
+        Initialize Bitcoin Transactions Analyzer.
         """
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
     def get_tx_info(self, txid: str) -> Optional[str]:
         """
-        Récupère les informations détaillées sur une transaction.
+        Retrieves detailed information for a specific Bitcoin transaction.
 
         Args:
-            txid: Identifiant de la transaction
+            txid: The unique transaction ID (hash) to inspect.
 
         Returns:
-            str: Infos de transaction formatées ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Confirmation status (Confirmed/Unconfirmed) and timestamp.
+            - Economic flow (Total BTC amount, fees paid, and fee rate in sat/vB).
+            - Technical structure (Size in bytes, number of inputs and outputs).
+            - Block information (Height and block hash if confirmed).
+            Returns None if the transaction is not found or an API error occurs.
         """
         try:
             data: dict = self.mempool.get_tx_info(txid)
@@ -76,23 +81,24 @@ class TransactionAnalyzer:
 
             return result
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 
     def get_tx_inputs_outputs(self, txid: str) -> Optional[str]:
         """
-        Récupère les détails des inputs et outputs d'une transaction.
+        Retrieves the detailed input and output flow of a transaction.
 
         Args:
-            txid: Identifiant de la transaction
+            txid: The unique transaction ID (hash) to analyze.
 
         Returns:
-            str: Détails inputs/outputs ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Accounting summary (Total Input vs Output and Network Fees).
+            - Detailed UTXO flow (BTC amounts mapped to specific addresses).
+            - Participant registry (List of all sender and recipient addresses).
+            Returns None if the transaction is not found or an API error occurs.
         """
         try:
             data: dict = self.mempool.get_tx_info(txid)
@@ -154,19 +160,23 @@ class TransactionAnalyzer:
             return result
 
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 
     def get_address_transactions(self, address: str) -> Optional[str]:
         """
-        Récupère les transactions d'une addresse
+        Retrieves the transaction history for a specific Bitcoin address.
 
         Args:
-            address: Adresse Bitcoin
+            address: The Bitcoin address to query.
 
         Returns:
-            str: Renvoie les id des transactions de l'adresse
+            A formatted string listing recent transactions, including:
+            - Transaction ID (TXID).
+            - Confirmation date and time.
+            - The specific amount sent by this address in each transaction (sats).
+            Returns None if the address has no history or an API error occurs.
         """
         try:
             data: dict = self.blockchain.get_address_info(address)
@@ -212,9 +222,8 @@ class TransactionAnalyzer:
 
             return result
 
-
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 

@@ -56,7 +56,6 @@ def get_address_overview(address: str) -> Optional[str]:
 
 def register_addresses_tools(mcp: FastMCP):
     """Registers all Bitcoin address tools"""
-    """"""
     mcp.add_tool(get_info_about_address)
     mcp.add_tool(get_address_overview)
 

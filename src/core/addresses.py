@@ -9,24 +9,29 @@ from src.config import Config
 
 
 class AddressAnalyzer:
-    """Analyseur d'adresses Bitcoin"""
+    """Bitcoin Address Analyzer"""
 
     def __init__(self):
         """
-        Initialise l'analyseur d'adresses.
+        Initialize Addresses Analyzer.
         """
         self.blockchain = get_blockchain_client()
         self.mempool = get_mempool_client()
 
     def get_address_info(self, address: str) -> Optional[str]:
         """
-        Récupère les infos d'adresse depuis Mempool.space.
+        Retrieves a complete summary of a Bitcoin address.
 
         Args:
-            address: Adresse Bitcoin
+            address: The Bitcoin address to analyze.
 
         Returns:
-            str: Infos formatées ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Balance category (Large, Medium, Low, Cleared).
+            - Activity status (Active, Sleeping, Inactive).
+            - Confirmed balance (BTC) and pending mempool balance (sat).
+            - Transaction counts and output history.
+            Returns None if an API error occurs or the address is not found.
         """
         try:
             data: dict = self.mempool.get_address_info(address)
@@ -48,22 +53,22 @@ class AddressAnalyzer:
             mempool_tx_count: int = infos.mempool_stats.get('tx_count')
 
             if balance_btc == 0 and tx_count > 0:
-                category: str = "Adresse vidée"
+                category: str = "Cleared address"
             elif balance_btc > 1:  # > 1 BTC
-                category: str = "Grande balance (> 1 BTC)"
+                category: str = "Large Balance (> 1 BTC)"
             elif balance_btc > 0.1:  # > 0.1 BTC
-                category: str = "Balance moyenne"
+                category: str = "Medium Balance (average)"
             elif balance_btc > 0:
-                category: str = "Petite balance (< 0.1 BTC)"
+                category: str = "Low Balance (< 0.1 BTC)"
             else:
-                category: str = "Adresse vide"
+                category: str = "Empty address"
 
             if mempool_tx_count > 0:
-                status: str = "ACTIVE - Transactions en cours"
+                status: str = "ACTIVE - Transactions in progress"
             elif balance_btc > 0:
-                status: str = "DORMANTE - Balance existante, aucune TX récente"
+                status: str = "SLEEPING - Existing balance, no recent TX"
             else:
-                status: str = "INACTIVE - Balance nulle"
+                status: str = "INACTIVE - Empty balance"
 
             result: str = (
                 f"## Bitcoin Address Analysis\n"
@@ -82,22 +87,23 @@ class AddressAnalyzer:
             )
             return result
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_address_info_overview(self, address: str) -> Optional[str]:
         """
-        Récupère les infos d'adresse depuis Blockchain.com.
+        Retrieves a high-level overview of a Bitcoin address.
 
         Args:
-            address: Adresse Bitcoin en base58 ou hash160
+            address: The Bitcoin address to analyze (base58 or hash160).
 
         Returns:
-            str: Infos formatées ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Current balance in BTC.
+            - Historical activity (Total received and sent in BTC).
+            - Total number of transactions.
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.blockchain.get_address_info(address)
@@ -122,11 +128,8 @@ class AddressAnalyzer:
             )
             return result
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 

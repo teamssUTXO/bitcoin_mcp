@@ -179,5 +179,5 @@ class DataTrendingNFTs:
     @classmethod
     def from_data(cls, data: dict) -> DataTrendingNFTs:
         return cls(
-            data=data.get("nfts", [])  # on découpe en trois la donnée pour coins, categories et nft, plus opti
+            data=data.get("nfts", [])  # The data is split into three parts: Coins, Categories, and NFT for better optimization.
         )

@@ -8,21 +8,26 @@ from src.data.market_dataclasses import DataMarketOverview, DataBitcoinOverview,
 
 
 class MarketAnalyzer:
-    """Analyseur du marché crypto"""
+    """Cryptocurrency Market Analyzer"""
 
     def __init__(self):
         """
-        Initialise l'analyseur de marché.
+        Initialize Cryptocurrency Market Analyzer.
         """
         self.coingecko = get_coingecko_client()
         self.alternative = get_alternative_client()
 
     def get_global_cryptomarket_data(self) -> Optional[str]:
         """
-        Récupère les données globales du marché des cryptos puis les formate
+        Retrieves a global overview of the cryptocurrency market.
 
         Returns:
-            str: Données formatées du marché global ou None en cas d'erreur
+            A Markdown formatted string including:
+            - General stats (Active cryptos, number of markets, market cap change).
+            - ICO status (Upcoming, ongoing, and ended).
+            - Total Market Capitalization and Volume (USD, EUR, BTC, ETH).
+            - Top 5 Market Dominance percentages.
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.coingecko.get_global_market_data()
@@ -65,19 +70,20 @@ class MarketAnalyzer:
             )
             return result
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_btc_price_usd(self) -> Optional[str]:
         """
-        Récupère le prix actuel du Bitcoin en USD.
+        Retrieves the current Bitcoin price and market metrics in USD.
 
         Returns:
-            str: Prix formaté du BTC ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Price data (Current price, 24h ago, and 24h percentage change).
+            - Market indicators (Market cap, 24h trading volume).
+            - Ratios and supply (Volume/Market Cap ratio and circulating supply).
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.coingecko.get_btc_price_usd()
@@ -103,19 +109,23 @@ class MarketAnalyzer:
             )
             return result
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_btc_market_data(self) -> Optional[str]:
         """
-        Récupère les informations détaillées sur le marché Bitcoin.
+        Retrieves a technical and financial report for Bitcoin.
 
         Returns:
-            str: Données de marché formatées ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Market rankings and current valuation (Price, Cap, Rank).
+            - Tokenomics (Supply, FDV, Algorithm, and Block time).
+            - 24h Volatility analysis (High, Low, and Percentage range).
+            - Historical performance (ATH and ATL dates/prices).
+            - Comparative price change analysis (1h, 24h, 7d, 30d, 60d, 1y).
+            - Resource links (GitHub, Whitepaper, and Description).
+            Returns None if an API error occurs or data is missing
         """
         try:
             data: dict = self.coingecko.get_btc_market_data()
@@ -177,19 +187,19 @@ class MarketAnalyzer:
             return result
 
         except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
-        except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 
     def get_market_sentiment(self) -> Optional[str]:
         """
-        Analyse le sentiment de marché.
+        Analyzes current market psychology and sentiment.
 
         Returns:
-            str: Analyse de sentiment ou None en cas d'erreur
+            A formatted string including:
+            - Community sentiment (Bullish vs. Bearish percentages).
+            - 7-day Fear & Greed Index history (Values and Classifications).
+            Returns None if API data from Alternative.me or CoinGecko is missing.
         """
         try:
             alternative_data: dict = self.alternative.get_fear_greed_index()
@@ -226,20 +236,23 @@ class MarketAnalyzer:
 
             return result
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 
     def get_trending_coins(self) -> Optional[str]:
         """
-        Recupère les coins en tendance
+        Retrieves the list of currently trending cryptocurrencies.
 
         Returns:
-            str: Coins en tendance
+            A Markdown formatted string including:
+            - Coin names and symbols.
+            - Trending and Market Cap rankings.
+            - Current price, 24h historical price, and percentage change.
+            - Market Cap and 24h trading volume.
+            - A brief description of each trending coin.
+            Returns None if an API error occurs or data is empty.
         """
         try:
             data: dict = self.coingecko.get_market_trend()
@@ -263,19 +276,21 @@ class MarketAnalyzer:
 
             return "\n".join(result)
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_trending_categories(self) -> Optional[str]:
         """
-        Recupère les categories de cryptomonnaies en tendance
+        Retrieves the list of currently trending cryptocurrency categories.
 
         Returns:
-            str: Categories en tendance
+            A Markdown formatted string including:
+            - Category names and rankings.
+            - Number of coins within each category.
+            - Market Cap and 24h market cap change (current vs. 24h ago).
+            - 24h trading volume for the entire category.
+            Returns None if an API error occurs or data is empty.
         """
         try:
             data: dict = self.coingecko.get_market_trend()
@@ -297,19 +312,21 @@ class MarketAnalyzer:
 
             return "\n".join(result)
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
     def get_trending_nfts(self) -> Optional[str]:
         """
-        Recupère les nfts en tendance
+        Retrieves the list of currently trending NFT collections.
 
         Returns:
-            str: nfts en tendance
+            A Markdown formatted string including:
+            - Collection name and symbol.
+            - Floor price and 24h percentage change.
+            - 24h trading volume and average sale price.
+            - Native currency used for the collection.
+            Returns None if an API error occurs or data is empty.
         """
         try:
             data: dict = self.coingecko.get_market_trend()
@@ -331,11 +348,8 @@ class MarketAnalyzer:
 
             return "\n".join(result)
 
-        except KeyError as e:
-            print(f"Erreur type: 02 - Clé manquante: {e}")
-            return None
         except Exception as e:
-            print(f"Erreur API: 01 - {e}")
+            print(f"API Error {e}")
             return None
 
 
@@ -343,7 +357,7 @@ class MarketAnalyzer:
 _market_analyser_instance = None
 
 def get_market_analyser_client() -> MarketAnalyzer:
-    """Get or create the Market Analyzer client singleton instance."""
+    """Get or create the Cryptocurrency Market Analyzer client singleton instance."""
     global _market_analyser_instance
     if _market_analyser_instance is None:
         _market_analyser_instance = MarketAnalyzer()

@@ -9,21 +9,24 @@ from src.config import Config
 
 
 class NetworkAnalyzer:
-    """Analyseur du réseau Bitcoin"""
+    """Bitcoin Network Analyzer"""
 
     def __init__(self):
         """
-        Initialise l'analyseur réseau.
+        Initialize Bitcoin Network Analyzer.
         """
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
     def get_network_stats(self) -> Optional[str]:
         """
-        Récupère les statistiques complètes du réseau Bitcoin.
+        Retrieves current recommended Bitcoin transaction fees.
 
         Returns:
-            str: Statistiques réseau formatées ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Fee rates (sat/vB) for different priority levels (Fast, Half-hour, Standard, Economy).
+            - Estimated total cost in BTC for a standard transaction (250 vBytes).
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.blockchain.get_network_stats()
@@ -56,18 +59,20 @@ class NetworkAnalyzer:
             )
             return result
 
-        except KeyError as e:
-            return f"Erreur type: 02 - Clé manquante: {e}"
         except Exception as e:
-            return f"Erreur API: 02 - {e}"
+            print(f"API Error {e}")
+            return None
 
 
     def get_network_recommended_fees(self) -> Optional[str]:
         """
-        Récupère les frais de transaction recommandés.
+        Retrieves current recommended Bitcoin transaction fees.
 
         Returns:
-            str: Frais recommandés formatés ou None en cas d'erreur
+            A Markdown formatted string including:
+            - Fee rates (sat/vB) for different priority levels (Fast, Half-hour, Standard, Economy).
+            - Estimated total cost in BTC for a standard transaction (250 vBytes).
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.mempool.get_recommended_fees()
@@ -94,19 +99,21 @@ class NetworkAnalyzer:
 
             return result
 
-
-        except KeyError as e:
-            return f"Erreur type: 02 - Clé manquante: {e}"
         except Exception as e:
-            return f"Erreur API: 01 - {e}"
+            print(f"API Error {e}")
+            return None
 
 
     def get_network_health(self) -> Optional[str]:
         """
-        Évalue la santé globale du réseau Bitcoin.
+        Evaluates the overall health and stability of the Bitcoin network.
 
         Returns:
-            str: Analyse de santé du réseau ou None en cas d'erreur
+            A formatted string including:
+            - A health score (0-100) and status (Excellent, Good, Fair, Poor).
+            - A list of detected issues (e.g., block time anomalies, low hashrate).
+            - A confirmation message if no issues are detected.
+            Returns None if an API error occurs or data is missing.
         """
         try:
             data: dict = self.blockchain.get_network_stats()
@@ -146,7 +153,8 @@ class NetworkAnalyzer:
             return result
 
         except Exception as e:
-            return f"Erreur API: 01 - {e}"
+            print(f"API Error {e}")
+            return None
 
 
 # Singleton instance for the analyzer
