@@ -5,7 +5,7 @@ import time
 from src.config import Config
 
 class APIClient:
-    """Client HTTP de base avec retry, timeout et cache"""
+    """Basic HTTP Client with retry, timeout and cache"""
     
     def __init__(self, base_url: str):
         self.base_url: str = base_url
@@ -15,7 +15,7 @@ class APIClient:
         self._cache: Dict[str, tuple] = {}
     
     def get(self, endpoint: str) -> Optional[Dict[Any, Any]]:
-        """GET avec cache TTL"""
+        """GET with TTL cache"""
         cache_key = f"{self.base_url}{endpoint}"
         
         if cache_key in self._cache:

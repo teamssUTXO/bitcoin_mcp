@@ -9,7 +9,7 @@ class BlockchainClient(APIClient):
 
     def get_network_stats(self) -> Optional[dict]:
         """
-        Renvoie les stats actuels du réseau bitcoin
+        Returns current Bitcoin network stats
         Docs : https://blockchain.com/fr/explorer/api/blockchain_api
         """
         return self.get("/stats?format=json")
@@ -19,7 +19,9 @@ class BlockchainClient(APIClient):
 
     def get_network_hashrate(self) -> Optional[int]:
         """
-        Renvoie le hashrate actuel du réseau bitcoin
+        Unused
+
+        Returns the current hashrate of the Bitcoin network miners
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
         result = self.get("/q/hashrate")
@@ -27,7 +29,9 @@ class BlockchainClient(APIClient):
 
     def get_network_difficulty(self) -> Optional[float]:
         """
-        Renvoie la difficulté actuelle du réseau bitcoin
+        Unused
+
+        Returns the current difficulty of the bitcoin network
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
         result = self.get("/q/getdifficulty")
@@ -38,7 +42,9 @@ class BlockchainClient(APIClient):
 
     def get_nb_tx_day(self) -> Optional[int]:
         """
-        Renvoie le nombre de transactions sur 24h
+        Unused
+
+        Returns the number of transactions in the Bitcoin network over 24 hours
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
         result = self.get("/q/24hrtransactioncount")
@@ -46,7 +52,9 @@ class BlockchainClient(APIClient):
 
     def get_nb_stc_day(self) -> Optional[int]:
         """
-        Renvoie le nombre de satoshis envoyés sur 24h
+        Unused
+
+        Returns the number of satoshis sent on the Bitcoin network in 24 hours
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
         result = self.get("/q/24hrbtcsent")
@@ -54,7 +62,9 @@ class BlockchainClient(APIClient):
 
     def get_unconfirmed_tx(self) -> Optional[int]:
         """
-        Renvoie le nombre de transactions non-confirmées
+        Unused
+
+        Returns the number of unconfirmed transactions on the Bitcoin network
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
         result = self.get("/q/unconfirmedcount")
@@ -65,7 +75,7 @@ class BlockchainClient(APIClient):
 
     def get_latest_block(self) -> Optional[dict]:
         """
-        Renvoie les infos du dernier bloc
+        Returns information about the last mined block on the Bitcoin network
         Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
         """
         return self.get(f"/latestblock")
@@ -75,14 +85,14 @@ class BlockchainClient(APIClient):
 
     def get_address_info(self, address) -> Optional[dict]:
         """
-        Renvoie les infos d'une adresse
+        Returns the information for a Bitcoin address (param address in base58 or hash160)
         Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
         """
         return self.get(f"/rawaddr/{address}")
 
+
 # Singleton instance for the client
 _blockchain_instance = None
-
 
 def get_blockchain_client() -> BlockchainClient:
     """Get or create the Elfa API client singleton instance."""

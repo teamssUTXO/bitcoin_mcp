@@ -40,7 +40,7 @@ def get_address_overview(address: str) -> Optional[str]:
     - Total amount ever sent (in BTC)
     - Total number of transactions
 
-    Accepts any Bitcoin address format (Legacy, SegWit, Bech32).
+    Accepted Bitcoin address format : base58 or hash160.
 
     Use cases: When you need a quick financial summary without granular details.
     """

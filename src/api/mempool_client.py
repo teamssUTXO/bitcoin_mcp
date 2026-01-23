@@ -11,7 +11,7 @@ class MempoolClient(APIClient):
 
     def get_block_tip_height(self) -> Optional[int]:
         """
-        Renvoie la hauteur du dernier bloc
+        Returns the height of the last block mined on the Bitcoin network
         Docs : https://mempool.space/docs/api/rest#get-block-tip-height
         """
         result = self.get("/blocks/tip/height")
@@ -19,7 +19,7 @@ class MempoolClient(APIClient):
 
     def get_block_tip_hash(self) -> Optional[int]:
         """
-        Renvoie le hash du dernier bloc
+        Returns the hash of the last block mined on the Bitcon network
         Docs : https://mempool.space/docs/api/rest#get-block-tip-hash
         """
         result = self.get("/blocks/tip/hash",)
@@ -27,14 +27,14 @@ class MempoolClient(APIClient):
 
     def get_block_height(self, height: int) -> Optional[str]:
         """
-        Renvoie le hash d'un bloc dont la hauteur est passé en paramètre
+        Returns the hash of a block whose height is passed as a parameter
         Docs : https://mempool.space/docs/api/rest#get-block-height
         """
         return str(self.get(f"/block-height/{height}"))
 
     def get_blocks_info(self) -> Optional[list[dict]]:
         """
-        Renvoie des infos sur les 10 derniers blocs
+        Returns information about the last 10 blocks mined on the Bitcoin network
         Docs : https://mempool.space/docs/api/rest#get-blocks
         """
         return self.get("/v1/blocks")
@@ -44,7 +44,7 @@ class MempoolClient(APIClient):
 
     def get_recommended_fees(self) -> Optional[dict]:
         """
-        Renvoie le ratio de frais de transactions recommandés
+        Returns the recommended transaction fee ratio for a Bitcoin transaction
         Docs : https://mempool.space/docs/api/rest#get-recommended-fees-precise
         """
         return self.get("/v1/fees/recommended")
@@ -54,7 +54,7 @@ class MempoolClient(APIClient):
 
     def get_address_info(self, address: str) -> Optional[dict]:
         """
-        Renvoie les infos d'une adresse bitcoin
+        Returns the information for a Bitcoin address
         Docs : https://mempool.space/docs/api/rest#get-address
         """
         return self.get(f"/address/{address}")
@@ -64,7 +64,7 @@ class MempoolClient(APIClient):
 
     def get_tx_info(self, txid: str) -> Optional[dict]:
         """
-        Renvoie des infos sur une transaction
+        Returns information about a Bitcoin transaction
         Docs : https://mempool.space/docs/api/rest#get-transaction
         """
         return self.get(f"/tx/{txid}")
@@ -74,21 +74,21 @@ class MempoolClient(APIClient):
 
     def get_mining_pools_rank(self) -> Optional[dict]:
         """
-        Renvoie le classement des meilleures mining pools depuis 3 mois
+        Returns the ranking of the best Bitcoin network mining pools for the last 3 months
         Docs : https://mempool.space/docs/api/rest#get-mining-pools
         """
         return self.get("/v1/mining/pools/3m")
 
     def get_mining_pools_hashrate(self) -> Optional[list]:
         """
-        Renvoie le hashrate des meilleures mining pools depuis 3 mois
+        Renvoie le hashrate des meilleures mining pools du réseau bitcoin depuis 3 mois
         Docs : https://mempool.space/docs/api/rest#get-mining-pool-hashrates
         """
         return self.get("/v1/mining/hashrate/pools/3m")
 
     def get_mining_pool_info_by_slug(self, slug: str) -> Optional[dict]:
         """
-        Renvoie les infos d'un mining pool (via slug)
+        Returns information about a mining pool via its slug
         Docs : https://mempool.space/docs/api/rest#get-mining-pool
         """
         return self.get(f"/v1/mining/pool/{slug}")
@@ -98,7 +98,7 @@ class MempoolClient(APIClient):
 
     def get_mempool_info(self) -> Optional[dict]:
         """
-        Renvoie des infos sur la mempool de mempool.space
+        Returns information about the mempool of mempool.space
         Docs : https://mempool.space/docs/api/rest#get-mempool
         """
         return self.get("/mempool")
@@ -106,7 +106,6 @@ class MempoolClient(APIClient):
 
 # Singleton instance for the client
 _mempool_instance = None
-
 
 def get_mempool_client() -> MempoolClient:
     """Get or create the Elfa API client singleton instance."""
