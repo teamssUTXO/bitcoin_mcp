@@ -66,18 +66,19 @@ class AddressAnalyzer:
                 status: str = "INACTIVE - Balance nulle"
 
             result: str = (
-                f"=== Adresse Bitcoin ===\n"
-                f"Adresse: {address}\n"
-                f"Catégorie: {category}\n"
-                f"\n💰 BALANCE:\n"
-                f"Confirmée: {balance_btc:.8f} BTC\n"
-                f"En attente: {mempool_balance:,} sat\n"
-                f"\n📊 ACTIVITÉ:\n"
-                f"Status: {status}\n"
-                f"Total transactions: {tx_count:,}\n"
-                f"TX en mempool: {mempool_tx_count}\n"
-                f"Reçus: {funded_txo_count:,} outputs ({funded_txo_sum / 100_000_000:.8f} BTC)\n"
-                f"Dépensés: {spent_txo_count:,} outputs ({spent_txo_sum / 100_000_000:.8f} BTC)"
+                f"## Bitcoin Address Analysis\n"
+                f"Address: {address}\n"
+                f"Category: {category}\n"
+                f"Status: {status}\n\n"
+                f"## Balance\n"
+                f"Confirmed: {balance_btc:.8f} BTC\n"
+                f"Mempool: {mempool_balance} sat\n\n"
+                f"## Transaction Activity\n"
+                f"Total: {tx_count}\n"
+                f"Mempool: {mempool_tx_count}\n\n"
+                f"## Outputs\n"
+                f"Received: {funded_txo_count} outputs | {funded_txo_sum / 100_000_000:.8f} BTC\n"
+                f"Spent: {spent_txo_count} outputs | {spent_txo_sum / 100_000_000:.8f} BTC"
             )
             return result
 
@@ -110,14 +111,14 @@ class AddressAnalyzer:
             sent_btc: float = infos.total_sent / Config.SATOSHI
 
             result: str = (
-                f"=== Adresse Bitcoin ===\n"
-                f"Adresse: {address}\n"
-                f"\n💰 BALANCE:\n"
-                f"Solde actuel: {balance_btc:.8f} BTC\n"
-                f"\n📊 HISTORIQUE:\n"
-                f"Total reçu: {received_btc:.8f} BTC\n"
-                f"Total envoyé: {sent_btc:.8f} BTC\n"
-                f"Nombre de transactions: {infos.n_tx:,}"
+                f"## Bitcoin Address Overview\n"
+                f"Address: {address}\n\n"
+                f"## Balance\n"
+                f"Current: {balance_btc:.8f} BTC\n\n"
+                f"## Historical Activity\n"
+                f"Total Received: {received_btc:.8f} BTC\n"
+                f"Total Sent: {sent_btc:.8f} BTC\n"
+                f"Transactions: {infos.n_tx}"
             )
             return result
 

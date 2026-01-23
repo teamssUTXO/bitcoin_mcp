@@ -31,16 +31,16 @@ class MiningPoolAnalyzer:
 
             total_blocks = sum(p.get("blockCount", 0) for p in infos.top10_pools)
 
-            result: str = "=== Top Mining Pools (3 mois) ===\n"
+            result: str = "## Top Mining Pools (3-Month Hashrate)\n"
 
             for i, pool in enumerate(infos.top10_pools, 1):
                 name: str = pool.get('name', 'Unknown')
                 block_count: int = pool.get('blockCount', 0)
                 percentage: int = (block_count / total_blocks * 100) if total_blocks > 0 else 0
 
-                result += f"{name} #{i}\n"
-                result += f"   Blocs: {block_count:,} ({percentage:.2f}%)\n"
-            result += f"\nTotal blocs: {total_blocks:,}\n"
+                result += f"#{i} {name}\n"
+                result += f"Blocks: {block_count} ({percentage:.2f}%)\n"
+            result += f"\nTotal Blocks: {total_blocks}\n"
 
             return result
 
@@ -76,10 +76,8 @@ class MiningPoolAnalyzer:
                 if share > 0:
                     share *= 100
 
-                result += f"Pool #{i}\n"
-                result += f"   Nom: {pool_name} EH/s\n"
-                result += f"   Hashrate: {hashrate:.2f} EH/s\n"
-                result += f"   Part du réseau: {share:.2f}%\n"
+                result += f"#{i} {pool_name}\n"
+                result += f"Hashrate: {hashrate:.2f} EH/s | Network Share: {share:.2f}%\n"
 
             return str(result)
 
@@ -112,12 +110,12 @@ class MiningPoolAnalyzer:
             dominance_percentage: float = (top_pool_block_count / total_blocks * 100) if total_blocks > 0 else 0
 
             result: str = (
-                f"=== Pool #1 ===\n"
-                f"Nom: {top_pool_name}\n"
+                f"## Top Mining Pool\n"
+                f"Name: {top_pool_name}\n"
                 f"Slug: {top_pool_slug}\n"
-                f"Blocs minés (3 mois): {top_pool_block_count:,}\n"
-                f"Pourcentage de tout les blocs miné (3 mois): {dominance_percentage:.2f}%\n"
-                f"Lien: {top_pool_link}\n"
+                f"Blocks Mined (3-Month): {top_pool_block_count}\n"
+                f"Network Dominance: {dominance_percentage:.2f}%\n"
+                f"Link: {top_pool_link}\n"
             )
             return result
 
@@ -156,22 +154,16 @@ class MiningPoolAnalyzer:
                 addr_list: str = "  - Aucune adresse listée"
 
             result: str = (
-                f"=== Détails du Pool de Minage ===\n"
-                f"Nom: {infos.name}\n"
-                f"Site Web: {infos.link}\n"
-                f"\n"
-                f"--- Performance Technique ---\n"
-                f"Puissance (Hashrate): {formatted_hashrate}\n"
-                f"\n"
-                f"--- Statistiques de Blocs ---\n"
-                f"Nombre de blocs trouvés :\n"
-                f"{infos.block_count}\n"
-                f"\n"
-                f"Part du réseau (Block Share) :\n"
-                f"{infos.block_share}\n"
-                f"\n"
-                f"--- Adresses du Pool ---\n"
-                f"{addr_list}\n"
+                f"## Mining Pool Details\n"
+                f"Name: {infos.name}\n"
+                f"Website: {infos.link}\n\n"
+                f"## Technical Performance\n"
+                f"Hashrate: {formatted_hashrate}\n\n"
+                f"## Block Statistics\n"
+                f"Blocks Found: {infos.block_count}\n"
+                f"Network Share: {infos.block_share}\n\n"
+                f"## Pool Addresses\n"
+                f"{addr_list}"
             )
             return result
 
@@ -209,19 +201,16 @@ class MiningPoolAnalyzer:
             dominance_percentage: int = (top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
 
             result: str = (
-                f"=== Statistiques Globales du Minage (Bitcoin) ===\n"
-                f"Pools actifs recensés : {num_pools}\n"
-                f"Total de blocs minés : {total_blocks:,}\n"
-                f"Moyenne par pool : {avg_blocks_per_pool:,.2f} blocs\n"
-                f"\n"
-                f"--- Dominance du Réseau ---\n"
-                f"🏆 Leader actuel : {top_pool_name}\n"
-                f"   Volume : {top_pool_blocks:,} blocs\n"
-                f"   Dominance : {dominance_percentage:.2f}% du réseau\n"
-                f"\n"
-                f"--- Écart de Puissance ---\n"
-                f"Plus petit acteur : {bottom_pool_blocks} bloc(s)\n"
-                f"Ratio Leader/Moyenne : x{(top_pool_blocks / avg_blocks_per_pool):.1f}\n"
+                f"## Global Mining Statistics (Bitcoin)\n"
+                f"Active Pools: {num_pools}\n"
+                f"Total Blocks Mined: {total_blocks}\n"
+                f"Average per Pool: {avg_blocks_per_pool:.2f}\n\n"
+                f"## Network Dominance\n"
+                f"Leader: {top_pool_name}\n"
+                f"Blocks: {top_pool_blocks} | Dominance: {dominance_percentage:.2f}%\n\n"
+                f"## Power Distribution\n"
+                f"Smallest Pool: {bottom_pool_blocks} blocks\n"
+                f"Leader/Average Ratio: {(top_pool_blocks / avg_blocks_per_pool):.1f}x\n"
             )
 
             return result

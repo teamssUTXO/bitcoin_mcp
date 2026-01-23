@@ -48,20 +48,20 @@ class MarketAnalyzer:
             fmt_dom: str = "\n".join([f"  - {k}: {v:.2f}%" for k, v in five_biggest_market_cap_percentage.items()])
 
             result: str = (
-                f"=== Vue d'ensemble du Marché ===\n"
-                f"Cryptos actives : {infos.active_cryptocurrencies:,}\n"
-                f"Nombre de marchés : {infos.nb_markets:,}\n"
-                f"Variation globale (Market Cap) : {infos.market_cap_change_percentage:+.2f}%\n\n"
-                f"--- État des ICOs ---\n"
-                f"• À venir : {infos.upcoming_icos}\n"
-                f"• En cours : {infos.ongoing_icos}\n"
-                f"• Terminées : {infos.ended_icos}\n\n"
-                f"--- Market Cap ---\n"
+                f"## Crypto Market Overview\n"
+                f"Active Cryptocurrencies: {infos.active_cryptocurrencies}\n"
+                f"Markets: {infos.nb_markets}\n"
+                f"Market Cap Change: {infos.market_cap_change_percentage:+.2f}%\n\n"
+                f"## ICO Status\n"
+                f"Upcoming: {infos.upcoming_icos}\n"
+                f"Ongoing: {infos.ongoing_icos}\n"
+                f"Ended: {infos.ended_icos}\n\n"
+                f"## Market Capitalization\n"
                 f"{fmt_cap}\n\n"
-                f"--- Volume ---\n"
+                f"## Trading Volume\n"
                 f"{fmt_vol}\n\n"
-                f"--- Top 5 Dominance (Parts de marché) ---\n"
-                f"{fmt_dom}\n"
+                f"## Top 5 Market Dominance\n"
+                f"{fmt_dom}"
             )
             return result
 
@@ -88,20 +88,18 @@ class MarketAnalyzer:
 
             circulating_supply: int = infos.usd_market_cap / infos.usd if infos.usd else 0
             vol_cap_ratio: int = (infos.usd_24h_vol / infos.usd_market_cap) * 100 if infos.usd_market_cap else 0
-            price_yesterday: int = infos.usd / (1 + (infos.usd_24h_change / 100))
-
+            price_yesterday: float = infos.usd / (1 + (infos.usd_24h_change / 100))
 
             result: str = (
-                f"=== Données du Marché (USD) ===\n"
-                f"Prix actuel: ${infos.usd:,.2f}\n"
-                f"Prix hier (est.): ${price_yesterday:,.2f}\n"
-                f"Variation sur 24h: {infos.usd_24h_change:+.2f}%\n"
-                f"\n"
-                f"--- Indicateurs Calculés ---\n"
-                f"Capitalisation: ${infos.usd_market_cap:,.0f}\n"
-                f"Volume 24h: ${infos.usd_24h_vol:,.0f}\n"
-                f"Ratio Vol/Cap: {vol_cap_ratio:.2f}% (Liquidité)\n"
-                f"Offre en circulation: {circulating_supply:,.0f} jetons\n"
+                f"## Market Data (USD)\n"
+                f"Current Price: ${infos.usd:,.2f}\n"
+                f"Price 24h Ago: ${price_yesterday:,.2f}\n"
+                f"24h Change: {infos.usd_24h_change:+.2f}%\n\n"
+                f"## Market Indicators\n"
+                f"Market Cap: ${infos.usd_market_cap:,.0f}\n"
+                f"24h Volume: ${infos.usd_24h_vol:,.0f}\n"
+                f"Vol/Cap Ratio: {vol_cap_ratio:.2f}%\n"
+                f"Circulating Supply: {circulating_supply:,.0f} tokens"
             )
             return result
 
@@ -139,42 +137,41 @@ class MarketAnalyzer:
             volatility_pct: int = (volatility_gap / infos.low_price_24h * 100) if infos.low_price_24h else 0
 
             result: str = (
-                f"=== Rapport Technique & Financier (Rang #{infos.market_cap_rank}) ===\n"
-                f"Prix Actuel: ${infos.current_price:,.4f}\n"
-                f"Capitalisation (MC): ${infos.market_cap:,.0f}\n"
-                f"Date de création (Genesis): {infos.genesis_date}\n\n"
+                f"## Technical & Financial Report\n"
+                f"Market Cap Rank: #{infos.market_cap_rank}\n"
+                f"Current Price: ${infos.current_price:,.4f}\n"
+                f"Market Cap: ${infos.market_cap:,.0f}\n"
+                f"Genesis Date: {infos.genesis_date}\n\n"
 
-                f"--- Tokenomics & Offre ---\n"
+                f"## Tokenomics\n"
                 f"Total Supply: {infos.total_supply:,.0f}\n"
                 f"Max Supply: {supply_info}\n"
-                f"FDV (Fully Diluted): {fdv_info}\n"
-                f"Algo / Block Time: {infos.hashing_algorithm} ({infos.block_time_in_minutes} min)\n\n"
+                f"Fully Diluted Valuation: {fdv_info}\n"
+                f"Algorithm: {infos.hashing_algorithm} | Block Time: {infos.block_time_in_minutes} min\n\n"
 
-                f"--- Volatilité & Bornes (24h) ---\n"
-                f"Plus Haut (High): ${infos.high_price_24h:,.4f}\n"
-                f"Plus Bas (Low): ${infos.low_price_24h:,.4f}\n"
-                f"Écart (Volatilité): {volatility_pct:.2f}% (${volatility_gap:,.4f})\n\n"
+                f"## 24h Volatility\n"
+                f"High: ${infos.high_price_24h:,.4f}\n"
+                f"Low: ${infos.low_price_24h:,.4f}\n"
+                f"Range: {volatility_pct:.2f}% (${volatility_gap:,.4f})\n\n"
 
-                f"--- Performance Historique (ATH/ATL) ---\n"
-                f"• ATH (Record): ${infos.ath_price:,.4f} le {infos.ath_date[:10]}\n"
-                f"  Chute depuis ATH: {infos.ath_change_percentage:.2f}%\n"
-                f"• ATL (Plancher): ${infos.atl_price:,.4f} le {infos.atl_date[:10]}\n"
-                f"  Hausse depuis ATL: {infos.atl_change_percentage:+.2f}%\n\n"
+                f"## Historical Performance\n"
+                f"ATH: ${infos.ath_price:,.4f} on {infos.ath_date[:10]} | Change: {infos.ath_change_percentage:.2f}%\n"
+                f"ATL: ${infos.atl_price:,.4f} on {infos.atl_date[:10]} | Change: {infos.atl_change_percentage:+.2f}%\n\n"
 
-                f"--- Analyse Temporelle (Tendance) ---\n"
-                f"Période | Variation % | Prix Précédent\n"
-                f"--------|-------------|---------------\n"
-                f"1H      | {infos.price_change_percentage_1h:>+7.2f}%    | ${infos.price_1h_before:,.4f}\n"
-                f"24H     | {infos.price_change_percentage_24h:>+7.2f}%    | ${infos.price_24h_before:,.4f}\n"
-                f"7J      | {infos.price_change_percentage_7d:>+7.2f}%    | ${infos.price_7d_before:,.4f}\n"
-                f"30J     | {infos.price_change_percentage_30d:>+7.2f}%    | ${infos.price_30d_before:,.4f}\n"
-                f"60J     | {infos.price_change_percentage_60d:>+7.2f}%    | ${infos.price_60d_before:,.4f}\n"
-                f"1 AN    | {infos.price_change_percentage_1y:>+7.2f}%    | ${infos.price_1y_before:,.4f}\n\n"
+                f"## Price Change Analysis\n"
+                f"Period | Change % | Previous Price\n"
+                f"-------|----------|---------------\n"
+                f"1h     | {infos.price_change_percentage_1h:>+7.2f}% | ${infos.price_1h_before:,.4f}\n"
+                f"24h    | {infos.price_change_percentage_24h:>+7.2f}% | ${infos.price_24h_before:,.4f}\n"
+                f"7d     | {infos.price_change_percentage_7d:>+7.2f}% | ${infos.price_7d_before:,.4f}\n"
+                f"30d    | {infos.price_change_percentage_30d:>+7.2f}% | ${infos.price_30d_before:,.4f}\n"
+                f"60d    | {infos.price_change_percentage_60d:>+7.2f}% | ${infos.price_60d_before:,.4f}\n"
+                f"1y     | {infos.price_change_percentage_1y:>+7.2f}% | ${infos.price_1y_before:,.4f}\n\n"
 
-                f"--- Informations & Liens ---\n"
+                f"## Resources\n"
                 f"GitHub: {infos.repo_github_link}\n"
                 f"Whitepaper: {infos.white_paper_link}\n"
-                f"Description: {infos.description}\n"
+                f"Description: {infos.description}"
             )
 
             return result
@@ -255,14 +252,13 @@ class MarketAnalyzer:
 
             for i in range(len(data.get("coins", []))):
                 result.append(
-                    f"=== Coin {infos.names[i]} / {infos.symbols[i]} ===\n"
-                    f"Rank (Trending): {infos.ranks[i]}\n"
-                    f"Price: {infos.prices[i]:.8f} USD\n"
-                    f"Price 24h (yesterday): {(infos.prices[i] / (1 + (infos.prices_changed[i] / 100))):.8f} USD ({"+" if infos.prices_changed[i] > 0 else ""}{infos.prices_changed[i]:.2f}%)\n"
-                    f"Market Cap: {infos.market_caps[i]} USD\n"
-                    f"Market Cap Rank: {infos.market_cap_ranks[i]}\n"
-                    f"Total Volume: {infos.total_volumes[i]} USD\n"
-                    f"\nDescription:\n{infos.descriptions[i]}\n"
+                    f"## {infos.names[i]} ({infos.symbols[i]})\n"
+                    f"Trending Rank: {infos.ranks[i]}\n"
+                    f"Price: ${infos.prices[i]:.8f}\n"
+                    f"Price 24h Ago: ${(infos.prices[i] / (1 + (infos.prices_changed[i] / 100))):.8f} | Change: {infos.prices_changed[i]:+.2f}%\n"
+                    f"Market Cap: ${infos.market_caps[i]} | Rank: {infos.market_cap_ranks[i]}\n"
+                    f"24h Volume: ${infos.total_volumes[i]}\n\n"
+                    f"Description: {infos.descriptions[i]}\n"
                 )
 
             return "\n".join(result)
@@ -292,11 +288,11 @@ class MarketAnalyzer:
 
             for i in range(len(data.get("categories", []))):
                 result.append(
-                    f"=== Categorie Top {i+1} {infos.names[i]} ===\n"
-                    f"Number of Coins : {infos.n_coins_count[i]}\n"
-                    f"Market Cap: {infos.market_caps[i]} USD\n"
-                    f"market Cap 24h (yesterday): {(infos.market_caps[i] / (1 + (infos.market_caps_changed[i] / 100)))} USD ({"+" if infos.market_caps_changed[i] > 0 else ""}{infos.market_caps_changed[i]:.2f}%)\n"
-                    f"Total Volume: {infos.total_volumes[i]} USD\n"
+                    f"## Top {i + 1}: {infos.names[i]}\n"
+                    f"Coins in Category: {infos.n_coins_count[i]}\n"
+                    f"Market Cap: ${infos.market_caps[i]}\n"
+                    f"Market Cap 24h Ago: ${(infos.market_caps[i] / (1 + (infos.market_caps_changed[i] / 100)))} | Change: {infos.market_caps_changed[i]:+.2f}%\n"
+                    f"24h Volume: ${infos.total_volumes[i]}\n"
                 )
 
             return "\n".join(result)
@@ -326,13 +322,11 @@ class MarketAnalyzer:
 
             for i in range(len(data.get("nfts", []))):
                 result.append(
-                    f"=== NFT {infos.names[i]} : {infos.symbols[i]} ===\n"
-                    f"Rank : {i+1}\n"
-                    f"Currency : {infos.native_currencies[i]}\n"
-                    f"Floor price: {infos.floor_prices[i]}\n"
-                    f"Floor Price Change in 24h: {infos.floor_prices_24h_percentage_change[i]:.2f}%\n"
-                    f"Volume in 24h: {infos.h24_volumes[i]}\n"
-                    f"Average sale (24h): {infos.h24_avg_sell_price[i]}\n"
+                    f"## NFT Top {i + 1}: {infos.names[i]} ({infos.symbols[i]})\n"
+                    f"Currency: {infos.native_currencies[i]}\n"
+                    f"Floor Price: {infos.floor_prices[i]} | 24h Change: {infos.floor_prices_24h_percentage_change[i]:+.2f}%\n"
+                    f"24h Volume: {infos.h24_volumes[i]}\n"
+                    f"24h Avg Sale: {infos.h24_avg_sell_price[i]}\n"
                 )
 
             return "\n".join(result)

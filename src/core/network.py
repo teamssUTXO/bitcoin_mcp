@@ -33,26 +33,26 @@ class NetworkAnalyzer:
             infos: DataNetworkStats = DataNetworkStats.from_data(data)
 
             result: str = (
-                f"=== Statistiques Réseau Bitcoin ===\n"
-                f"Prix marché: ${infos.market_price_usd:,.2f}\n"
+                f"## Bitcoin Network Statistics\n"
+                f"Market Price: ${infos.market_price_usd:,.2f}\n"
                 f"Hashrate: {infos.hash_rate / 1_000_000_000_000:.2f} TH/s\n"
-                f"Difficulté: {infos.difficulty:,.0f}\n"
-                f"Prochain ajustement: Bloc #{infos.nextretarget}\n"
-                f"\n=== Blocs ===\n"
-                f"Blocs minés (24h): {infos.n_blocks_mined}\n"
-                f"Total blocs: {infos.n_blocks_total:,}\n"
-                f"Temps entre blocs: {infos.minutes_between_blocks:.2f} min\n"
-                f"Taille des blocs: {infos.blocks_size:,} bytes\n"
-                f"\n=== Transactions ===\n"
-                f"Transactions (24h): {infos.n_tx:,}\n"
-                f"BTC envoyés (estimé): {infos.estimated_btc_sent:,.2f} BTC\n"
-                f"Volume transactions: ${infos.estimated_transaction_volume_usd:,.0f}\n"
-                f"\n=== Mining ===\n"
-                f"BTC minés (24h): {infos.n_btc_mined / 100_000_000:.2f} BTC\n"
-                f"Frais totaux: {infos.total_fees_btc / 100_000_000:.8f} BTC\n"
-                f"Revenus mineurs: {infos.miners_revenue_btc:.2f} BTC (${infos.miners_revenues_usd:,.0f})\n"
-                f"\n=== Supply ===\n"
-                f"BTC en circulation: {infos.totalbc:,.2f} BTC"
+                f"Difficulty: {infos.difficulty:.0f}\n"
+                f"Next Adjustment: Block {infos.nextretarget}\n\n"
+                f"## Block Metrics\n"
+                f"Blocks Mined (24h): {infos.n_blocks_mined}\n"
+                f"Total Blocks: {infos.n_blocks_total}\n"
+                f"Avg Block Time: {infos.minutes_between_blocks:.2f} min\n"
+                f"Avg Block Size: {infos.blocks_size} bytes\n\n"
+                f"## Transaction Activity\n"
+                f"Transactions (24h): {infos.n_tx}\n"
+                f"Estimated BTC Sent: {infos.estimated_btc_sent:.2f} BTC\n"
+                f"Transaction Volume: ${infos.estimated_transaction_volume_usd:.0f}\n\n"
+                f"## Mining Economics\n"
+                f"BTC Mined (24h): {infos.n_btc_mined / 100_000_000:.2f} BTC\n"
+                f"Total Fees: {infos.total_fees_btc / 100_000_000:.8f} BTC\n"
+                f"Miner Revenue: {infos.miners_revenue_btc:.2f} BTC | ${infos.miners_revenues_usd:.0f}\n\n"
+                f"## Supply Information\n"
+                f"Circulating Supply: {infos.totalbc:.2f} BTC"
             )
             return result
 
@@ -85,11 +85,11 @@ class NetworkAnalyzer:
             }
 
             result: str = (
-                f"=== Frais Recommandés (sat/vB) ===\n"
-                f"Plus rapide: {infos.fastest} sat/vB (~10 min); (~{list(costs.values())[0]} BTC)\n"
-                f"Demi-heure: {infos.half_hour} sat/vB (~30 min) (~{list(costs.values())[1]} BTC)\n"
-                f"Standard: {infos.hour} sat/vB (~60 min) (~{list(costs.values())[2]} BTC)\n"
-                f"Économique: {infos.economy} sat/vB (~{list(costs.values())[3]} BTC)\n"
+                f"## Recommended Transaction Fees\n"
+                f"Fastest (~10 min): {infos.fastest} sat/vB | Cost: ~{list(costs.values())[0]} BTC\n"
+                f"Half-Hour (~30 min): {infos.half_hour} sat/vB | Cost: ~{list(costs.values())[1]} BTC\n"
+                f"Standard (~60 min): {infos.hour} sat/vB | Cost: ~{list(costs.values())[2]} BTC\n"
+                f"Economy: {infos.economy} sat/vB | Cost: ~{list(costs.values())[3]} BTC\n"
             )
 
             return result
@@ -120,28 +120,28 @@ class NetworkAnalyzer:
 
             if infos.minutes_between_blocks > 15:
                 health_score -= 20
-                issues.append(f"Blocs lents ({infos.minutes_between_blocks:.1f} min)")
+                issues.append(f"Slow blocks ({infos.minutes_between_blocks:.1f} min)")
             elif infos.minutes_between_blocks < 5:
                 health_score -= 10
-                issues.append(f"Blocs rapides ({infos.minutes_between_blocks:.1f} min)")
+                issues.append(f"Fast blocks ({infos.minutes_between_blocks:.1f} min)")
 
             if infos.hash_rate < 100_000_000_000:  # < 100 TH/s
                 health_score -= 30
-                issues.append("Hashrate faible")
+                issues.append("Low hashrate")
 
             if infos.n_tx < 100_000:
                 health_score -= 15
-                issues.append("Faible volume de transactions")
+                issues.append("Low transaction volume")
 
             status: str = "Excellent" if health_score >= 90 else \
-                "Bon" if health_score >= 70 else \
-                    "Moyen" if health_score >= 50 else "Faible"
+                "Good" if health_score >= 70 else \
+                    "Fair" if health_score >= 50 else "Poor"
 
-            result: str = f"État du réseau: {status} ({health_score}/100)\n"
+            result: str = f"Network Status: {status} ({health_score}/100)\n"
             if issues:
-                result += "Points d'attention: " + ", ".join(issues)
+                result += "Issues: " + ", ".join(issues)
             else:
-                result += "Aucun problème détecté"
+                result += "No issues detected"
 
             return result
 

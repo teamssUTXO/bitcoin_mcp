@@ -35,11 +35,11 @@ class BlockAnalyzer:
             time_ago_str: str = f"{int(time_ago.total_seconds() / 60)} minutes" if time_ago else "N/A"
 
             result: str = (
-                f"=== Dernier Bloc Miné ===\n"
-                f"Hauteur: #{infos.height:,}\n"
+                f"## Latest Mined Block\n"
+                f"Height: {infos.height}\n"
                 f"Hash: {infos.hash}\n"
-                f"Horodatage: {date_str} (il y a {time_ago_str})\n"
-                f"Index du block: {infos.block_index:,}\n"
+                f"Timestamp: {date_str} ({time_ago_str} ago)\n"
+                f"Block Index: {infos.block_index}"
             )
             return result
 
@@ -98,21 +98,20 @@ class BlockAnalyzer:
 
             for i in range(len(data)):
                 result.append(
-                    f"=== Informations (10 derniers blocs) ===\n"
-                    f"\nBloc #{infos.heights[i]:,} | ID: {infos.ids[i]}\n"
-                    f"Date: {infos.timestamps[i]}\n"
-                    f"Transactions: {infos.txs_count[i]:,}\n"
-                    f"Taille: {infos.sizes[i]:.2f} MB\n"
-                    f"Weight: {infos.weights[i]:,}\n"
-                    f"Frais totaux: {infos.totalsFees[i]:,} sats / Frais moyens: {infos.avgsFeeRate[i]} sat/vB\n"
-                    f"Récompense: {infos.rewards[i]:,} sats\n"
+                    f"## Last 10 Blocks Details\n"
+                    f"Block {infos.heights[i]} | {infos.ids[i]}\n"
+                    f"Time: {infos.timestamps[i]}\n"
+                    f"Transactions: {infos.txs_count[i]}\n"
+                    f"Size: {infos.sizes[i]:.2f} MB | Weight: {infos.weights[i]}\n"
+                    f"Fees: {infos.totalsFees[i]} sat total | {infos.avgsFeeRate[i]} sat/vB avg\n"
+                    f"Reward: {infos.rewards[i]} sat\n"
                     f"Pool: {infos.pools_slug[i]}\n"
-                    f"Nonce: {infos.nonces[i]}"
-                    f"=== Statistiques (10 derniers blocs) ===\n"
-                    f"Total transactions: {total_tx:,}\n"
-                    f"Moyenne par bloc: {avg_tx:.0f} tx\n"
-                    f"Taille moyenne: {avg_size / 1_000_000:.2f} MB\n"
-                    f"Temps moyen entre blocs: {avg_time:.2f} min"
+                    f"Nonce: {infos.nonces[i]}\n\n"
+                    f"## Aggregate Statistics\n"
+                    f"Total Transactions: {total_tx}\n"
+                    f"Average per Block: {avg_tx:.0f}\n"
+                    f"Average Size: {avg_size / 1_000_000:.2f} MB\n"
+                    f"Average Block Time: {avg_time:.2f} min"
                 )
 
             return "\n".join(result)
