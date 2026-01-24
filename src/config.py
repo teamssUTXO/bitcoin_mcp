@@ -27,4 +27,12 @@ class Config:
     API_WRITE_TIMEOUT: int = 10.0
     API_POOL_TIMEOUT: int = 5.0
 
+    # Logging
+    LOGGER_NAME: str = "bitcoin_mcp_server"
+    LOG_DIR: str = "logs"
+    LOG_LEVEL: str = "INFO"
+    LOGGER_BACKUP_COUNT: int = 30
+    LOGGER_CONSOLE_OUTPUT: bool = True
+
+
 config = Config()
