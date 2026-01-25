@@ -1,7 +1,9 @@
+import logging
 from typing import Optional
 from src.api.client import APIClient
 from src.config import Config
 
+logger = logging.getLogger(__name__)
 
 class CoinGeckoClient(APIClient):
     def __init__(self):
@@ -15,7 +17,11 @@ class CoinGeckoClient(APIClient):
         Returns global data on the cryptocurrency market
         Docs : https://docs.coingecko.com/reference/crypto-global
         """
-        return self.get("/global")
+        try:
+            return self.get("/global")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from CoinGecko : {e}")
+            return None
 
     def get_market_trend(self) -> Optional[dict]:
         """
@@ -25,7 +31,11 @@ class CoinGeckoClient(APIClient):
         - Top 6 trending categories
         Docs : https://docs.coingecko.com/reference/trending-search
         """
-        return self.get("/search/trending")
+        try:
+            return self.get("/search/trending")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from CoinGecko : {e}")
+            return None
 
 
     # === GLOBAL INFORMATIONS ABOUT BITCOIN ===
@@ -35,14 +45,22 @@ class CoinGeckoClient(APIClient):
         Returns general information about Bitcoin
         Docs : https://docs.coingecko.com/reference/coins-id
         """
-        return self.get("/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false")
+        try:
+            return self.get("/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from CoinGecko : {e}")
+            return None
 
     def get_btc_price_usd(self) -> Optional[dict]:
         """
         Returns the price of Bitcoin in USD
         Docs : https://docs.coingecko.com/reference/simple-price
         """
-        return self.get("/simple/price?ids=bitcoin&vs_currencies=usd")
+        try:
+            return self.get("/simple/price?ids=bitcoin&vs_currencies=usd")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from CoinGecko : {e}")
+            return None
 
 
 # Singleton instance for the client

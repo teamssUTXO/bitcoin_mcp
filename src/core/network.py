@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from src.api.mempool_client import get_mempool_client
@@ -7,6 +8,7 @@ from data.network_dataclasses import DataNetworkFees, DataNetworkStats
 
 from src.config import Config
 
+logger = logging.getLogger(__name__)
 
 class NetworkAnalyzer:
     """Bitcoin Network Analyzer"""
@@ -60,7 +62,7 @@ class NetworkAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 
@@ -100,7 +102,7 @@ class NetworkAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 
@@ -153,7 +155,7 @@ class NetworkAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 

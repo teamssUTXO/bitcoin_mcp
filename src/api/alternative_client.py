@@ -1,6 +1,9 @@
+import logging
 from typing import Optional
 from src.api.client import APIClient
 from src.config import Config
+
+logger = logging.getLogger(__name__)
 
 class AlternativeClient(APIClient):
     def __init__(self):
@@ -16,14 +19,22 @@ class AlternativeClient(APIClient):
         Returns information on the cryptocurrency market
         Docs : https://alternative.me/crypto/api/
         """
-        return self.get("/v2/global")
+        try:
+            return self.get("/v2/global")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Alternative : {e}")
+            return None
 
     def get_fear_greed_index(self) -> Optional[dict]:
         """
         Returns the 'Fear & Greed' index on the crypto market over 7 days
         Docs : https://alternative.me/crypto/fear-and-greed-index/#api
         """
-        return self.get("/fng/?limit=7")
+        try:
+            return self.get("/fng/?limit=7")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Alternative : {e}")
+            return None
 
 
 # Singleton instance for the client

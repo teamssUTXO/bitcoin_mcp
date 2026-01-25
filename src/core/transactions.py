@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 from datetime import datetime
 
@@ -9,6 +10,8 @@ from src.data.transactions_dataclasses import DataTransactionsAddress
 
 from src.config import Config
 
+
+logger = logging.getLogger(__name__)
 
 class TransactionAnalyzer:
     """Bitcoin Transactions Analyzer"""
@@ -81,8 +84,9 @@ class TransactionAnalyzer:
 
             return result
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", extra={"txid": txid}, exc_info=True)
             return None
 
 
@@ -160,7 +164,7 @@ class TransactionAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", extra={"txid": txid}, exc_info=True)
             return None
 
 
@@ -222,8 +226,9 @@ class TransactionAnalyzer:
 
             return result
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", extra={"address": address}, exc_info=True)
             return None
 
 

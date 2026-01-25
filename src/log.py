@@ -36,11 +36,11 @@ class LoggerMCP:
 
         file_handler = TimedRotatingFileHandler(
             filename=self.log_dir / "server.log",
-            utc=True,
             when="midnight",
             interval=1,
             backupCount=self.backup_count,
-            encoding="utf-8"
+            encoding="utf-8",
+            utc = True
         )
 
         file_handler.setLevel(log_level)

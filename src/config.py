@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass
+from pathlib import Path
 
 @dataclass
 class Config:
@@ -29,7 +30,7 @@ class Config:
 
     # Logging
     LOGGER_NAME: str = "bitcoin_mcp_server"
-    LOG_DIR: str = "logs"
+    LOG_DIR: str = "../logs"
     LOG_LEVEL: str = "INFO"
     LOGGER_BACKUP_COUNT: int = 30
     LOGGER_CONSOLE_OUTPUT: bool = True

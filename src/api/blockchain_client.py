@@ -1,6 +1,9 @@
+import logging
 from typing import Optional
 from src.api.client import APIClient
 from src.config import Config
+
+logger = logging.getLogger(__name__)
 
 class BlockchainClient(APIClient):
     def __init__(self):
@@ -12,7 +15,11 @@ class BlockchainClient(APIClient):
         Returns current Bitcoin network stats
         Docs : https://blockchain.com/fr/explorer/api/blockchain_api
         """
-        return self.get("/stats?format=json")
+        try:
+            return self.get("/stats?format=json")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN NETWORK INFORMATIONS ===
@@ -24,8 +31,12 @@ class BlockchainClient(APIClient):
         Returns the current hashrate of the Bitcoin network miners
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        result = self.get("/q/hashrate")
-        return int(result) if result else None
+        try :
+            result = self.get("/q/hashrate")
+            return int(result) if result else None
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_network_difficulty(self) -> Optional[float]:
         """
@@ -34,8 +45,12 @@ class BlockchainClient(APIClient):
         Returns the current difficulty of the bitcoin network
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        result = self.get("/q/getdifficulty")
-        return int(result) if result else None
+        try:
+            result = self.get("/q/getdifficulty")
+            return int(result) if result else None
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN TRANSACTIONS INFORMATIONS ===
@@ -47,8 +62,12 @@ class BlockchainClient(APIClient):
         Returns the number of transactions in the Bitcoin network over 24 hours
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        result = self.get("/q/24hrtransactioncount")
-        return int(result) if result else None
+        try:
+            result = self.get("/q/24hrtransactioncount")
+            return int(result) if result else None
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_nb_stc_day(self) -> Optional[int]:
         """
@@ -57,8 +76,12 @@ class BlockchainClient(APIClient):
         Returns the number of satoshis sent on the Bitcoin network in 24 hours
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        result = self.get("/q/24hrbtcsent")
-        return int(result) if result else None
+        try:
+            result = self.get("/q/24hrbtcsent")
+            return int(result) if result else None
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_unconfirmed_tx(self) -> Optional[int]:
         """
@@ -67,8 +90,12 @@ class BlockchainClient(APIClient):
         Returns the number of unconfirmed transactions on the Bitcoin network
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        result = self.get("/q/unconfirmedcount")
-        return int(result) if result else None
+        try:
+            result = self.get("/q/unconfirmedcount")
+            return int(result) if result else None
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN BLOCKS INFORMATIONS ===
@@ -78,7 +105,11 @@ class BlockchainClient(APIClient):
         Returns information about the last mined block on the Bitcoin network
         Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
         """
-        return self.get(f"/latestblock")
+        try:
+            return self.get(f"/latestblock")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN ADDRESSES INFORMATIONS ===
@@ -88,7 +119,11 @@ class BlockchainClient(APIClient):
         Returns the information for a Bitcoin address (param address in base58 or hash160)
         Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
         """
-        return self.get(f"/rawaddr/{address}")
+        try:
+            return self.get(f"/rawaddr/{address}")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
 # Singleton instance for the client

@@ -1,12 +1,12 @@
+import logging
 from typing import Optional
-
 from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
-
 from src.data.addresses_dataclasses import DataOverviewAddress, DataInfosAddress
-
 from src.config import Config
 
+
+logger = logging.getLogger(__name__)
 
 class AddressAnalyzer:
     """Bitcoin Address Analyzer"""
@@ -88,7 +88,7 @@ class AddressAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", extra={"address": address}, exc_info=True)
             return None
 
     def get_address_info_overview(self, address: str) -> Optional[str]:
@@ -128,8 +128,9 @@ class AddressAnalyzer:
             )
             return result
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", extra={"address": address}, exc_info=True)
             return None
 
 

@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from src.api.coingecko_client import get_coingecko_client
@@ -6,6 +7,8 @@ from src.api.alternative_client import get_alternative_client
 from src.data.market_dataclasses import DataMarketOverview, DataBitcoinOverview, DataBitcoinMarket, \
     DataBitcoinMarketSentiment, DataTrendingCategories, DataTrendingCoins, DataTrendingNFTs
 
+
+logger = logging.getLogger(__name__)
 
 class MarketAnalyzer:
     """Cryptocurrency Market Analyzer"""
@@ -70,8 +73,9 @@ class MarketAnalyzer:
             )
             return result
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_btc_price_usd(self) -> Optional[str]:
@@ -110,7 +114,7 @@ class MarketAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_btc_market_data(self) -> Optional[str]:
@@ -186,8 +190,8 @@ class MarketAnalyzer:
 
             return result
 
-        except KeyError as e:
-            print(f"API Error {e}")
+        except Exception as e:
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 
@@ -236,8 +240,9 @@ class MarketAnalyzer:
 
             return result
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 
@@ -276,8 +281,9 @@ class MarketAnalyzer:
 
             return "\n".join(result)
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_trending_categories(self) -> Optional[str]:
@@ -312,8 +318,9 @@ class MarketAnalyzer:
 
             return "\n".join(result)
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_trending_nfts(self) -> Optional[str]:
@@ -348,8 +355,9 @@ class MarketAnalyzer:
 
             return "\n".join(result)
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 

@@ -1,7 +1,10 @@
+import logging
 from typing import Optional
-
 from mcp.server.fastmcp import FastMCP
 from src.core.network import get_network_analyser_client
+
+
+logger = logging.getLogger(__name__)
 
 def get_bitcoin_network_overview() -> Optional[str]:
     """
@@ -34,12 +37,19 @@ def get_bitcoin_network_overview() -> Optional[str]:
     **Supply Information:**
     - Total BTC in circulation
     """
+    try:
+        logger.info("Tool Called : get_bitcoin_network_overview")
 
-    network_analyzer = get_network_analyser_client()
+        network_analyzer = get_network_analyser_client()
+        data: str = network_analyzer.get_network_stats()
 
-    data: str = network_analyzer.get_network_stats()
-    return data
+        logger.info("Tool get_bitcoin_network_overview succeeded")
 
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}", exc_info=True)
+        return None
 
 def get_bitcoin_network_recommended_fees() -> Optional[str]:
     """
@@ -60,11 +70,19 @@ def get_bitcoin_network_recommended_fees() -> Optional[str]:
 
     Use cases: When you need to know how much to pay for a Bitcoin transaction, to optimize transaction costs vs. speed, or to check if the network is congested.
     """
+    try:
+        logger.info("Tool Called : get_bitcoin_network_recommended_fees")
 
-    network_analyzer = get_network_analyser_client()
+        network_analyzer = get_network_analyser_client()
+        data: str = network_analyzer.get_network_recommended_fees()
 
-    data: str = network_analyzer.get_network_recommended_fees()
-    return data
+        logger.info("Tool get_bitcoin_network_recommended_fees succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}", exc_info=True)
+        return None
 
 def get_bitcoin_network_health() -> Optional[str]:
     """
@@ -76,18 +94,29 @@ def get_bitcoin_network_health() -> Optional[str]:
 
     The health score is a composite metric that considers factors like block production consistency, hashrate stability and transactions volume.
     """
+    try:
+        logger.info("Tool Called : get_bitcoin_network_health")
 
-    network_analyzer = get_network_analyser_client()
+        network_analyzer = get_network_analyser_client()
+        data: str = network_analyzer.get_network_health()
 
-    data: str = network_analyzer.get_network_health()
-    return data
+        logger.info("Tool get_bitcoin_network_health succeeded")
 
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_bitcoin_network_health : {e}", exc_info=True)
+        return None
 
 def register_network_tools(mcp: FastMCP):
     """Registers all Bitcoin network tools"""
+    logger.info("Registering Network Tools...")
+
     mcp.add_tool(get_bitcoin_network_overview)
     mcp.add_tool(get_bitcoin_network_recommended_fees)
     mcp.add_tool(get_bitcoin_network_health)
+
+    logger.info("Network Tools Registered")
     
     
 

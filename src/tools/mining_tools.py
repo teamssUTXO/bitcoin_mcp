@@ -1,9 +1,10 @@
+import logging
 from typing import Optional
-
 from mcp.server.fastmcp import FastMCP
-
 from src.core.mining import get_mining_analyser_client
 
+
+logger = logging.getLogger(__name__)
 
 def get_top_10_mining_pools_rank() -> Optional[str]:
     """
@@ -19,11 +20,19 @@ def get_top_10_mining_pools_rank() -> Optional[str]:
 
     Use cases: When you need to understand mining centralization, identify the dominant mining pools, or analyze the distribution of network hashrate.
     """
+    try:
+        logger.info("Tool Called : get_top_10_mining_pools_ranking")
 
-    mining_analyzer = get_mining_analyser_client()
+        mining_analyzer = get_mining_analyser_client()
+        data: str = mining_analyzer.get_mining_pools_ranking()
 
-    data: str = mining_analyzer.get_mining_pools_ranking()
-    return data
+        logger.info("Tool get_top_10_mining_pools_ranking succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_top_10_mining_pools_rank : {e}", exc_info=True)
+        return None
 
 
 def get_mining_pools_hashrates_3month() -> Optional[str]:
@@ -40,11 +49,18 @@ def get_mining_pools_hashrates_3month() -> Optional[str]:
 
     Use cases: When you need to analyze mining pool trends over time, understand hashrate distribution patterns, or identify consistently dominant pools.
     """
+    try:
+        logger.info("Tool Called : get_top_10_mining_pools_hashrates_3month")
+        mining_analyzer = get_mining_analyser_client()
+        data: str = mining_analyzer.get_mining_pool_hashrates()
 
-    mining_analyzer = get_mining_analyser_client()
+        logger.info("Tool get_top_10_mining_pools_hashrates_3month succeeded")
 
-    data: str = mining_analyzer.get_mining_pool_hashrates()
-    return data
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_top_10_mining_pools_hashrates_3month : {e}", exc_info=True)
+        return None
 
 
 def get_top1_mining_pool() -> Optional[str]:
@@ -62,11 +78,19 @@ def get_top1_mining_pool() -> Optional[str]:
 
     Use cases: When you only need to know who currently dominates Bitcoin mining, to check if mining centralization is concerning, or to quickly identify the market leader.
     """
+    try:
+        logger.info("Tool Called : get_top1_mining_pool")
 
-    mining_analyzer = get_mining_analyser_client()
+        mining_analyzer = get_mining_analyser_client()
+        data: str = mining_analyzer.get_top_pool()
 
-    data: str = mining_analyzer.get_top_pool()
-    return data
+        logger.info("Tool get_top1_mining_pool succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_top1_mining_pool : {e}", exc_info=True)
+        return None
 
 def get_mining_pool_by_slug(slug: str) -> Optional[str]:
     """
@@ -84,16 +108,24 @@ def get_mining_pool_by_slug(slug: str) -> Optional[str]:
 
     Use cases: When you need detailed information about a specific mining pool that you already know by name or slug, to investigate a pool's addresses, or to verify a pool's technical specifications.
     """
+    try:
+        logger.info("Tool Called : get_mining_pool_by_slug")
 
-    if not slug:
-        return "no parameters"
+        mining_analyzer = get_mining_analyser_client()
+        data: str = mining_analyzer.get_pool_by_slug(slug)
 
-    mining_analyzer = get_mining_analyser_client()
+        logger.info("Tool get_mining_pool_by_slug succeeded")
 
-    data: str = mining_analyzer.get_pool_by_slug(slug)
-    return data
+        return data
 
-def get_bitcoin_network_mining_pools_statistics() -> str:
+    except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_mining_pool_by_slug : {e}", exc_info=True)
+        return None
+
+def get_bitcoin_network_mining_pools_statistics() -> Optional[str]:
     """
     Use this to get aggregate statistics and analysis of the Bitcoin mining pool ecosystem.
 
@@ -117,20 +149,31 @@ def get_bitcoin_network_mining_pools_statistics() -> str:
 
     Use cases: When you need to understand the overall mining landscape, assess centralization risk, or compare the gap between dominant and small pools.
     """
+    try:
+        logger.info("Tool Called : get_bitcoin_network_mining_pools_statistics")
 
-    mining_analyzer = get_mining_analyser_client()
+        mining_analyzer = get_mining_analyser_client()
+        data: str = mining_analyzer.get_mining_statistics()
 
-    data: str = mining_analyzer.get_mining_statistics()
-    return data
+        logger.info("Tool get_bitcoin_network_mining_pools_statistics succeeded")
 
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
+        return None
 
 def register_mining_tools(mcp: FastMCP):
     """Registers all Bitcoin mining tools"""
+    logger.info("Registering Mining Tools...")
+
     mcp.add_tool(get_mining_pools_hashrates_3month)
     mcp.add_tool(get_top_10_mining_pools_rank)
     mcp.add_tool(get_bitcoin_network_mining_pools_statistics)
     mcp.add_tool(get_top1_mining_pool)
     mcp.add_tool(get_mining_pool_by_slug)
+
+    logger.info("Mining Tools Registered")
 
 
 

@@ -1,6 +1,9 @@
+import logging
 from typing import Optional
 from src.api.client import APIClient
 from src.config import Config
+
+logger = logging.getLogger(__name__)
 
 class MempoolClient(APIClient):
     def __init__(self):
@@ -14,30 +17,46 @@ class MempoolClient(APIClient):
         Returns the height of the last block mined on the Bitcoin network
         Docs : https://mempool.space/docs/api/rest#get-block-tip-height
         """
-        result = self.get("/blocks/tip/height")
-        return str(result) if result else None
+        try:
+            result = self.get("/blocks/tip/height")
+            return str(result) if result else None
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_block_tip_hash(self) -> Optional[int]:
         """
         Returns the hash of the last block mined on the Bitcon network
         Docs : https://mempool.space/docs/api/rest#get-block-tip-hash
         """
-        result = self.get("/blocks/tip/hash",)
-        return str(result) if result else None
+        try:
+            result = self.get("/blocks/tip/hash",)
+            return str(result) if result else None
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_block_height(self, height: int) -> Optional[str]:
         """
         Returns the hash of a block whose height is passed as a parameter
         Docs : https://mempool.space/docs/api/rest#get-block-height
         """
-        return str(self.get(f"/block-height/{height}"))
+        try:
+            return str(self.get(f"/block-height/{height}"))
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_blocks_info(self) -> Optional[list[dict]]:
         """
         Returns information about the last 10 blocks mined on the Bitcoin network
         Docs : https://mempool.space/docs/api/rest#get-blocks
         """
-        return self.get("/v1/blocks")
+        try:
+            return self.get("/v1/blocks")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN FEES INFORMATIONS ===
@@ -47,7 +66,11 @@ class MempoolClient(APIClient):
         Returns the recommended transaction fee ratio for a Bitcoin transaction
         Docs : https://mempool.space/docs/api/rest#get-recommended-fees-precise
         """
-        return self.get("/v1/fees/recommended")
+        try:
+            return self.get("/v1/fees/recommended")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN ADDRESSES INFORMATIONS ===
@@ -57,7 +80,11 @@ class MempoolClient(APIClient):
         Returns the information for a Bitcoin address
         Docs : https://mempool.space/docs/api/rest#get-address
         """
-        return self.get(f"/address/{address}")
+        try:
+            return self.get(f"/address/{address}")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN TRANSACTIONS INFORMATIONS ===
@@ -67,7 +94,11 @@ class MempoolClient(APIClient):
         Returns information about a Bitcoin transaction
         Docs : https://mempool.space/docs/api/rest#get-transaction
         """
-        return self.get(f"/tx/{txid}")
+        try:
+            return self.get(f"/tx/{txid}")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN MINING POOLS INFORMATIONS ===
@@ -77,21 +108,33 @@ class MempoolClient(APIClient):
         Returns the ranking of the best Bitcoin network mining pools for the last 3 months
         Docs : https://mempool.space/docs/api/rest#get-mining-pools
         """
-        return self.get("/v1/mining/pools/3m")
+        try:
+            return self.get("/v1/mining/pools/3m")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_mining_pools_hashrate(self) -> Optional[list]:
         """
         Renvoie le hashrate des meilleures mining pools du réseau bitcoin depuis 3 mois
         Docs : https://mempool.space/docs/api/rest#get-mining-pool-hashrates
         """
-        return self.get("/v1/mining/hashrate/pools/3m")
+        try:
+            return self.get("/v1/mining/hashrate/pools/3m")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
     def get_mining_pool_info_by_slug(self, slug: str) -> Optional[dict]:
         """
         Returns information about a mining pool via its slug
         Docs : https://mempool.space/docs/api/rest#get-mining-pool
         """
-        return self.get(f"/v1/mining/pool/{slug}")
+        try:
+            return self.get(f"/v1/mining/pool/{slug}")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
     # === BITCOIN NETWORK INFORMATIONS (MEMPOOL) ===
@@ -101,7 +144,11 @@ class MempoolClient(APIClient):
         Returns information about the mempool of mempool.space
         Docs : https://mempool.space/docs/api/rest#get-mempool
         """
-        return self.get("/mempool")
+        try:
+            return self.get("/mempool")
+        except Exception as e:
+            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            return None
 
 
 # Singleton instance for the client

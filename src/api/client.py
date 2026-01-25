@@ -54,8 +54,6 @@ class APIClient:
         if cached is not None:
             return cached
 
-        attempts: int = 0
-
         for attempts in range(self.max_retry + 1):
             try:
                 response = self.client.get(url)
@@ -72,9 +70,9 @@ class APIClient:
             except httpx.HTTPStatusError as e:
                 status = e.response.status_code
                 retryable = 500 <= status < 600
-
             except (httpx.TimeoutException, httpx.NetworkError):
                 retryable = True
+
 
             if not self.enable_retry or not retryable or attempts >= self.max_retry:
                 return None

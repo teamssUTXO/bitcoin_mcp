@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 from datetime import datetime, timedelta
 
@@ -5,6 +6,9 @@ from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 
 from src.data.block_dataclasses import DataLatestBlock, DataLatestBlocks
+
+logger = logging.getLogger(__name__)
+
 
 class BlockAnalyzer:
     """Bitcoin Blocks Analyzer"""
@@ -47,8 +51,9 @@ class BlockAnalyzer:
             )
             return result
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_block_by_height(self, height: int) -> Optional[str]:
@@ -69,8 +74,9 @@ class BlockAnalyzer:
 
             return f"Hash du bloc #{height:,}: {block_hash}"
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", extra={"height": height}, exc_info=True)
             return None
 
     def get_latest_blocks_info(self) -> Optional[str]:
@@ -124,8 +130,9 @@ class BlockAnalyzer:
 
             return "\n".join(result)
 
+
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 

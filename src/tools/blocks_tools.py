@@ -1,9 +1,9 @@
+import logging
 from typing import Optional
-
 from mcp.server.fastmcp import FastMCP
-
 from src.core.blocks import get_blocks_analyser_client
 
+logger = logging.getLogger(__name__)
 
 def get_summary_of_latest_block() -> Optional[str]:
     """
@@ -17,11 +17,19 @@ def get_summary_of_latest_block() -> Optional[str]:
 
     Use cases: When you need current blockchain state information, to verify the latest block, or to check recent mining activity.
     """
+    try:
+        logger.info("Tool called : get_summary_of_latest_block")
 
-    blocks_analyzer = get_blocks_analyser_client()
+        blocks_analyzer = get_blocks_analyser_client()
+        data: str = blocks_analyzer.get_latest_block_summary()
 
-    data: str = blocks_analyzer.get_latest_block_summary()
-    return data
+        logger.info("Tool get_summary_of_latest_block succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_summary_of_latest_block : {e}", exc_info=True)
+        return None
 
 
 def get_block_hash_with_height(height: int) -> Optional[str]:
@@ -34,14 +42,22 @@ def get_block_hash_with_height(height: int) -> Optional[str]:
 
     Use cases: When you need to identify a specific block by its position, to verify block integrity, or to look up historical blocks.
     """
+    try:
+        logger.info("Tool called : get_block_hash_with_height")
 
-    if not height:
-        return "no parameters"
+        blocks_analyzer = get_blocks_analyser_client()
+        data: str = blocks_analyzer.get_block_by_height(height)
 
-    blocks_analyzer = get_blocks_analyser_client()
+        logger.info("Tool get_block_hash_with_height succeeded")
+        return data
 
-    data: str = blocks_analyzer.get_block_by_height(height)
-    return data
+
+    except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_block_hash_with_height : {e}", exc_info=True)
+        return None
 
 
 def get_10_latest_blocks_informations() -> Optional[str]:
@@ -66,18 +82,30 @@ def get_10_latest_blocks_informations() -> Optional[str]:
 
     Use cases: When you need to analyze recent blockchain activity trends, compare mining pool performance, or monitor network congestion.
     """
+    try :
+        logger.info("Tool called : get_10_latest_blocks_informations")
 
-    blocks_analyzer = get_blocks_analyser_client()
+        blocks_analyzer = get_blocks_analyser_client()
+        data: str = blocks_analyzer.get_latest_blocks_info()
 
-    data: str = blocks_analyzer.get_latest_blocks_info()
-    return data
+        logger.info("Tool get_10_latest_blocks_informations succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_10_latest_blocks_informations : {e}", exc_info=True)
+        return None
 
 
 def register_blocks_tools(mcp: FastMCP):
     """Registers all Bitcoin network tools"""
+    logger.info("Registering Blocks Tools...")
+
     mcp.add_tool(get_10_latest_blocks_informations)
     mcp.add_tool(get_block_hash_with_height)
     mcp.add_tool(get_summary_of_latest_block)
+
+    logger.info("Blocks Tools Registered")
 
 
 

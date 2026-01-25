@@ -1,9 +1,10 @@
+import logging
 from typing import Optional
-
 from mcp.server.fastmcp import FastMCP
-
 from src.core.addresses import get_addresses_analyser_client
 
+
+logger = logging.getLogger(__name__)
 
 def get_info_about_address(address: str) -> Optional[str]:
     """
@@ -20,14 +21,23 @@ def get_info_about_address(address: str) -> Optional[str]:
 
     Use cases: When you need a complete snapshot of an address's financial activity and current state.
     """
+    try:
+        logger.info("Tool called : get_info_about_address")
 
-    if not address:
-        return "no parameters"
+        addresses_analyzer = get_addresses_analyser_client()
+        data: str = addresses_analyzer.get_address_info(address)
 
-    addresses_analyzer = get_addresses_analyser_client()
+        logger.info("Tool get_info_about_address succeeded")
 
-    data: str = addresses_analyzer.get_address_info(address)
-    return data
+        return data
+
+
+    except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
+        return None
 
 
 def get_address_overview(address: str) -> Optional[str]:
@@ -44,20 +54,33 @@ def get_address_overview(address: str) -> Optional[str]:
 
     Use cases: When you need a quick financial summary without granular details.
     """
+    try:
+        logger.info("Tool called : get_address_overview")
 
-    if not address:
-        return "no parameters"
+        addresses_analyzer = get_addresses_analyser_client()
+        data: str = addresses_analyzer.get_address_info_overview(address)
 
-    addresses_analyzer = get_addresses_analyser_client()
+        logger.info("Tool get_address_overview succeeded")
 
-    data: str = addresses_analyzer.get_address_info_overview(address)
-    return data
+        return data
+
+
+    except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_address_overview : {e}", exc_info=True)
+        return None
 
 
 def register_addresses_tools(mcp: FastMCP):
     """Registers all Bitcoin address tools"""
+    logger.info("Registering Addresses Tools...")
+
     mcp.add_tool(get_info_about_address)
     mcp.add_tool(get_address_overview)
+
+    logger.info("Addresses Tools Registered")
 
 
 

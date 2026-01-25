@@ -1,9 +1,12 @@
+import logging
 from typing import Optional
 
 from src.api.mempool_client import get_mempool_client
 
 from src.data.mining_dataclasses import DataRankingMiningPools, DataHashratesMiningPools, DataMiningPoolBySlug
 
+
+logger = logging.getLogger(__name__)
 
 class MiningPoolAnalyzer:
     """Mining Pools Analyzer"""
@@ -49,7 +52,7 @@ class MiningPoolAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_mining_pool_hashrates(self) -> Optional[str]:
@@ -87,7 +90,7 @@ class MiningPoolAnalyzer:
             return str(result)
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_top_pool(self) -> Optional[str]:
@@ -130,7 +133,7 @@ class MiningPoolAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
     def get_pool_by_slug(self, pool_slug: str) -> Optional[str]:
@@ -183,7 +186,7 @@ class MiningPoolAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", extra={"pool_slug": pool_slug},  exc_info=True)
             return None
 
 
@@ -235,7 +238,7 @@ class MiningPoolAnalyzer:
             return result
 
         except Exception as e:
-            print(f"API Error {e}")
+            logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
 

@@ -1,9 +1,10 @@
+import logging
 from typing import Optional
-
 from mcp.server.fastmcp import FastMCP
-
 from src.core.market import get_market_analyser_client
 
+
+logger = logging.getLogger(__name__)
 
 def get_cryptomarket_overview() -> Optional[str]:
     """
@@ -20,11 +21,19 @@ def get_cryptomarket_overview() -> Optional[str]:
 
     Use cases: When you need a broad view of the entire crypto ecosystem health, to understand market trends, or to see which cryptocurrencies dominate the market.
     """
+    try:
+        logger.info("Tool called : get_cryptomarket_overview")
 
-    market_analyzer = get_market_analyser_client()
+        market_analyzer = get_market_analyser_client()
+        data: str = market_analyzer.get_global_cryptomarket_data()
 
-    data: str = market_analyzer.get_global_cryptomarket_data()
-    return data
+        logger.info("Tool get_global_cryptomarket_overview succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_cryptomarket_overview : {e}", exc_info=True)
+        return None
 
 
 def get_bitcoin_price_usd() -> Optional[str]:
@@ -42,11 +51,19 @@ def get_bitcoin_price_usd() -> Optional[str]:
 
     Use cases: When you need a quick Bitcoin price check with essential market context.
     """
+    try:
+        logger.info("Tool called : get_bitcoin_price_usd")
 
-    market_analyzer = get_market_analyser_client()
+        market_analyzer = get_market_analyser_client()
+        data: str = market_analyzer.get_btc_price_usd()
 
-    data: str = market_analyzer.get_btc_price_usd()
-    return data
+        logger.info("Tool get_btc_price_usd succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_btc_price_usd : {e}", exc_info=True)
+        return None
 
 
 def get_bitcoin_market_data() -> Optional[str]:
@@ -84,11 +101,19 @@ def get_bitcoin_market_data() -> Optional[str]:
 
     Use cases: When you need in-depth Bitcoin market analysis, historical performance tracking, or comprehensive investment research data. For quick price checks, use `get_bitcoin_price_usd`.
     """
+    try:
+        logger.info("Tool called : get_bitcoin_market_data")
 
-    market_analyzer = get_market_analyser_client()
+        market_analyzer = get_market_analyser_client()
+        data: str = market_analyzer.get_btc_market_data()
 
-    data: str = market_analyzer.get_btc_market_data()
-    return data
+        logger.info("Tool get_btc_market_data succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_bitcoin_market_data : {e}", exc_info=True)
+        return None
 
 def get_bitcoin_market_sentiment() -> Optional[str]:
     """
@@ -108,10 +133,18 @@ def get_bitcoin_market_sentiment() -> Optional[str]:
 
     Use cases: When you need to gauge overall market sentiment, understand investor psychology, or determine if the market is in fear or greed mode.
     """
+    try:
+        logger.info("Tool called : get_bitcoin_market_sentiment")
 
-    market_analyzer = get_market_analyser_client()
-    data: str = market_analyzer.get_market_sentiment()
-    return data
+        market_analyzer = get_market_analyser_client()
+        data: str = market_analyzer.get_market_sentiment()
+
+        logger.info("Tool get_bitcoin_market_sentiment succeeded")
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_bitcoin_market_sentiment : {e}", exc_info=True)
+        return None
 
 
 def get_trending_coins() -> Optional[str]:
@@ -130,11 +163,19 @@ def get_trending_coins() -> Optional[str]:
 
     Use cases: When you need to discover what cryptocurrencies are currently attracting the most attention, identify emerging trends, or find coins gaining popularity.
     """
+    try:
+        logger.info("Tool called : get_trending_coins")
 
-    market_analyzer = get_market_analyser_client()
+        market_analyzer = get_market_analyser_client()
+        data: str = market_analyzer.get_trending_coins()
 
-    data: str = market_analyzer.get_trending_coins()
-    return data
+        logger.info("Tool get_trending_coins succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_trending_coins : {e}", exc_info=True)
+        return None
 
 
 def get_trending_categories() -> Optional[str]:
@@ -152,12 +193,19 @@ def get_trending_categories() -> Optional[str]:
 
     Use cases: When you need to identify which cryptocurrency sectors are gaining attention, understand macro trends in the crypto ecosystem, or find emerging narratives. This is based on real user search behavior for category pages.
     """
+    try:
+        logger.info("Tool called : get_trending_categories")
 
-    market_analyzer = get_market_analyser_client()
+        market_analyzer = get_market_analyser_client()
+        data: str = market_analyzer.get_trending_categories()
 
-    data: str = market_analyzer.get_trending_categories()
-    return data
+        logger.info("Tool get_trending_categories succeeded")
 
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_trending_categories : {e}", exc_info=True)
+        return None
 
 def get_trending_nfts() -> Optional[str]:
     """
@@ -174,14 +222,24 @@ def get_trending_nfts() -> Optional[str]:
 
     Use cases: When you need to discover which NFT collections are currently attracting the most attention, identify trending digital art or collectibles, or monitor NFT market activity. This is based on real user search behavior.
     """
+    try:
+        logger.info("Tool called : get_trending_nfts")
 
-    market_analyzer = get_market_analyser_client()
+        market_analyzer = get_market_analyser_client()
+        data: str = market_analyzer.get_trending_nfts()
 
-    data: str = market_analyzer.get_trending_nfts()
-    return data
+        logger.info("Tool get_trending_nfts succeeded")
+
+        return data
+
+    except Exception as e:
+        logger.error(f"Unexpected error in tool get_trending_nfts : {e}", exc_info=True)
+        return None
 
 def register_market_tools(mcp: FastMCP):
     """Registers all Bitcoin market tools"""
+    logger.info("Registering Market Tools...")
+
     mcp.add_tool(get_bitcoin_price_usd)
     mcp.add_tool(get_bitcoin_market_data)
     mcp.add_tool(get_cryptomarket_overview)
@@ -189,6 +247,8 @@ def register_market_tools(mcp: FastMCP):
     mcp.add_tool(get_trending_coins)
     mcp.add_tool(get_trending_categories)
     mcp.add_tool(get_trending_nfts)
+
+    logger.info("Market Tools Registered")
 
 
 
