@@ -5,7 +5,7 @@ from src.api.coingecko_client import get_coingecko_client
 from src.api.alternative_client import get_alternative_client
 
 from src.data.market_dataclasses import DataMarketOverview, DataBitcoinOverview, DataBitcoinMarket, \
-    DataBitcoinMarketSentiment, DataTrendingCategories, DataTrendingCoins, DataTrendingNFTs
+    DataBitcoinMarketSentiment, DataTrendingCategories, DataTrendingCoins, DataTrendingNFTs, DataBitcoinPriceUSD
 
 
 logger = logging.getLogger(__name__)
@@ -80,13 +80,11 @@ class MarketAnalyzer:
 
     def get_btc_price_usd(self) -> Optional[str]:
         """
-        Retrieves the current Bitcoin price and market metrics in USD.
+        Retrieves the current Bitcoin price in USD.
 
         Returns:
             A Markdown formatted string including:
-            - Price data (Current price, 24h ago, and 24h percentage change).
-            - Market indicators (Market cap, 24h trading volume).
-            - Ratios and supply (Volume/Market Cap ratio and circulating supply).
+            - Current Price data.
             Returns None if an API error occurs or data is missing.
         """
         try:
@@ -94,23 +92,9 @@ class MarketAnalyzer:
             if not data:
                 return None
 
-            infos: DataBitcoinOverview = DataBitcoinOverview.from_data(data)
+            infos: DataBitcoinPriceUSD = DataBitcoinPriceUSD.from_data(data)
 
-            circulating_supply: int = infos.usd_market_cap / infos.usd if infos.usd else 0
-            vol_cap_ratio: int = (infos.usd_24h_vol / infos.usd_market_cap) * 100 if infos.usd_market_cap else 0
-            price_yesterday: float = infos.usd / (1 + (infos.usd_24h_change / 100))
-
-            result: str = (
-                f"## Market Data (USD)\n"
-                f"Current Price: ${infos.usd:,.2f}\n"
-                f"Price 24h Ago: ${price_yesterday:,.2f}\n"
-                f"24h Change: {infos.usd_24h_change:+.2f}%\n\n"
-                f"## Market Indicators\n"
-                f"Market Cap: ${infos.usd_market_cap:,.0f}\n"
-                f"24h Volume: ${infos.usd_24h_vol:,.0f}\n"
-                f"Vol/Cap Ratio: {vol_cap_ratio:.2f}%\n"
-                f"Circulating Supply: {circulating_supply:,.0f} tokens"
-            )
+            result: str = f"Current Bitcoin Price in USD: ${infos.price_usd:,.2f}"
             return result
 
         except Exception as e:
@@ -215,10 +199,17 @@ class MarketAnalyzer:
 
             # Définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
             fg_lines: list = []
-            for i in range(1, 8):
-                day_data: list = getattr(infos, f"fg_data_{i}d", ["N/A", "Inconnu"])
-                fg_lines.append(f"  J-{i}: {day_data[0]} - {day_data[1]}")
-            fg_history_txt: str = "\n".join(fg_lines)
+
+            for i in range(7):
+                day_data = infos.fg_data[i]
+                if isinstance(day_data, dict):
+                    value = day_data.get("value", "N/A")
+                    classification = day_data.get("value_classification", "Inconnu")
+                else:
+                    value = "N/A"
+                    classification = "Inconnu"
+                fg_lines.append(f"  J+{i}: {value} - {classification}")
+            fg_history_txt = "\n".join(fg_lines)
 
             sentiment_label: str = "Neutre"
             if infos.sentiment_votes_up_percentage > infos.sentiment_votes_down_percentage:
@@ -348,7 +339,7 @@ class MarketAnalyzer:
                 result.append(
                     f"## NFT Top {i + 1}: {infos.names[i]} ({infos.symbols[i]})\n"
                     f"Currency: {infos.native_currencies[i]}\n"
-                    f"Floor Price: {infos.floor_prices[i]} | 24h Change: {infos.floor_prices_24h_percentage_change[i]:+.2f}%\n"
+                    f"Floor Price: {infos.floor_prices[i]} | 24h Change: {infos.floor_prices_24h_percentage_change[i]}%\n"
                     f"24h Volume: {infos.h24_volumes[i]}\n"
                     f"24h Avg Sale: {infos.h24_avg_sell_price[i]}\n"
                 )

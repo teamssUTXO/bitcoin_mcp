@@ -85,18 +85,18 @@ class NetworkAnalyzer:
             infos: DataNetworkFees = DataNetworkFees.from_data(data)
 
             costs: dict = {
-                'Rapide (~10 min)': (infos.fastest * tx_size) / Config.SATOSHI,
-                'Demi-heure': (infos.half_hour * tx_size) / Config.SATOSHI,
-                'Standard (~1h)': (infos.hour * tx_size) / Config.SATOSHI,
-                'Économique': (infos.economy * tx_size) / Config.SATOSHI
+                'Rapide (~10 min)': infos.fastest * tx_size,
+                'Demi-heure': infos.half_hour * tx_size,
+                'Standard (~1h)': infos.hour * tx_size,
+                'Économique': infos.economy * tx_size
             }
 
             result: str = (
                 f"## Recommended Transaction Fees\n"
-                f"Fastest (~10 min): {infos.fastest} sat/vB | Cost: ~{list(costs.values())[0]} BTC\n"
-                f"Half-Hour (~30 min): {infos.half_hour} sat/vB | Cost: ~{list(costs.values())[1]} BTC\n"
-                f"Standard (~60 min): {infos.hour} sat/vB | Cost: ~{list(costs.values())[2]} BTC\n"
-                f"Economy: {infos.economy} sat/vB | Cost: ~{list(costs.values())[3]} BTC\n"
+                f"Fastest (~10 min): {infos.fastest} sat/vB | Cost: ~{list(costs.values())[0]} sats\n"
+                f"Half-Hour (~30 min): {infos.half_hour} sat/vB | Cost: ~{list(costs.values())[1]} sats\n"
+                f"Standard (~60 min): {infos.hour} sat/vB | Cost: ~{list(costs.values())[2]} sats\n"
+                f"Economy: {infos.economy} sat/vB | Cost: ~{list(costs.values())[3]} sats\n"
             )
 
             return result

@@ -21,6 +21,20 @@ class DataMarketOverview:
 
 
 @dataclass
+class DataBitcoinPriceUSD:
+    data: dict
+
+    def __post_init__(self):
+        self.price_usd : int = self.data.get("bitcoin", {}).get("usd", 0)
+
+    @classmethod
+    def from_data(cls, data: dict) -> DataBitcoinPriceUSD:
+        return cls(
+            data = data
+        )
+
+
+@dataclass
 class DataBitcoinOverview:
     data: dict
 
@@ -44,7 +58,7 @@ class DataBitcoinMarket:
     def __post_init__(self):
         self.block_time_in_minutes: int = self.data.get("block_time_in_minutes", 0)
         self.hashing_algorithm: str = self.data.get("hashing_algorithm", "")
-        self.description: str = self.data.get("description", "")
+        self.description: str = self.data.get("description", {}).get("en", "")
         self.white_paper_link: str = self.data.get("links", {}).get("whitepaper", "")
         self.repo_github_link: str = self.data.get("links", {}).get("repos_url", {}).get("github", [])[0]
         self.genesis_date: str = self.data.get("genesis_date", "")
@@ -60,8 +74,8 @@ class DataBitcoinMarket:
         self.atl_change_percentage: int = self.data.get("market_data", {}).get("atl_change_percentage", {}).get("usd", 0)
         self.atl_date: int = self.data.get("market_data", {}).get("atl_date", {}).get("usd", 0)
 
-        self.high_price_24h: int = self.data.get("market_price", {}).get("high_24h", 0)
-        self.low_price_24h: int = self.data.get("market_price", {}).get("low_24h", 0)
+        self.high_price_24h: int = self.data.get("market_data", {}).get("high_24h", {}).get("usd", 0)
+        self.low_price_24h: int = self.data.get("market_data", {}).get("low_24h", {}).get("usd", 0)
 
         self.total_supply: int = self.data.get("market_data", {}).get("total_supply", 0)
         self.max_supply: int = self.data.get("market_data", {}).get("max_supply", 0)

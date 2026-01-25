@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "dotenv>=0.9.9",
-    "fastmcp",
+    "fastmcp>=3.0.0b1",
     "httpx",
     "mcp[cli]>=1.25.0",
     "typing",
