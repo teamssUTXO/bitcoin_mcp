@@ -213,16 +213,16 @@ class MarketAnalyzer:
 
             sentiment_label: str = "Neutre"
             if infos.sentiment_votes_up_percentage > infos.sentiment_votes_down_percentage:
-                sentiment_label = "🟢 Majorité Haussière (Bullish)"
+                sentiment_label = "Majorité Haussière (Bullish)"
             elif infos.sentiment_votes_down_percentage > infos.sentiment_votes_up_percentage:
-                sentiment_label = "🔴 Majorité Baissière (Bearish)"
+                sentiment_label = "Majorité Baissière (Bearish)"
 
             result: str = (
                 f"=== Psychologie & Sentiment du Marché ===\n"
                 f"--- Sentiment Communautaire (CoinGecko) ---\n"
                 f"Tendance: {sentiment_label}\n"
-                f"👍 Optimistes (Votes Up): {infos.sentiment_votes_up_percentage:.0f}%\n"
-                f"👎 Pessimistes (Votes Down): {infos.sentiment_votes_down_percentage:.0f}%\n"
+                f"Optimistes (Votes Up): {infos.sentiment_votes_up_percentage:.0f}%\n"
+                f"Pessimistes (Votes Down): {infos.sentiment_votes_down_percentage:.0f}%\n"
                 f"\n"
                 f"--- Historique Fear & Greed (7 derniers jours) ---\n"
                 f"Indicateur de peur et d'avidité (Source: Alternative.me)\n"

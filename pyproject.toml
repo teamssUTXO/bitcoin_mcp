@@ -9,5 +9,4 @@ dependencies = [
     "fastmcp>=3.0.0b1",
     "httpx",
     "mcp[cli]>=1.25.0",
-    "typing",
 ]
