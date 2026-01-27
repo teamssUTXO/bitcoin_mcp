@@ -9,7 +9,7 @@ Our goal is to build a comprehensive, community-driven Bitcoin MCP server that s
 2. [How Can I contribute?](#how-can-i-contribute-)
 4. [Development setup](#development-setup)
 5. [Licence](#license)
-6. [Thanks❤️](#thanks)
+6. [Thanks❤️](#thanks%EF%B8%8F)
 
 ---
 
@@ -22,7 +22,6 @@ By participating, you agree to:
 - Be respectful of differing viewpoints and experiences
 - Accept constructive criticism gracefully
 - Focus on what is best for the community
-- Show empathy towards other community members
 
 ---
 
@@ -33,7 +32,7 @@ There are many ways to contribute to the Bitcoin MCP Server:
 ### Code Contributions
 
 - Add new tools: Expand the server's capabilities with new Bitcoin-related tools
-- Layer 2 support: Implement Lightning Network, Liquid, or other Layer 2 functionality
+- Bitcoin ecosystem expansion: Add support for Layer 2 protocols (Lightning Network, Liquid), Ordinals/Inscriptions, BRC-20 tokens, and other Bitcoin technologies
 - Improve existing tools: Enhance performance, add features, or fix bugs
 - Write tests: Help us improve code quality with unit and integration tests
 - Add configuration examples: Support for ChatGPT, Gemini, and other LLM platforms
@@ -69,35 +68,35 @@ bitcoin_mcp/
 │       ├── client.py                         # Base API client with common functionality
 │       ├── coingecko_client.py               # CoinGecko API client for market data
 │       └── mempool_client.py                 # Mempool.space API Client
-│   ├── core/ 
+│   ├── core/                                 
 │       ├── __init__.py
-│       ├── addresses.py                      # Address-related operations (balance, UTXOs, history)
-│       ├── blocks.py                         # Block data retrieval
-│       ├── market.py                         # Market data (price, volume, market cap)
-│       ├── mining.py                         # Mining statistics (hashrate, difficulty, pools)
-│       ├── network.py                        # Network health and statistics
-│       └── transactions.py                   # Transaction operations
-│   ├── data/
+│       ├── addresses.py                      # Processes data 
+│       ├── blocks.py                         # and returns
+│       ├── market.py                         # formatted text
+│       ├── mining.py                         # for LLM consumption
+│       ├── network.py                        # in markdown
+│       └── transactions.py
+│   ├── data/                                 # Data structures for tools
 │       ├── __init__.py
-│       ├── addresses_dataclasses.py          # Address-related data structures
-│       ├── blocks_dataclasses.py             # Block data structures
-│       ├── market_dataclasses.py             # Market data structures
-│       ├── mining_dataclasses.py             # Mining data structures
-│       ├── network_dataclasses.py            # Network data structures
-│       └── transactions_dataclasses.py       # Transaction data structures
-│   ├── tools/
+│       ├── addresses_dataclasses.py
+│       ├── blocks_dataclasses.py
+│       ├── market_dataclasses.py
+│       ├── mining_dataclasses.py
+│       ├── network_dataclasses.py
+│       └── transactions_dataclasses.py
+│   ├── tools/                                # MCP tools
 │       ├── __init__.py
-│       ├── addresses_tools.py                # MCP tools for address operations
-│       ├── blocks_tools.py                   # MCP tools for block queries
-│       ├── market_tools.py                   # MCP tools for market data
-│       ├── mining_tools.py                   # MCP tools for mining stats
-│       ├── network_tools.py                  # MCP tools for network info
-│       └── transactions_tools.py             # MCP tools for transaction operations
+│       ├── addresses_tools.py                
+│       ├── blocks_tools.py                   
+│       ├── market_tools.py                   
+│       ├── mining_tools.py                  
+│       ├── network_tools.py                 
+│       └── transactions_tools.py             
 │   ├── tests
-│       └── unit_tests.py                     # Unit tests for core fonctionnality
+│       └── unit_tests.py                     # Unit tests (coming coon...)
 │   ├── __init__.py
-│   ├── config.py                             # Configuration management
-│   ├── log.py                                # Logging configuration and utilities
+│   ├── config.py                             # Project Variable Configuration
+│   ├── log.py                                # Logging configuration
 │   └── main.py
 ├── .env.example                              # Environment variables template (Unused)
 ├── compose.yaml                              # Docker Compose configuration
@@ -108,7 +107,7 @@ bitcoin_mcp/
 ├── README.md 
 ├── requirements.txt                          # Python dependencies for pip-based installation
 ├── SECURITY.md
-└── uv.lock                                   # Lock file generated by the UV package manager.
+└── uv.lock                                   # Lock file generated by the UV package manager
 ```
 
 ### Contribution Workflow
@@ -163,11 +162,11 @@ Check [Conventionals Commit Messages](https://gist.github.com/joshbuchea/6f47e86
 
 **Note**: Unit tests are not yet implemented. Please verify your contributions manually using [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
 
-### Adding a New Bitcoin Domain
+### Adding a New Bitcoin Client
 
 1. Create API client in `/src/api/`
 2. Define dataclasses in `/src/data/`
-3. Implement business logic in `/src/core/`
+3. Implement logic in `/src/core/`
 4. Create MCP tools in `/src/tools/`
 5. Register tools in `/src/main.py`
 6. Update documentation

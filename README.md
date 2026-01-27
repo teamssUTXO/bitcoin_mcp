@@ -5,6 +5,7 @@ A comprehensive Model Context Protocol (MCP) server that brings Bitcoin data and
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-green.svg)](https://modelcontextprotocol.io/)
+![](https://img.shields.io/badge/made%20with%20the%20bitcoin%20love%20<3-8A2BE2)
 
 ---
 
@@ -56,24 +57,15 @@ The Bitcoin MCP Server empowers AI assistants with real-time Bitcoin data and an
 
 ## ✨ Features
 
-### Core Capabilities
-
-- **Address Operations**: Check balances, UTXOs, and transaction history for any Bitcoin address
-- **Block Explorer**: Retrieve block details, transactions, and mining information
-- **Transaction Analysis**: Get transaction details, status, and fee information
-- **Market Data**: Real-time and historical price data from multiple sources
-- **Mining Statistics**: Hashrate, difficulty adjustments, and pool distribution
-- **Network Metrics**: Mempool status, fee recommendations, and network health
-- **Multi-API Support**: Aggregates data from Blockchain.com, Mempool.space, CoinGecko, and more
-
-### Technical Features
-
-- 🚀 **Fast & Lightweight**: Efficient data retrieval with minimal overhead
-- 🛡️ **Type-Safe**: Built with Python dataclasses for reliability
-- 📝 **Well-Documented**: Comprehensive inline documentation and examples
-- 🧪 **Tested**: Unit tests to ensure code quality (expanding coverage)
-- 🐳 **Docker Support**: Easy deployment with Docker and Docker Compose
-- 🔧 **Configurable**: Flexible configuration via environment variables
+- **Network Overview**: Real-time Bitcoin network statistics including hashrate, difficulty, block production, and transaction volume
+- **Transaction Analysis**: Detailed transaction information with input/output breakdown, fee analysis, and confirmation status
+- **Address Intelligence**: Complete address analytics including balance, transaction history and UTXO management
+- **Block Explorer**: Access to block data with mining pool information, transaction counts, fees, and timestamps
+- **Market Data**: Real-time Bitcoin price, market capitalization, trading volume, and multi-timeframe performance analysis
+- **Mining Insights**: Top mining pools ranking, hashrate distribution, network dominance statistics, and 3-month historical trends
+- **Fee Recommendations**: Dynamic fee estimates for different confirmation speeds (fastest, half-hour, standard, economy)
+- **Market Sentiment**: Community sentiment tracking and Fear & Greed Index with 7-day historical data
+- **Trending Analytics**: Discover trending cryptocurrencies, NFT collections, and categories
 
 ---
 
@@ -220,46 +212,46 @@ The Bitcoin MCP Server provides the following tools organized by category:
 
 ### 📬 Address Tools
 
-- `get_info_about_address`: 
-- `get_address_overview`: 
+- `get_address_overview` 
+- `get_info_about_address`
 
 ### 📦 Block Tools
 
-- `get_10_latest_blocks_informations`: 
-- `get_block_hash_with_height`: 
-- `get_summary_of_latest_block`: 
+- `get_10_latest_blocks_informations` 
+- `get_block_hash_with_height`
+- `get_summary_of_latest_block`
 
 ### 💸 Transaction Tools
 
-- `get_bitcoin_transaction_infos`: 
-- `get_transaction_input_output`: 
-- `get_transactions_of_address`: 
+- `get_bitcoin_transaction_infos`
+- `get_transaction_input_output`
+- `get_transactions_of_address`
 
 ### 💰 Market Tools
 
-- `get_bitcoin_price_usd`: 
-- `get_bitcoin_market_data`: 
-- `get_cryptomarket_overview`: 
-- `get_bitcoin_market_sentiment`:
-- `get_trending_coins`: 
-- `get_trending_categories`: 
-- `get_trending_nfts`: 
+- `get_bitcoin_price_usd`
+- `get_bitcoin_market_data`
+- `get_cryptomarket_overview`
+- `get_bitcoin_market_sentiment`
+- `get_trending_coins`
+- `get_trending_categories`
+- `get_trending_nfts`
 
 ### ⛏️ Mining Tools
 
-- `get_mining_pools_hashrates_3month`: 
-- `get_top_10_mining_pools_rank`: 
-- `get_bitcoin_network_mining_pools_statistics`: 
-- `get_top1_mining_pool`: 
-- `get_mining_pool_by_slug`: 
+- `get_mining_pools_hashrates_3month`
+- `get_top_10_mining_pools_rank`
+- `get_bitcoin_network_mining_pools_statistics`
+- `get_top1_mining_pool`
+- `get_mining_pool_by_slugl`
 
 ### 🌐 Network Tools
 
-- `get_bitcoin_network_overview`: Current mempool size and transaction count
-- `get_bitcoin_network_recommended_fees`: General Bitcoin network statistics
-- `get_bitcoin_network_health`: Number of reachable nodes on the network
+- `get_bitcoin_network_overview`
+- `get_bitcoin_network_recommended_fees`
+- `get_bitcoin_network_health`
 
-**Total**: 25+ tools and growing!
+**Total**: 20+ tools and growing!
 
 For detailed tool documentation, see the inline help in each tool module or use the MCP Inspector.
 
@@ -283,26 +275,7 @@ This command automatically:
 
 ### Manual Configuration
 
-For detailed manual configuration instructions for Claude Desktop and other platforms, see [mcp_config/README.md](mcp_config/README.md).
-
-### Environment Variables
-
-Create a `.env` file in the project root (optional):
-```bash
-# Logging
-LOG_LEVEL=INFO
-
-# API Configuration (if using authenticated endpoints)
-BLOCKCHAIN_API_KEY=your_key_here
-COINGECKO_API_KEY=your_key_here
-
-# Bitcoin Node (optional - for direct node access)
-BITCOIN_RPC_URL=http://localhost:8332
-BITCOIN_RPC_USER=your_user
-BITCOIN_RPC_PASSWORD=your_password
-```
-
-Most users won't need to configure anything - the defaults work great!
+For detailed manual configuration instructions for Claude Desktop and other platforms, see [how to configure MCP Server](mcp_config/README.md).
 
 ---
 
@@ -318,20 +291,11 @@ Using MCP servers **will consume more tokens** from your AI assistant's message 
 
 **Impact**: You may reach your daily message limit faster when using Bitcoin MCP tools extensively.
 
-**Tips to optimize**:
-- Ask focused questions rather than broad explorations
-- Limit the number of addresses/transactions queried at once
-- Use summary requests instead of detailed breakdowns when possible
-
 ### Rate Limiting
 
-While the APIs are free, they may implement rate limiting:
+While the APIs are free, rate limits apply. Intensive usage may result in temporary blocks. Please refer to the client website for specific API usage limits.
 
-- **Blockchain.com**: ~1 request per second recommended
-- **Mempool.space**: Generally permissive, but avoid abuse
-- **CoinGecko**: 10-50 calls/minute on free tier
 
-The server implements basic rate limiting to prevent issues, but very intensive use may encounter temporary blocks.
 
 ---
 
@@ -339,20 +303,18 @@ The server implements basic rate limiting to prevent issues, but very intensive 
 
 ### Coming Soon
 
-- ⚡ **Layer 2 Support**: Lightning Network data and statistics
-- 🌊 **Liquid Network**: Liquid sidechain tools and asset tracking
-- 🔧 **Additional Platforms**: Configuration guides for ChatGPT, Gemini, and more
-- 🧪 **Comprehensive Tests**: Expanded unit and integration test coverage
-- 📊 **Advanced Analytics**: On-chain analytics and pattern recognition
-- 🔔 **Alert System**: Price alerts and transaction monitoring
-- 📈 **Historical Analysis**: Deep-dive into historical blockchain data
+- **Unit Tests**: Comprehensive test coverage for reliability
+- **More Platforms**: ChatGPT, Gemini, and other MCP client configurations
+- **Specialized Tools**: Domain-specific tools for trading, analytics, and research
+- **Enhanced Data Processing**: Improved caching, formatting, and response quality
 
 ### Long-term Vision
 
-- Support for other cryptocurrencies (Ethereum, Litecoin, etc.)
-- Custom node integration for enterprise users
-- Advanced charting and visualization tools
-- WebSocket support for real-time updates
+- **Complete Bitcoin Stack**: Full-featured support for all Bitcoin layers and protocols
+- **Specialized Tool Categories**: Expand with domain-specific tools (trading analysis, on-chain metrics, educational resources, technical indicators, etc.)
+- **Enterprise-Grade Infrastructure**: Custom Bitcoin Core node integration with advanced caching and performance optimization
+- **Real-Time Data Streams**: WebSocket support for live price updates, mempool monitoring, and block notifications
+- **Community-Driven Development**: Open governance model with transparent roadmap and regular community input
 
 **Want to help shape the roadmap?** See [CONTRIBUTING.md](CONTRIBUTING.md)!
 
@@ -360,16 +322,16 @@ The server implements basic rate limiting to prevent issues, but very intensive 
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.
+We welcome contributions from the community! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated ❤️.
 
 ### How to Contribute
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Create a feature branch
 3. Make your changes
 4. Test with MCP Inspector
-5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-6. Push to your branch (`git push origin feature/amazing-feature`)
+5. Commit your changes
+6. Push to your branch
 7. Open a Pull Request
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
@@ -386,42 +348,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 For security concerns or vulnerability reports, please see our [Security Policy](SECURITY.md).
 
-**Do not** create public GitHub issues for security vulnerabilities.
-
 ---
 
-## 📞 Support
+For any questions send me a message on Discord : `teamsutxo`
 
-- **Documentation**: Check this README and [mcp_config/README.md](mcp_config/README.md)
-- **Issues**: [GitHub Issues](../../issues)
-- **Discussions**: [GitHub Discussions](../../discussions)
-- **Discord**: Message `teamsutxo` for questions
-
----
-
-## 🙏 Acknowledgments
-
-- [Anthropic](https://anthropic.com) for creating Claude and the MCP protocol
-- [Blockchain.com](https://blockchain.com), [Mempool.space](https://mempool.space), and [CoinGecko](https://coingecko.com) for their excellent free APIs
-- The Bitcoin community for continued innovation and support
-- All contributors who help make this project better
-
----
-
-## 📝 Final Note
-
-**This code was not vibe-coded.** Every line was thoughtfully crafted, tested, and documented to provide a reliable, professional tool for the Bitcoin and AI communities. 
-
----
-
-**Star ⭐ this repository** if you find it useful!
-
-**Let's bring Bitcoin to AI, together!** 🚀⚡
-
-=========================================
-
-[//]: # (TODO : )
-MCP Inspector : 
-
-Erreur lors de la connexion HTTP sans proxy. Le message ne prend pas en compte si on utilise le proxy ou non. copier-coller pas très bien formatté.  
-Faire dynamiquement le fait que si on choisit SSE, ça mette /sse, et si on met http, ça met /mcp en endpoint de connexion
+This project was not vibe-coded.
