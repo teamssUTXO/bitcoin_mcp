@@ -2,10 +2,11 @@
 
 A comprehensive Model Context Protocol (MCP) server that brings Bitcoin data and functionality directly to AI assistants like Claude, ChatGPT, and other MCP-compatible platforms.
 
+![Bitcoin](https://img.shields.io/badge/Bitcoin-F7931A?logo=bitcoin&logoColor=white)
+[![MCP](https://img.shields.io/badge/MCP-Compatible-green.svg)](https://modelcontextprotocol.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![MCP](https://img.shields.io/badge/MCP-Compatible-green.svg)](https://modelcontextprotocol.io/)
-![](https://img.shields.io/badge/made%20with%20the%20bitcoin%20love%20<3-8A2BE2)
+![](https://img.shields.io/badge/spread%20the%20bitcoin%20love%20<3-f00020)
 
 ---
 
