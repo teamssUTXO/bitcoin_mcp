@@ -2,9 +2,6 @@
 import sys
 import os
 
-from starlette.applications import Starlette
-from starlette.routing import Route, Mount
-
 ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(ROOT)
 
@@ -14,7 +11,7 @@ import uvicorn
 from starlette.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
-from mcp.server.fastmcp import FastMCP, Context
+from mcp.server.fastmcp import FastMCP
 
 from src.tools.network_tools import register_network_tools
 from src.tools.transactions_tools import register_transactions_tools
@@ -43,7 +40,7 @@ register_blocks_tools(mcp)
 logger.info("Tools Initialized")
 
 @mcp.custom_route("/health", methods=["GET"])
-async def health_check(request):
+async def health_check():
     return JSONResponse({"status": "healthy", "service": "mcp-server"})
 
 if __name__ == "__main__":
@@ -57,9 +54,9 @@ if __name__ == "__main__":
 
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"],  # En production, spécifie les origines autorisées
+            allow_origins=["*"],
             allow_credentials=True,
-            allow_methods=["*"],  # Autorise toutes les méthodes (GET, POST, OPTIONS, etc.)
+            allow_methods=["*"],
             allow_headers=["*"],
         )
 

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 
-from src.data.block_dataclasses import DataLatestBlock, DataLatestBlocks
+from src.data.blocks_dataclasses import DataLatestBlock, DataLatestBlocks
 
 logger = logging.getLogger(__name__)
 
