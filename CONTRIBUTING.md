@@ -1,0 +1,196 @@
+# Contributing to the Bitcoin MCP Server
+
+First off, thank you for considering contributing to Bitcoin MCP Server!
+
+Our goal is to build a comprehensive, community-driven Bitcoin MCP server that supports all possible Bitcoin operations.
+
+# Table of contents
+1. [Code of conduct](#code-of-conduct)
+2. [How Can I contribute?](#how-can-i-contribute-)
+4. [Development setup](#development-setup)
+5. [Licence](#license)
+6. [Thanks❤️](#thanks)
+
+---
+
+## Code of conduct
+
+This project is committed to providing a welcoming and inclusive environment for all contributors. Please be respectful, constructive, and professional in all interactions.
+
+By participating, you agree to:
+
+- Be respectful of differing viewpoints and experiences
+- Accept constructive criticism gracefully
+- Focus on what is best for the community
+- Show empathy towards other community members
+
+---
+
+## How Can I contribute ?
+
+There are many ways to contribute to the Bitcoin MCP Server:
+
+### Code Contributions
+
+- Add new tools: Expand the server's capabilities with new Bitcoin-related tools
+- Layer 2 support: Implement Lightning Network, Liquid, or other Layer 2 functionality
+- Improve existing tools: Enhance performance, add features, or fix bugs
+- Write tests: Help us improve code quality with unit and integration tests
+- Add configuration examples: Support for ChatGPT, Gemini, and other LLM platforms
+
+### Bug Reports & Feature Requests
+
+- Report bugs you encounter
+- Suggest new tools or features
+- Propose improvements to existing functionality
+
+---
+
+## Development setup
+
+### Prerequisites
+
+- Python 3.10 or higher (3.13 or 3.14 recommended)
+- `uv` package manager
+- MCP Inspector for testing (unit tests coming soon...)
+
+### Project Structure
+
+```
+bitcoin_mcp/
+├── mcp_config/                               # MCP client configuration examples 
+│   ├── claude_desktop_config.json.example    # Example config for Claude Desktop
+│   └── README.md                             # Configuration guide for different platforms
+├── src/                                      
+│   ├── api/                                  # API clients for interacting ith external Bitcoin data providers
+│       ├── __init__.py
+│       ├── alternative_client.py             # Alternative Bitcoin API Client
+│       ├── blockchain_client.py              # Blockchain.com API Client
+│       ├── client.py                         # Base API client with common functionality
+│       ├── coingecko_client.py               # CoinGecko API client for market data
+│       └── mempool_client.py                 # Mempool.space API Client
+│   ├── core/ 
+│       ├── __init__.py
+│       ├── addresses.py                      # Address-related operations (balance, UTXOs, history)
+│       ├── blocks.py                         # Block data retrieval
+│       ├── market.py                         # Market data (price, volume, market cap)
+│       ├── mining.py                         # Mining statistics (hashrate, difficulty, pools)
+│       ├── network.py                        # Network health and statistics
+│       └── transactions.py                   # Transaction operations
+│   ├── data/
+│       ├── __init__.py
+│       ├── addresses_dataclasses.py          # Address-related data structures
+│       ├── blocks_dataclasses.py             # Block data structures
+│       ├── market_dataclasses.py             # Market data structures
+│       ├── mining_dataclasses.py             # Mining data structures
+│       ├── network_dataclasses.py            # Network data structures
+│       └── transactions_dataclasses.py       # Transaction data structures
+│   ├── tools/
+│       ├── __init__.py
+│       ├── addresses_tools.py                # MCP tools for address operations
+│       ├── blocks_tools.py                   # MCP tools for block queries
+│       ├── market_tools.py                   # MCP tools for market data
+│       ├── mining_tools.py                   # MCP tools for mining stats
+│       ├── network_tools.py                  # MCP tools for network info
+│       └── transactions_tools.py             # MCP tools for transaction operations
+│   ├── tests
+│       └── unit_tests.py                     # Unit tests for core fonctionnality
+│   ├── __init__.py
+│   ├── config.py                             # Configuration management
+│   ├── log.py                                # Logging configuration and utilities
+│   └── main.py
+├── .env.example                              # Environment variables template (Unused)
+├── compose.yaml                              # Docker Compose configuration
+├── CONTRIBUTING.md
+├── Dockerfile
+├── LICENSE 
+├── README.Docker.md                          # Docker deployment documentation 
+├── README.md 
+├── requirements.txt                          # Python dependencies for pip-based installation
+├── SECURITY.md
+└── uv.lock                                   # Lock file generated by the UV package manager.
+```
+
+### Contribution Workflow
+
+1. **Fork and clone**:
+```bash
+   git clone https://github.com/teamssUTXO/bitcoin-mcp-server.git
+   cd bitcoin-mcp-server
+```
+
+2. **Create a feature branch**:
+```bash
+   git checkout -b feature/your-feature-name
+```
+
+3. **Make your changes**:
+   - Follow the existing code style
+   - Add or update documentation as needed
+   - Include examples if adding new tools
+
+
+4. **Test your changes**:
+
+   - Use MCP Inspector to verify functionality
+   - Unit tests coming soon - stay tuned!
+
+
+5. **Commit your changes**:
+```bash
+   git commit -m "feat: add your feature description"
+```
+   
+   Use conventional commit messages :
+   - `feat:` for new features
+   - `fix:` for bug fixes
+   - `docs:` for documentation
+   - `refactor:` for code refactoring
+   - `test:` for adding tests
+
+Check [Conventionals Commit Messages](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716).
+
+6. **Push to your fork**:
+```bash
+   git push origin feature/your-feature-name
+```
+
+7. **Open a Pull Request** with:
+   - Clear description of changes
+   - Link to related issue (if applicable)
+   - Screenshots or examples (if relevant)
+   - Testing steps
+
+**Note**: Unit tests are not yet implemented. Please verify your contributions manually using [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
+
+### Adding a New Bitcoin Domain
+
+1. Create API client in `/src/api/`
+2. Define dataclasses in `/src/data/`
+3. Implement business logic in `/src/core/`
+4. Create MCP tools in `/src/tools/`
+5. Register tools in `/src/main.py`
+6. Update documentation
+
+Example: Adding Lightning Network Support
+```
+1. Create: src/api/lightning_client.py
+2. Create: src/data/lightning_dataclasses.py
+3. Create: src/core/lightning.py
+4. Create: src/tools/lightning_tools.py
+5. Update: src/main.py (register Lightning tools)
+6. Update: README.md (document new features)
+```
+
+---
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.
+
+---
+
+## Thanks❤️
+
+Thank you for contributing to the Bitcoin MCP Server!
+

@@ -1,12 +1,30 @@
+# With uv :
 {
-  "main": {
-    "command": "path\\to\\uv.EXE",
-    "args": [
-      "run",
-      "mcp",
-      "python",
-      "-m",
-      "path\\to\\main.py"
-    ]
+  "mcpServers": {
+    "bitcoin_mcp_server": {
+      "command": "ABSOLUTE/PATH/TO/uv.exe",
+      "args": [
+        "run",
+        "--frozen",
+        "--with",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "ABSOLUTE/PATH/TO/bitcoin_mcp/src/main.py"
+      ]
+    }
+  }
+}
+
+
+# With python
+{
+  "mcpServers": {
+    "bitcoin-mcp-server": {
+      "command": "ABSOLUTE/PATH/TO/python",
+      "args": [
+        "ABSOLUTE/PATH/TO/bitcoin_mcp/src/main.py"
+      ]
+    }
   }
 }
