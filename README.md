@@ -90,6 +90,11 @@ The Bitcoin MCP Server empowers AI assistants with real-time Bitcoin data and an
 
 ![img](https://github.com/user-attachments/assets/87693e81-84a8-4f61-9d65-a6eecdb4432c)
 
+You can use these examples :
+
+- Transaction : a1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d
+- Address : 1Ay8vMC7R1UbyCCZRVULMV7iQpHSAbguJP
+- Block (height) : 933135
 
 ---
 
