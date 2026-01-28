@@ -70,6 +70,27 @@ The Bitcoin MCP Server empowers AI assistants with real-time Bitcoin data and an
 
 ---
 
+## 💼 Use Cases
+
+### For Investors & Traders
+
+[img](https://github.com/user-attachments/assets/d10cf426-5c05-4ea4-950f-d766a1a9b2ed)
+
+### For Developers & Analysts
+
+[img](https://github.com/user-attachments/assets/3e6c905b-454a-4c44-8cd7-4c56292f8e75)
+
+### For Researchers & Educators
+
+[img](https://github.com/user-attachments/assets/bd48499c-a27b-47ee-98dc-3b0eccea865c)
+
+### For Business Intelligence
+
+[img](https://github.com/user-attachments/assets/87693e81-84a8-4f61-9d65-a6eecdb4432c)
+
+
+---
+
 ## 🚀 Installation
 
 ### Prerequisites
@@ -132,78 +153,6 @@ Check [How to configure MCP Server](mcp_config/README.md)
 ### Option 3: Using Docker
 
 See [README.Docker.md](README.Docker.md) for detailed Docker deployment instructions.
-
----
-
-## 🔑 API Information
-
-### No API Keys Required!
-
-The Bitcoin MCP Server uses **free, public APIs** that don't require authentication or API keys. This makes setup incredibly simple - just install and go!
-
-### Data Sources
-
-The server aggregates data from multiple reliable sources:
-
-- **[Blockchain.com](https://blockchain.com)**
-- **[Mempool.space](https://mempool.space)**
-- **[CoinGecko](https://coingecko.com)**
-- **[Alternative](https://alternative.me/crypto/coins/)**
-
-### Fair Use Policy
-
-While these APIs are free and don't require keys, please use them responsibly:
-
-- ⚠️ **Avoid excessive requests**: Don't spam the APIs with rapid-fire queries
-- 🕐 **Rate limiting**: The server implements reasonable delays between requests
-- 🤝 **Be respectful**: These services are provided free of charge to the community
-- 📊 **Cache when possible**: Results are cached to minimize redundant requests
-
-**Note**: If you plan to use this server at high volume or in a production environment, consider using API keys or self-hosting Bitcoin Core nodes for data access.
-
----
-
-## 💼 Use Cases
-
-### For Investors & Traders
-```
-User: "What's the current Bitcoin price and 24-hour trading volume?"
-AI: Uses bitcoin_mcp_server to fetch real-time market data from CoinGecko
-```
-```
-User: "Show me the transaction history for address bc1q..."
-AI: Retrieves complete transaction history with amounts and timestamps
-```
-
-### For Developers & Analysts
-```
-User: "What's the current network hashrate and mining difficulty?"
-AI: Provides real-time mining statistics and difficulty adjustment predictions
-```
-```
-User: "Analyze the last 10 blocks ?"
-AI: Fetches block data, miner information, and fee analysis
-```
-
-### For Researchers & Educators
-```
-User: "Explain how Bitcoin mempool works and show me the current status"
-AI: Combines educational explanation with live mempool data
-```
-```
-User: "What are the current recommended transaction fees?"
-AI: Provides real-time fee recommendations for different priority levels
-```
-
-### For Business Intelligence
-```
-User: "Track Bitcoin's price movement over the last week and identify trends"
-AI: Fetches historical data and performs trend analysis
-```
-```
-User: "Compare transaction volumes between the top 5 mining pools"
-AI: Aggregates mining pool data and creates comparative analysis
-```
 
 ---
 
@@ -280,6 +229,34 @@ For detailed manual configuration instructions for Claude Desktop and other plat
 
 ---
 
+## 🔑 API Information
+
+### No API Keys Required!
+
+The Bitcoin MCP Server uses **free, public APIs** that don't require authentication or API keys. This makes setup incredibly simple - just install and go!
+
+### Data Sources
+
+The server aggregates data from multiple reliable sources:
+
+- **[Blockchain.com](https://blockchain.com)**
+- **[Mempool.space](https://mempool.space)**
+- **[CoinGecko](https://coingecko.com)**
+- **[Alternative](https://alternative.me/crypto/coins/)**
+
+### Fair Use Policy
+
+While these APIs are free and don't require keys, please use them responsibly:
+
+- ⚠️ **Avoid excessive requests**: Don't spam the APIs with rapid-fire queries
+- 🕐 **Rate limiting**: The server implements reasonable delays between requests
+- 🤝 **Be respectful**: These services are provided free of charge to the community
+- 📊 **Cache when possible**: Results are cached to minimize redundant requests
+
+**Note**: If you plan to use this server at high volume or in a production environment, consider using API keys or self-hosting Bitcoin Core nodes for data access.
+
+---
+
 ## ⚠️ Usage Considerations
 
 ### Message Limits
@@ -295,8 +272,6 @@ Using MCP servers **will consume more tokens** from your AI assistant's message 
 ### Rate Limiting
 
 While the APIs are free, rate limits apply. Intensive usage may result in temporary blocks. Please refer to the client website for specific API usage limits.
-
-
 
 ---
 
