@@ -2,6 +2,8 @@
 
 A comprehensive Model Context Protocol (MCP) server that brings Bitcoin data and functionality directly to AI assistants like Claude, ChatGPT, and other MCP-compatible platforms.
 
+For any questions send me a message on discord : `teamsutxo`
+
 ![Bitcoin](https://img.shields.io/badge/Bitcoin-F7931A?logo=bitcoin&logoColor=white)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-green.svg)](https://modelcontextprotocol.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -201,7 +203,7 @@ The Bitcoin MCP Server provides the following tools organized by category:
 - `get_bitcoin_network_recommended_fees`
 - `get_bitcoin_network_health`
 
-**Total**: 20+ tools and growing!
+Total: **20+ tools** and growing!
 
 For detailed tool documentation, see the inline help in each tool module or use the MCP Inspector.
 
@@ -248,10 +250,10 @@ The server aggregates data from multiple reliable sources:
 
 While these APIs are free and don't require keys, please use them responsibly:
 
-- ⚠️ **Avoid excessive requests**: Don't spam the APIs with rapid-fire queries
-- 🕐 **Rate limiting**: The server implements reasonable delays between requests
-- 🤝 **Be respectful**: These services are provided free of charge to the community
-- 📊 **Cache when possible**: Results are cached to minimize redundant requests
+- **Avoid excessive requests**: Don't spam the APIs with rapid-fire queries
+- **Rate limiting**: The server implements reasonable delays between requests
+- **Be respectful**: These services are provided free of charge to the community
+- **Cache when possible**: Results are cached to minimize redundant requests
 
 **Note**: If you plan to use this server at high volume or in a production environment, consider using API keys or self-hosting Bitcoin Core nodes for data access.
 
@@ -326,6 +328,6 @@ For security concerns or vulnerability reports, please see our [Security Policy]
 
 ---
 
-For any questions send me a message on Discord : `teamsutxo`
+
 
 This project was not vibe-coded.
