@@ -33,10 +33,10 @@ The **Model Context Protocol (MCP)** is an open standard that enables AI assista
 
 ### Key Benefits of MCP
 
-- **🔌 Plug-and-Play Integration**: Connect AI assistants to external tools without custom code
-- **🔒 Secure**: Controlled access to data and operations
-- **🌐 Universal**: Works across different AI platforms (Claude, ChatGPT, etc.)
-- **📦 Modular**: Easy to add, remove, or update capabilities
+- **Plug-and-Play Integration**: Connect AI assistants to external tools without custom code
+- **Secure**: Controlled access to data and operations
+- **Universal**: Works across different AI platforms (Claude, ChatGPT, etc.)
+- **Modular**: Easy to add, remove, or update capabilities
 
 Learn more at [modelcontextprotocol.io](https://modelcontextprotocol.io/)
 
@@ -46,11 +46,11 @@ Learn more at [modelcontextprotocol.io](https://modelcontextprotocol.io/)
 
 The Bitcoin MCP Server empowers AI assistants with real-time Bitcoin data and analysis capabilities:
 
-- **📊 Real-time Data**: Access current Bitcoin prices, market data, and network statistics
-- **🔍 Blockchain Analysis**: Query blocks, transactions, and addresses directly
-- **⛏️ Mining Insights**: Get hashrate, difficulty, and mining pool information
-- **💰 Market Intelligence**: Track price movements, volume, and market capitalization
-- **🌐 Network Health**: Monitor mempool status, fee estimates, and node statistics
+- **Real-time Data**: Access current Bitcoin prices, market data, and network statistics
+- **Blockchain Analysis**: Query blocks, transactions, and addresses directly
+- **Mining Insights**: Get hashrate, difficulty, and mining pool information
+- **Market Intelligence**: Track price movements, volume, and market capitalization
+- **Network Health**: Monitor mempool status, fee estimates, and node statistics
 
 **No Bitcoin expertise required** - just ask questions in natural language, and the AI handles the technical queries for you!
 
