@@ -74,19 +74,19 @@ The Bitcoin MCP Server empowers AI assistants with real-time Bitcoin data and an
 
 ### For Investors & Traders
 
-[img](https://github.com/user-attachments/assets/d10cf426-5c05-4ea4-950f-d766a1a9b2ed)
+![img](https://github.com/user-attachments/assets/d10cf426-5c05-4ea4-950f-d766a1a9b2ed)
 
 ### For Developers & Analysts
 
-[img](https://github.com/user-attachments/assets/3e6c905b-454a-4c44-8cd7-4c56292f8e75)
+![img](https://github.com/user-attachments/assets/3e6c905b-454a-4c44-8cd7-4c56292f8e75)
 
 ### For Researchers & Educators
 
-[img](https://github.com/user-attachments/assets/bd48499c-a27b-47ee-98dc-3b0eccea865c)
+![img](https://github.com/user-attachments/assets/bd48499c-a27b-47ee-98dc-3b0eccea865c)
 
 ### For Business Intelligence
 
-[img](https://github.com/user-attachments/assets/87693e81-84a8-4f61-9d65-a6eecdb4432c)
+![img](https://github.com/user-attachments/assets/87693e81-84a8-4f61-9d65-a6eecdb4432c)
 
 
 ---
