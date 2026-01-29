@@ -161,6 +161,10 @@ Check [How to configure MCP Server](mcp_config/README.md)
 
 See [README.Docker.md](README.Docker.md) for detailed Docker deployment instructions.
 
+### Check server health
+
+To check that the server is working correctly, use the endpoint `/health`.
+
 ---
 
 ## 🛠️ Available Tools
