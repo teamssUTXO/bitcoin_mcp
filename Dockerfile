@@ -19,6 +19,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 ## Create a non-privileged user that the app will run under.
+## Ensure write permissions are enabled for the repository folder to allow log generation, otherwise the script will not work.
 ## See https://docs.docker.com/go/dockerfile-user-best-practices/
 #ARG UID=10001
 #RUN adduser \

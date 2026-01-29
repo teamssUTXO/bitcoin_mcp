@@ -131,7 +131,7 @@ bitcoin_mcp/
 
 4. **Test your changes**:
 
-   - Use MCP Inspector to verify functionality
+   - Use MCP Inspector to verify functionality: `mcp dev src/main.py`
    - Unit tests coming soon - stay tuned!
 
 
