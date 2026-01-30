@@ -165,6 +165,10 @@ See [README.Docker.md](README.Docker.md) for detailed Docker deployment instruct
 
 To check that the server is working correctly, use the endpoint `/health`.
 
+### Port Configuration
+
+Customize the port with `--port 8000` or `-p 8000`. Default: 3000.
+
 ---
 
 ## 🛠️ Available Tools
@@ -336,7 +340,5 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 For security concerns or vulnerability reports, please see our [Security Policy](SECURITY.md).
 
 ---
-
-
 
 This project was not vibe-coded.
