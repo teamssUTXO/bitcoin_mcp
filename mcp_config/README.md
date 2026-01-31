@@ -17,37 +17,26 @@ This directory contains configuration files and examples for integrating the Bit
 - [Claude Desktop](https://claude.ia/download) installed on your system
 - Bitcoin MCP Server downloaded and dependencies installed 
 
-### How to configure ?
+### How to configure with uv ?
 
 Navigate to Bitcoin MCP Server directory and run:
 
-**Using UV (recommended):**
 ```bash
 cd /path/to/bitcoin_mcp
 uv run mcp install src/main.py
 ```
 
-**Using Python:**
-```bash
-cd /path/to/bitcoin_mcp
-python src/main.py mcp install
-```
+Verify the installation by follow these steps : [Verify the installation](#verify-the-installation)
 
-### Verify Installation
+### How to configure with pip (using Python directly)?
 
-1. Launch or restart Claude Desktop (completely close and reopen the application)
-2. Sign in with your Anthropic account if prompted
-3. Check the MCP connection status:
-
-**✅ Success**: Look in the bottom-right corner of the Claude Desktop chat input bar for a small **"+"** button. Click it and select **"Connectors"**. You should see `bitcoin_mcp_server` listed as a connected server. Make sure the tool is toggled **on** (enabled).
-
-**❌ Error**: If a red pop-up notification appears when launching the app, click **"View Logs"** to see the detailed error message and identify the issue.
+You can’t configure it automatically with pip. Follow the section below for manual configuration.
 
 ### Manual Configuration
 
 If the automatic installation doesn't work, you can manually configure Claude Desktop.
 
-### Configuration File Location
+#### Configuration File Location
 
 The Claude Desktop configuration file is located at:
 
@@ -72,13 +61,13 @@ You can also access the configuration file directly from Claude Desktop:
 
 1. Open **Claude Desktop**
 2. Click the **three horizontal lines** (☰) in the top-left corner
-3. Select **Settings**
+3. Select **File** then **Settings**
 4. Navigate to the **Developer** tab
-5. Click **Edit Developer File Configuration** to open the configuration file in your default editor
+5. Click **Edit Developer File Configuration** and open the configuration file
 
-### Configuration Templates
+#### Configuration Templates
 
-**Using UV (recommended):** 
+Using UV :
 ```json
 {
   "mcpServers": {
@@ -98,23 +87,35 @@ You can also access the configuration file directly from Claude Desktop:
 }
 ```
 
-**Using Python directly:**
+Using pip (python directly):
 ```json
 {
   "mcpServers": {
     "bitcoin-mcp-server": {
-      "command": "absolute/path/to/uv.exe",
+      "command": "absolute/path/to/bitcoin_mcp/.venv/Scripts/python.exe",
       "args": [
-        "ABSOLUTE/PATH/TO/bitcoin_mcp/src/main.py"
+        "absolute/path/to/bitcoin_mcp/src/main.py"
       ]
     }
   }
 }
 ```
 
-**Important**: Replace all paths with absolute paths to your actual installations. Use forward slashes `/` or escaped backslashes `\\` on Windows.
+⚠️ **Important**: Replace all paths with absolute paths to your actual installations. Use forward slashes `/` or escaped backslashes `\\` on Windows.
 
 These files are also available in [claude_desktop_config.json.example](claude_desktop_config.json.example)
+
+### Verify the installation
+
+You can verify the installation by :
+
+1. Launch or restart Claude Desktop (completely close and reopen the application)
+2. Sign in with your Anthropic account if prompted
+3. Check the MCP connection status:
+
+**✅ Success**: Look in the bottom-right corner of the Claude Desktop chat input bar for a small **"+"** button. Click it and select **"Connectors"**. You should see `bitcoin_mcp_server` listed as a connected server. Make sure the tool is toggled **on** (enabled).
+
+**❌ Error**: If a red pop-up notification appears when launching the app, click **"View Logs"** to see the detailed error message and identify the issue.
 
 ## Other AI Platforms
 

@@ -2,7 +2,7 @@
 {
   "mcpServers": {
     "bitcoin_mcp_server": {
-      "command": "ABSOLUTE/PATH/TO/uv.exe",
+      "command": "absolute/path/to/uv.exe",
       "args": [
         "run",
         "--frozen",
@@ -10,7 +10,7 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "ABSOLUTE/PATH/TO/bitcoin_mcp/src/main.py"
+        "absolute/path/to/bitcoin_mcp/src/main.py"
       ]
     }
   }
@@ -21,9 +21,9 @@
 {
   "mcpServers": {
     "bitcoin-mcp-server": {
-      "command": "ABSOLUTE/PATH/TO/python",
+      "command": "absolute/path/to/bitcoin_mcp/.venv/Scripts/python.exe",
       "args": [
-        "ABSOLUTE/PATH/TO/bitcoin_mcp/src/main.py"
+        "absolute/path/to/bitcoin_mcp/src/main.py"
       ]
     }
   }

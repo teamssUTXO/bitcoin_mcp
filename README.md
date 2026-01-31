@@ -119,7 +119,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```bash
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
-Restart the cmd line window after installing this
+Restart your command-line window after installing this.
 
 2. **Clone the repository**:
 ```bash
@@ -159,10 +159,9 @@ source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. **Run the server**:
-```bash
-python src/main.py
-```
+4. **Run the server with Claude Desktop**:
+
+Follow the Claude configuration guide: : [Config.README.md](mcp_config/README.md)
 
 ### Option 3: Using Docker
 
