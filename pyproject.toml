@@ -5,7 +5,7 @@ description = "bitcoin mcp"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "cffi==1.17",
+    "cffi==1.17.1",
     "dotenv>=0.9.9",
     "fastmcp>=3.0.0b1",
     "httpx",
