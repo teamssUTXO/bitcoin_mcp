@@ -238,9 +238,58 @@ This command automatically:
 
 **Then restart Claude Desktop** to activate the server.
 
-### Manual Configuration
+### Manual Configuration for Claude Desktop
 
 For detailed manual configuration instructions for Claude Desktop and other platforms, see [how to configure MCP Server](mcp_config/README.md).
+
+### Configure the Server
+
+You can customize the server behavior by editing the configuration file located at `src/config.py`.
+
+#### Available Configuration Options
+
+**API Endpoints**
+- `MEMPOOL_API_URL`: Mempool.space API endpoint (default: `https://mempool.space/api`)
+- `COINGECKO_API_URL`: CoinGecko API endpoint (default: `https://api.coingecko.com/api/v3`)
+- `BLOCKCHAIN_INFO_API_URL`: Blockchain.info API endpoint (default: `https://blockchain.info`)
+- `HIRO_API_URL`: Hiro API endpoint (default: `https://api.hiro.so`)
+- `ALTERNATIVE_API_URL`: Alternative.me API endpoint (default: `https://api.alternative.me`)
+
+**Bitcoin Constants**
+- `SATOSHI`: Satoshi conversion factor (default: `100_000_000`)
+
+**Performance & Reliability**
+- `ENABLE_CACHE`: Enable response caching (default: `True`)
+- `ENABLE_RETRY`: Enable automatic retries on failures (default: `True`)
+- `CACHE_TTL_TIME`: Cache time-to-live in seconds (default: `60`)
+- `MAX_RETRIES`: Maximum retry attempts for failed requests (default: `3`)
+
+**Timeout Settings**
+- `API_CONNECT_TIMEOUT`: Connection timeout in seconds (default: `5.0`)
+- `API_READ_TIMEOUT`: Read timeout in seconds (default: `30.0`)
+- `API_WRITE_TIMEOUT`: Write timeout in seconds (default: `10.0`)
+- `API_POOL_TIMEOUT`: Connection pool timeout in seconds (default: `5.0`)
+
+**Logging Configuration**
+- `LOGGER_NAME`: Logger name (default: `"bitcoin_mcp_server"`)
+- `LOG_DIR`: Directory for log files (default: `"../logs"`)
+- `LOG_LEVEL`: Logging level - `DEBUG`, `INFO`, `WARNING`, `ERROR` (default: `"INFO"`)
+- `LOGGER_BACKUP_COUNT`: Number of log files to retain (default: `30`)
+- `LOGGER_CONSOLE_OUTPUT`: Enable console logging (default: `True`)
+
+#### How to Modify
+
+Edit `src/config.py` and change the values:
+```python
+# Example: Increase cache time and reduce retries
+CACHE_TTL_TIME: int = 300  # 5 minutes instead of 1
+MAX_RETRIES: int = 2       # 2 retries instead of 3
+
+# Example: Enable debug logging
+LOG_LEVEL: str = "DEBUG"
+```
+
+**Note:** Restart the server after making configuration changes for them to take effect.
 
 ---
 
