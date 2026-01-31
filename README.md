@@ -102,33 +102,40 @@ You can use these examples :
 
 ### Prerequisites
 
-- **Python 3.10+** installed on your system
-- **UV** package manager (recommended) or **pip**
+- **Python 3.12** installed on your system
+- **UV** package manager (obligatory)
 - An MCP-compatible AI client (e.g., Claude Desktop)
 
 ### Option 1: Using UV (Recommended)
 
-UV is a fast Python package installer and resolver.
+1. **Install UV** (if not already installed) UV is a fast Python package installer and resolver.
 
-1. **Install UV** (if not already installed):
+- Linux :
 ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+
+- Windows :
+```bash
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+Restart the cmd line window after installing this
 
 2. **Clone the repository**:
 ```bash
-   git clone https://github.com/YOUR_USERNAME/bitcoin-mcp-server.git
-   cd bitcoin-mcp-server
+git clone https://github.com/teamssUTXO/bitcoin_mcp.git
+cd bitcoin_mcp
 ```
 
 3. **Install dependencies**:
 ```bash
-   uv pip install -e .
+uv venv
+uv pip install -e .
 ```
 
 4. **Install to Claude Desktop**:
 ```bash
-   uv run mcp install src/main.py
+uv run mcp install src/main.py
 ```
 
 Check [How to configure MCP Server](mcp_config/README.md)
@@ -137,24 +144,24 @@ Check [How to configure MCP Server](mcp_config/README.md)
 
 1. **Clone the repository**:
 ```bash
-   git clone https://github.com/YOUR_USERNAME/bitcoin-mcp-server.git
-   cd bitcoin-mcp-server
+git clone https://github.com/teamssutxo/bitcoin_mcp.git
+cd bitcoin_mcp
 ```
 
 2. **Create a virtual environment** (recommended):
 ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 ```
 
 3. **Install dependencies**:
 ```bash
-   pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 4. **Run the server**:
 ```bash
-   python src/main.py
+python src/main.py
 ```
 
 ### Option 3: Using Docker

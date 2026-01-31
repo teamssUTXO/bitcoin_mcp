@@ -40,8 +40,8 @@ register_blocks_tools(mcp)
 logger.info("Tools Initialized")
 
 @mcp.custom_route("/health", methods=["GET"])
-async def health_check():
-    return JSONResponse({"status": "healthy", "service": "mcp-server"})
+async def health_check(request):
+    return JSONResponse({"status": "healthy", "service": "bitcoin_mcp_server"})
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run MCP Server")
