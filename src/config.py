@@ -23,10 +23,10 @@ class Config:
     MAX_RETRIES: int = 3
 
     # Timeout
-    API_CONNECT_TIMEOUT: int = 5.0
-    API_READ_TIMEOUT: int = 30.0
-    API_WRITE_TIMEOUT: int = 10.0
-    API_POOL_TIMEOUT: int = 5.0
+    API_CONNECT_TIMEOUT: int = 5
+    API_READ_TIMEOUT: int = 30
+    API_WRITE_TIMEOUT: int = 10
+    API_POOL_TIMEOUT: int = 5
 
     # Logging
     LOGGER_NAME: str = "bitcoin_mcp_server"

@@ -14,20 +14,24 @@ attrs==25.4.0
     #   cyclopts
     #   jsonschema
     #   referencing
-authlib==1.6.6
-    # via fastmcp
+authlib==1.6.7
+    # via
+    #   bitcoin-mcp
+    #   fastmcp
 beartype==0.22.9
     # via
     #   py-key-value-aio
     #   py-key-value-shared
-cachetools==6.2.6
-    # via py-key-value-aio
+cachetools==7.0.1
+    # via
+    #   bitcoin-mcp
+    #   py-key-value-aio
 certifi==2026.1.4
     # via
     #   httpcore
     #   httpx
     #   requests
-cffi==1.17.1
+cffi==2.0.0
     # via
     #   bitcoin-mcp
     #   cryptography
@@ -39,14 +43,10 @@ click==8.3.1
     #   uvicorn
 colorama==0.4.6 ; sys_platform == 'win32'
     # via click
-cryptography==45.0.7 ; python_full_version >= '3.14' and platform_python_implementation != 'PyPy'
+cryptography==46.0.5
     # via
     #   authlib
-    #   pyjwt
-    #   secretstorage
-cryptography==46.0.0 ; python_full_version < '3.14' or platform_python_implementation == 'PyPy'
-    # via
-    #   authlib
+    #   bitcoin-mcp
     #   pyjwt
     #   secretstorage
 cyclopts==4.5.1
@@ -136,7 +136,7 @@ py-key-value-aio==0.3.0
     # via fastmcp
 py-key-value-shared==0.3.0
     # via py-key-value-aio
-pycparser==3.0
+pycparser==3.0 ; implementation_name != 'PyPy'
     # via cffi
 pydantic==2.12.5
     # via

@@ -192,40 +192,38 @@ class MarketAnalyzer:
         try:
             alternative_data: dict = self.alternative.get_fear_greed_index()
             coingecko_data: dict = self.coingecko.get_btc_market_data()
-            if not alternative_data | coingecko_data:
+            if not alternative_data or not coingecko_data:
                 return None
 
             infos: DataBitcoinMarketSentiment = DataBitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
 
-            # Définit : fg_data_1, 2, 3... = [valeur de l'indice fg du jour, classification de cet index]
             fg_lines: list = []
 
             for i in range(7):
                 day_data = infos.fg_data[i]
                 if isinstance(day_data, dict):
                     value = day_data.get("value", "N/A")
-                    classification = day_data.get("value_classification", "Inconnu")
+                    classification = day_data.get("value_classification", "Unknown")
                 else:
                     value = "N/A"
-                    classification = "Inconnu"
+                    classification = "Unknown"
                 fg_lines.append(f"  J+{i}: {value} - {classification}")
             fg_history_txt = "\n".join(fg_lines)
 
-            sentiment_label: str = "Neutre"
+            sentiment_label: str = "Neutral"
             if infos.sentiment_votes_up_percentage > infos.sentiment_votes_down_percentage:
-                sentiment_label = "Majorité Haussière (Bullish)"
+                sentiment_label = "Bullish Majority"
             elif infos.sentiment_votes_down_percentage > infos.sentiment_votes_up_percentage:
-                sentiment_label = "Majorité Baissière (Bearish)"
+                sentiment_label = "Bearish Majority"
 
             result: str = (
-                f"=== Psychologie & Sentiment du Marché ===\n"
-                f"--- Sentiment Communautaire (CoinGecko) ---\n"
-                f"Tendance: {sentiment_label}\n"
-                f"Optimistes (Votes Up): {infos.sentiment_votes_up_percentage:.0f}%\n"
-                f"Pessimistes (Votes Down): {infos.sentiment_votes_down_percentage:.0f}%\n"
-                f"\n"
-                f"--- Historique Fear & Greed (7 derniers jours) ---\n"
-                f"Indicateur de peur et d'avidité (Source: Alternative.me)\n"
+                f"## Market Psychology & Sentiment\n\n"
+                f"### Community Sentiment (CoinGecko)\n"
+                f"Trend: {sentiment_label}\n"
+                f"Bullish: {infos.sentiment_votes_up_percentage:.0f}% | "
+                f"Bearish: {infos.sentiment_votes_down_percentage:.0f}%\n\n"
+                f"### Fear & Greed History (Last 7 Days)\n"
+                f"Source: Alternative.me\n"
                 f"{fg_history_txt}\n"
             )
 
