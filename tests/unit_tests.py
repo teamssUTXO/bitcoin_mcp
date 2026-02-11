@@ -17,7 +17,11 @@ Resources:
     - Documentation: https://modelcontextprotocol.io/docs/tools/inspector
     - GitHub: https://github.com/modelcontextprotocol/inspector
 """
+import unittest
 
 # TODO : Unit tests coming soon
+
+if __name__ == "__main__":
+    unittest.main()
 
 
