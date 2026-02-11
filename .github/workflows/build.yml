@@ -1,0 +1,50 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+name: Python MCP Server
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.12"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest requests
+    
+    - name: Start MCP Server
+      run: |
+        python src/main.py -p 8000 &
+        sleep 5
+    
+    - name: Health Check
+      run: |
+        RESPONSE=$(curl -s http://localhost:8000/health)
+        echo "Health check response: $RESPONSE"
+        if [[ "$RESPONSE" == *"\"status\":\"healthy\""* ]]; then
+          echo "OK"
+        else
+          echo "KO"
+          exit 1
+        fi
+    
+    - name: Run unit tests
+      run: |
+        pytest tests/unit_tests.py
