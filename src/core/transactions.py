@@ -203,8 +203,8 @@ class TransactionAnalyzer:
                 for tx in infos.txs
             ]
 
-            # Destinations (adresse + montant)
-            # Enlevé car trop de tokens
+            # Destinations(address + amount)
+            # Removed because too many tokens
             # destinations: list = [
             #     [
             #         (o.get("addr", ""), o.get("value", 0))

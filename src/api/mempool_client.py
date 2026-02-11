@@ -116,7 +116,7 @@ class MempoolClient(APIClient):
 
     def get_mining_pools_hashrate(self) -> Optional[list]:
         """
-        Renvoie le hashrate des meilleures mining pools du réseau bitcoin depuis 3 mois
+        Returns the hashrate of the best Bitcoin network mining pools for the last 3 months
         Docs : https://mempool.space/docs/api/rest#get-mining-pool-hashrates
         """
         try:

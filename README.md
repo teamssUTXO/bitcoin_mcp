@@ -8,7 +8,7 @@ For any questions send me a message on discord : `teamsutxo`
 ![Bitcoin MCP](https://img.shields.io/badge/github-Bitcoin%20MCP-blue?logo=github)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
-![](https://img.shields.io/badge/spread%20the%20bitcoin%20love%20<3-f00020)
+
 
 ---
 
@@ -397,3 +397,5 @@ For security concerns or vulnerability reports, please see our [Security Policy]
 ---
 
 This project was not vibe-coded.
+
+![bitcoin love](https://img.shields.io/badge/spread%20the%20bitcoin%20love%20<3-f00020)
