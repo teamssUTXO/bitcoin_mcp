@@ -10,8 +10,12 @@
 **/.classpath
 **/.dockerignore
 **/.env
+**/.env.example
 **/.git
 **/.gitignore
+**/.gitattribute
+**/.github
+**/.idea
 **/.project
 **/.settings
 **/.toolstarget
@@ -30,5 +34,10 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+logs/
+*.log
 LICENSE
 README.md
+CONTRIBUTING.md
+README.Docker.md
+SECURITY.md

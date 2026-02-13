@@ -30,7 +30,7 @@ class Config:
 
     # Logging
     LOGGER_NAME: str = "bitcoin_mcp_server"
-    LOG_DIR: str = "../logs"
+    LOG_DIR: str = str(Path(__file__).parent.parent / "logs")
     LOG_LEVEL: str = "INFO"
     LOGGER_BACKUP_COUNT: int = 30
     LOGGER_CONSOLE_OUTPUT: bool = True
