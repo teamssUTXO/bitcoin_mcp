@@ -1,7 +1,6 @@
 # manually add project root to sys.path => entire repo becomes usable
 import sys
 import os
-
 ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(ROOT)
 
