@@ -343,6 +343,12 @@ Using MCP servers **will consume more tokens** from your AI assistant's message 
 
 While the APIs are free, rate limits apply. Intensive usage may result in temporary blocks. Please refer to the client website for specific API usage limits.
 
+### CORS
+
+The current configuration allows requests from any origin, which is acceptable for local development but should be explicitly restricted before any production deployment.
+
+Note also that combining `allow_origins=["*"]` with `allow_credentials=True` is technically invalid per the CORS spec — browsers will reject credentialed cross-origin requests when the origin is a wildcard. Consider either disabling credentials or explicitly listing allowed origins.
+
 ---
 
 ## 🗺️ Roadmap
