@@ -9,6 +9,7 @@ from src.config import Config
 # Docs : https://docs.python.org/3/library/logging.html
 class LoggerMCP:
     """Server Logger Class"""
+
     def __init__(self):
         self.logger_name: str = Config.LOGGER_NAME
         self.log_dir: Path = Path(Config.LOG_DIR)
@@ -27,11 +28,14 @@ class LoggerMCP:
         log_level = getattr(logging, self.level.upper(), logging.INFO)
 
         self.root_logger.setLevel(log_level)
-        self.root_logger.handlers.clear()
+
+        for handler in self.root_logger.handlers[:]:
+            handler.close()
+            self.root_logger.removeHandler(handler)
 
         formatter = logging.Formatter(
             fmt="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S"
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
 
         file_handler = TimedRotatingFileHandler(
@@ -40,7 +44,7 @@ class LoggerMCP:
             interval=1,
             backupCount=self.backup_count,
             encoding="utf-8",
-            utc = True
+            utc=True,
         )
 
         file_handler.setLevel(log_level)
