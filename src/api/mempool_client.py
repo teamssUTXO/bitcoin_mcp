@@ -12,7 +12,7 @@ class MempoolClient(APIClient):
 
     # === BITCOIN BLOCKS INFORMATIONS ===
 
-    def get_block_tip_height(self) -> Optional[int]:
+    def get_block_tip_height(self) -> Optional[str]:
         """
         Returns the height of the last block mined on the Bitcoin network
         Docs : https://mempool.space/docs/api/rest#get-block-tip-height
@@ -24,9 +24,9 @@ class MempoolClient(APIClient):
             logger.error(f"Failed to fetch data from Mempool.space : {e}")
             return None
 
-    def get_block_tip_hash(self) -> Optional[int]:
+    def get_block_tip_hash(self) -> Optional[str]:
         """
-        Returns the hash of the last block mined on the Bitcon network
+        Returns the hash of the last block mined on the Bitcoin network
         Docs : https://mempool.space/docs/api/rest#get-block-tip-hash
         """
         try:

@@ -43,7 +43,7 @@ class MiningPoolAnalyzer:
             for i, pool in enumerate(infos.top10_pools, 1):
                 name: str = pool.get('name', 'Unknown')
                 block_count: int = pool.get('blockCount', 0)
-                percentage: int = (block_count / total_blocks * 100) if total_blocks > 0 else 0
+                percentage: int = int(block_count / total_blocks * 100) if total_blocks > 0 else 0
 
                 result += f"#{i} {name}\n"
                 result += f"Blocks: {block_count} ({percentage:.2f}%)\n"
@@ -211,7 +211,7 @@ class MiningPoolAnalyzer:
             num_pools: int = len(infos.pools)
 
             total_blocks: int = sum(p.get("blockCount", 0) for p in infos.pools)
-            avg_blocks_per_pool: int = total_blocks / num_pools if num_pools > 0 else 0
+            avg_blocks_per_pool: int = int(total_blocks / num_pools) if num_pools > 0 else 0
 
             top_pool: dict = max(infos.pools, key=lambda x: x.get('blockCount', 0))
             top_pool_name: str = top_pool.get('name', 'Unknown')
@@ -220,7 +220,7 @@ class MiningPoolAnalyzer:
             bottom_pool: dict = min(infos.pools, key=lambda x: x.get('blockCount', 0))
             bottom_pool_blocks: int = bottom_pool.get('blockCount', 0)
 
-            dominance_percentage: int = (top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
+            dominance_percentage: int = int(top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
 
             result: str = (
                 f"## Global Mining Statistics (Bitcoin)\n"

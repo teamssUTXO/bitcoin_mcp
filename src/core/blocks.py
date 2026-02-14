@@ -72,7 +72,7 @@ class BlockAnalyzer:
             if not block_hash:
                 return None
 
-            return f"Hash du bloc #{height:,}: {block_hash}"
+            return f"Block Hash #{height:,}: {block_hash}"
 
 
         except Exception as e:

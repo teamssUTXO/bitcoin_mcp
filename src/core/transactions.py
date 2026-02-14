@@ -50,7 +50,7 @@ class TransactionAnalyzer:
 
             fee_btc: float = infos.fee / Config.SATOSHI
 
-            transaction_status: str = "COMFIRMED" if infos.status.get("confirmed") else "UNCOMFIRMED"
+            transaction_status: str = "CONFIRMED" if infos.status.get("confirmed") else "UNCONFIRMED"
             transaction_block_time: int = infos.status.get('block_time', 0)
             transaction_block_hash: str = infos.status.get('block_hash', '')
             transaction_block_height: int = infos.status.get('block_height', 0)
