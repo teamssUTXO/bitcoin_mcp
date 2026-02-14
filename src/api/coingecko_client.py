@@ -67,7 +67,7 @@ class CoinGeckoClient(APIClient):
 _coingecko_instance = None
 
 def get_coingecko_client() -> CoinGeckoClient:
-    """Get or create the Elfa API client singleton instance."""
+    """Get or create the CoinGecko API client singleton instance."""
     global _coingecko_instance
     if _coingecko_instance is None:
         _coingecko_instance = CoinGeckoClient()

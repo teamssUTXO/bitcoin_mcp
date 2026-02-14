@@ -15,7 +15,7 @@ class MiningPoolAnalyzer:
         """
         Initialize Mining Pools Analyzer.
         """
-        self.mempool = get_mempool_client() # le client mempool
+        self.mempool = get_mempool_client()
 
 
     def get_mining_pools_ranking(self) -> Optional[str]:
@@ -43,7 +43,7 @@ class MiningPoolAnalyzer:
             for i, pool in enumerate(infos.top10_pools, 1):
                 name: str = pool.get('name', 'Unknown')
                 block_count: int = pool.get('blockCount', 0)
-                percentage: int = int(block_count / total_blocks * 100) if total_blocks > 0 else 0
+                percentage: float = (block_count / total_blocks * 100) if total_blocks > 0 else 0
 
                 result += f"#{i} {name}\n"
                 result += f"Blocks: {block_count} ({percentage:.2f}%)\n"
@@ -77,7 +77,7 @@ class MiningPoolAnalyzer:
 
             for i, pool in enumerate(infos.pools, 1):
                 pool_name: str = pool.get('poolName', "")
-                hashrate: int = pool.get('avgHashrate', 0)
+                hashrate: float = pool.get('avgHashrate', 0)
                 if hashrate > 0:
                     hashrate: float = hashrate / 1_000_000_000_000_000_000  # EH/s
                 share: float = (pool.get('share', 0))
@@ -169,7 +169,7 @@ class MiningPoolAnalyzer:
             if infos.addresses:
                 addr_list: str = "\n".join([f"  - {addr}" for addr in infos.addresses])
             else:
-                addr_list: str = "  - Aucune adresse listée"
+                addr_list: str = "  - No listed adresses"
 
             result: str = (
                 f"## Mining Pool Details\n"
@@ -220,7 +220,7 @@ class MiningPoolAnalyzer:
             bottom_pool: dict = min(infos.pools, key=lambda x: x.get('blockCount', 0))
             bottom_pool_blocks: int = bottom_pool.get('blockCount', 0)
 
-            dominance_percentage: int = int(top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
+            dominance_percentage: float = (top_pool_blocks / total_blocks * 100) if total_blocks > 0 else 0
 
             result: str = (
                 f"## Global Mining Statistics (Bitcoin)\n"

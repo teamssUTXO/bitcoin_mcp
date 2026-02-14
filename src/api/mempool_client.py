@@ -114,7 +114,7 @@ class MempoolClient(APIClient):
             logger.error(f"Failed to fetch data from Mempool.space : {e}")
             return None
 
-    def get_mining_pools_hashrate(self) -> Optional[list]:
+    def get_mining_pools_hashrate(self) -> Optional[list[dict]]:
         """
         Returns the hashrate of the best Bitcoin network mining pools for the last 3 months
         Docs : https://mempool.space/docs/api/rest#get-mining-pool-hashrates
@@ -155,7 +155,7 @@ class MempoolClient(APIClient):
 _mempool_instance = None
 
 def get_mempool_client() -> MempoolClient:
-    """Get or create the Elfa API client singleton instance."""
+    """Get or create the Mempool API client singleton instance."""
     global _mempool_instance
     if _mempool_instance is None:
         _mempool_instance = MempoolClient()

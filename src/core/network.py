@@ -79,7 +79,7 @@ class NetworkAnalyzer:
             if not data:
                 return None
 
-            tx_size: int = 250 # taille de transaction standard
+            tx_size: int = 250 # standard transaction size
             infos: DataNetworkFees = DataNetworkFees.from_data(data)
 
             costs: dict = {
@@ -123,7 +123,7 @@ class NetworkAnalyzer:
             infos: DataNetworkStats = DataNetworkStats.from_data(data)
 
             health_score: int = 100
-            issues: list = []
+            issues: list[str] = []
 
             if infos.minutes_between_blocks > 15:
                 health_score -= 20
