@@ -63,7 +63,7 @@ class TransactionAnalyzer:
 
             sat_per_byte: float = infos.fee / infos.size if infos.size > 0 else 0
 
-            status_icon: str = "✅" if infos.status.get("confirmed") else "⏳"
+            status_icon: str = "[CONFIRMED]" if infos.status.get("confirmed") else "[PENDING]"
 
             result: str = (
                 f"## Transaction {status_icon}\n"
