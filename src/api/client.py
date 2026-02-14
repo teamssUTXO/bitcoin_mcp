@@ -55,6 +55,7 @@ class APIClient:
             return cached
 
         for attempts in range(self.max_retry + 1):
+            retryable = False
             try:
                 response = self.client.get(url)
                 response.raise_for_status()

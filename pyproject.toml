@@ -9,7 +9,7 @@ dependencies = [
     "cachetools==7.0.1",
     "cffi==2.0.0",
     "cryptography==46.0.5",
-    "dotenv>=0.9.9",
+    "python-dotenv>=0.9.9",
     "fastmcp>=3.0.0b1",
     "httpx",
     "mcp[cli]>=1.25.0",

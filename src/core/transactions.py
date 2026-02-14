@@ -50,20 +50,20 @@ class TransactionAnalyzer:
 
             fee_btc: float = infos.fee / Config.SATOSHI
 
-            transaction_status: str = "COMFIRMED" if infos.status.get("confirmed") else "UNCOMFIRMED"
+            transaction_status: str = "CONFIRMED" if infos.status.get("confirmed") else "UNCONFIRMED"
             transaction_block_time: int = infos.status.get('block_time', 0)
             transaction_block_hash: str = infos.status.get('block_hash', '')
             transaction_block_height: int = infos.status.get('block_height', 0)
 
             date_str: str = datetime.fromtimestamp(transaction_block_time).strftime(
-                '%Y-%m-%d %H:%M:%S') if transaction_block_time else 'Non confirmée'
+                '%Y-%m-%d %H:%M:%S') if transaction_block_time else 'UNCONFIRMED'
 
             total_sats_out: int = sum(out.get('value', 0) for out in infos.vout)
             total_btc_out: float = total_sats_out / Config.SATOSHI
 
-            sat_per_byte: int = infos.fee / infos.size if infos.size > 0 else 0
+            sat_per_byte: float = infos.fee / infos.size if infos.size > 0 else 0
 
-            status_icon: str = "✅" if infos.status.get("confirmed") else "⏳"
+            status_icon: str = "[CONFIRMED]" if infos.status.get("confirmed") else "[PENDING]"
 
             result: str = (
                 f"## Transaction {status_icon}\n"
@@ -129,19 +129,19 @@ class TransactionAnalyzer:
             for i in inputs:
                 addr: str = i.address if i.address else "SYSTEM (Coinbase/Mint)"
                 val: float = i.value / Config.SATOSHI
-                detailed_in_lines.append(f"  [IN]  {val:12.8f} BTC | Depuis: {addr}")
+                detailed_in_lines.append(f"  [IN]  {val:12.8f} BTC | SINCE: {addr}")
 
             detailed_out_lines: list = []
             for o in outputs:
                 addr: str = o.address if o.address else "DATA (OP_RETURN)"
                 val: float = o.value / Config.SATOSHI
-                detailed_out_lines.append(f"  [OUT] {val:12.8f} BTC | Vers:   {addr}")
+                detailed_out_lines.append(f"  [OUT] {val:12.8f} BTC | To:   {addr}")
 
             clean_in_addrs: list = [a for a in addresses_in if a]
             clean_out_addrs: list = [a for a in addresses_out if a]
 
-            list_in_txt: str = "\n".join([f"  - {a}" for a in clean_in_addrs]) if clean_in_addrs else "  - Aucune adresse publique (Coinbase)"
-            list_out_txt: str = "\n".join([f"  - {a}" for a in clean_out_addrs]) if clean_out_addrs else "  - Aucune adresse standard"
+            list_in_txt: str = "\n".join([f"  - {a}" for a in clean_in_addrs]) if clean_in_addrs else "  - No public address"
+            list_out_txt: str = "\n".join([f"  - {a}" for a in clean_out_addrs]) if clean_out_addrs else "  - No standard address"
 
             result: str = (
                 f"## Transaction Flow Analysis\n"

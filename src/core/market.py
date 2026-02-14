@@ -124,15 +124,15 @@ class MarketAnalyzer:
 
             if infos.max_supply and infos.max_supply > 0:
                 supply_minted_pct: float = (infos.total_supply / infos.max_supply) * 100
-                fdv: int = infos.max_supply * infos.current_price
-                supply_info: str = f"{supply_minted_pct:.2f}% minés sur {infos.max_supply:,.0f}"
+                fdv: float = infos.max_supply * infos.current_price
+                supply_info: str = f"{supply_minted_pct:.2f}% mined on {infos.max_supply:,.0f}"
                 fdv_info: str = f"${fdv:,.0f}"
             else:
-                supply_info: str = "Offre illimitée ou inconnue"
+                supply_info: str = "Unlimited or unknown offer"
                 fdv_info: str = "N/A"
 
-            volatility_gap: int = infos.high_price_24h - infos.low_price_24h
-            volatility_pct: int = (volatility_gap / infos.low_price_24h * 100) if infos.low_price_24h else 0
+            volatility_gap: float = infos.high_price_24h - infos.low_price_24h
+            volatility_pct: float = (volatility_gap / infos.low_price_24h * 100) if infos.low_price_24h else 0
 
             result: str = (
                 f"## Technical & Financial Report\n"

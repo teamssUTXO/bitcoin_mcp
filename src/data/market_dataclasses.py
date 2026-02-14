@@ -183,7 +183,7 @@ class DataTrendingNFTs:
         self.names: list = [item.get("name", "") for item in self.data]
         self.symbols: list = [item.get("symbol", "") for item in self.data]
 
-        self.native_currencies: list = [item.get("native_currency_symbol", ""). upper() for item in self.data]
+        self.native_currencies: list = [item.get("native_currency_symbol", "").upper() for item in self.data]
 
         self.floor_prices: list = [item.get("data", {}).get("floor_price", "") for item in self.data]
         self.floor_prices_24h_percentage_change: list = [item.get("data", {}).get("floor_price_in_usd_24h_percentage_change") for item in self.data]

@@ -3,10 +3,8 @@ from typing import Optional
 
 from src.api.mempool_client import get_mempool_client
 from src.api.blockchain_client import get_blockchain_client
+from src.data.network_dataclasses import DataNetworkFees, DataNetworkStats
 
-from data.network_dataclasses import DataNetworkFees, DataNetworkStats
-
-from src.config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -81,14 +79,14 @@ class NetworkAnalyzer:
             if not data:
                 return None
 
-            tx_size: int = 250 # taille de transaction standard
+            tx_size: int = 250 # standard transaction size
             infos: DataNetworkFees = DataNetworkFees.from_data(data)
 
             costs: dict = {
-                'Rapide (~10 min)': infos.fastest * tx_size,
-                'Demi-heure': infos.half_hour * tx_size,
+                'Fast (~10 min)': infos.fastest * tx_size,
+                'Half-Hour': infos.half_hour * tx_size,
                 'Standard (~1h)': infos.hour * tx_size,
-                'Économique': infos.economy * tx_size
+                'Economy': infos.economy * tx_size
             }
 
             result: str = (
@@ -125,7 +123,7 @@ class NetworkAnalyzer:
             infos: DataNetworkStats = DataNetworkStats.from_data(data)
 
             health_score: int = 100
-            issues: list = []
+            issues: list[str] = []
 
             if infos.minutes_between_blocks > 15:
                 health_score -= 20

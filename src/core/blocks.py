@@ -39,7 +39,7 @@ class BlockAnalyzer:
             infos: DataLatestBlock = DataLatestBlock.from_data(data)
 
             date_str: str = datetime.fromtimestamp(infos.timestamp).strftime('%Y-%m-%d %H:%M:%S') if infos.timestamp else 'N/A'
-            time_ago: timedelta = datetime.now() - datetime.fromtimestamp(infos.timestamp) if infos.timestamp else None
+            time_ago: Optional[timedelta] = datetime.now() - datetime.fromtimestamp(infos.timestamp) if infos.timestamp else None
             time_ago_str: str = f"{int(time_ago.total_seconds() / 60)} minutes" if time_ago else "N/A"
 
             result: str = (
@@ -72,7 +72,7 @@ class BlockAnalyzer:
             if not block_hash:
                 return None
 
-            return f"Hash du bloc #{height:,}: {block_hash}"
+            return f"Block Hash #{height:,}: {block_hash}"
 
 
         except Exception as e:
@@ -105,11 +105,11 @@ class BlockAnalyzer:
             avg_size: float = total_size / len(data)
 
             if len(infos.timestamps) >= 2:
-                time_diffs: list = [infos.timestamps[i] - infos.timestamps[i + 1] for i in
+                time_diffs: list[int] = [infos.timestamps[i] - infos.timestamps[i + 1] for i in
                                     range(len(infos.timestamps) - 1)]
-                avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # en minutes
+                avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # in minutes
             else:
-                avg_time: int = 0
+                avg_time: float = 0.0
 
             for i in range(len(data)):
                 result.append(

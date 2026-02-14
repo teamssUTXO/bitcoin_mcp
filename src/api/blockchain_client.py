@@ -18,7 +18,7 @@ class BlockchainClient(APIClient):
         try:
             return self.get("/stats?format=json")
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
 
@@ -35,7 +35,7 @@ class BlockchainClient(APIClient):
             result = self.get("/q/hashrate")
             return int(result) if result else None
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
     def get_network_difficulty(self) -> Optional[float]:
@@ -47,9 +47,9 @@ class BlockchainClient(APIClient):
         """
         try:
             result = self.get("/q/getdifficulty")
-            return int(result) if result else None
+            return float(result) if result else None
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
 
@@ -66,7 +66,7 @@ class BlockchainClient(APIClient):
             result = self.get("/q/24hrtransactioncount")
             return int(result) if result else None
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
     def get_nb_stc_day(self) -> Optional[int]:
@@ -80,7 +80,7 @@ class BlockchainClient(APIClient):
             result = self.get("/q/24hrbtcsent")
             return int(result) if result else None
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
     def get_unconfirmed_tx(self) -> Optional[int]:
@@ -94,7 +94,7 @@ class BlockchainClient(APIClient):
             result = self.get("/q/unconfirmedcount")
             return int(result) if result else None
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
 
@@ -108,13 +108,13 @@ class BlockchainClient(APIClient):
         try:
             return self.get(f"/latestblock")
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
 
     # === BITCOIN ADDRESSES INFORMATIONS ===
 
-    def get_address_info(self, address) -> Optional[dict]:
+    def get_address_info(self, address: str) -> Optional[dict]:
         """
         Returns the information for a Bitcoin address (param address in base58 or hash160)
         Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
@@ -122,7 +122,7 @@ class BlockchainClient(APIClient):
         try:
             return self.get(f"/rawaddr/{address}")
         except Exception as e:
-            logger.error(f"Failed to fetch data from Mempool.space : {e}")
+            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
             return None
 
 
@@ -130,7 +130,7 @@ class BlockchainClient(APIClient):
 _blockchain_instance = None
 
 def get_blockchain_client() -> BlockchainClient:
-    """Get or create the Elfa API client singleton instance."""
+    """Get or create the Blockchain.com API client singleton instance."""
     global _blockchain_instance
     if _blockchain_instance is None:
         _blockchain_instance = BlockchainClient()
