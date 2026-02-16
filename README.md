@@ -351,27 +351,6 @@ Note also that combining `allow_origins=["*"]` with `allow_credentials=True` is 
 
 ---
 
-## 🗺️ Roadmap
-
-### Coming Soon
-
-- **Unit Tests**: Comprehensive test coverage for reliability
-- **More Platforms**: ChatGPT, Gemini, and other MCP client configurations
-- **Specialized Tools**: Domain-specific tools for trading, analytics, and research
-- **Enhanced Data Processing**: Improved caching, formatting, and response quality
-
-### Long-term Vision
-
-- **Complete Bitcoin Stack**: Full-featured support for all Bitcoin layers and protocols
-- **Specialized Tool Categories**: Expand with domain-specific tools (trading analysis, on-chain metrics, educational resources, technical indicators, etc.)
-- **Enterprise-Grade Infrastructure**: Custom Bitcoin Core node integration with advanced caching and performance optimization
-- **Real-Time Data Streams**: WebSocket support for live price updates, mempool monitoring, and block notifications
-- **Community-Driven Development**: Open governance model with transparent roadmap and regular community input
-
-**Want to help shape the roadmap?** See [CONTRIBUTING.md](CONTRIBUTING.md)!
-
----
-
 ## 🤝 Contributing
 
 We welcome contributions from the community! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated ❤️.
