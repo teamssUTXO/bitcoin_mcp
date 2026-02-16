@@ -4,7 +4,7 @@ from typing import Optional
 
 @dataclass
 class Error:
-    """Base error class for all Bitcoin MCP errors."""
+    """Base error class for all errors."""
 
     message: str
     details: Optional[str] = None

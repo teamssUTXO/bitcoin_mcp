@@ -2,8 +2,19 @@ import random
 import httpx
 from typing import Optional, Dict, Any
 import time
+from returns.result import Result, Success, Failure
 
 from src.config import Config
+from src.errors import (
+    Error,
+    NetworkError,
+    HTTPError,
+    TimeoutError,
+    DataValidationError,
+    NotFoundError,
+    RateLimitError,
+)
+
 
 # docs = https://www.python-httpx.org/
 class APIClient:
@@ -28,7 +39,7 @@ class APIClient:
 
         self.client = httpx.Client(timeout=self.timeout)
 
-    def _get_from_cache(self, key: str):
+    def _get_from_cache(self, key: str) -> Optional[Any]:
         if not self.enable_cache:
             return None
 
@@ -42,17 +53,17 @@ class APIClient:
 
         return None
 
-    def _save_to_cache(self, key: str, data: Any):
+    def _save_to_cache(self, key: str, data: Any) -> None:
         if self.enable_cache:
             self._cache[key] = (data, time.time())
     
-    def get(self, endpoint: str) -> Optional[Dict[Any, Any]]:
+    def get(self, endpoint: str) -> Result[Dict[Any, Any], Error]:
         """GET with TTL cache"""
         url = f"{self.base_url}{endpoint}"
 
         cached = self._get_from_cache(url)
         if cached is not None:
-            return cached
+            return Success(cached) # Quand on return quelque chose réussi : Success(...), sinon Failure(...)
 
         for attempts in range(self.max_retry + 1):
             retryable = False
