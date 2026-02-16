@@ -59,8 +59,6 @@ docstring-parser==0.17.0
     # via cyclopts
 docutils==0.22.4
     # via rich-rst
-dotenv==0.9.9
-    # via bitcoin-mcp
 email-validator==2.3.0
     # via pydantic
 exceptiongroup==1.3.1
@@ -156,7 +154,7 @@ pyperclip==1.11.0
     # via fastmcp
 python-dotenv==1.2.1
     # via
-    #   dotenv
+    #   bitcoin-mcp
     #   fastmcp
     #   mcp
     #   pydantic-settings
@@ -177,6 +175,8 @@ referencing==0.36.2
     #   jsonschema-specifications
 requests==2.32.5
     # via jsonschema-path
+returns==0.26.0
+    # via bitcoin-mcp
 rich==14.3.1
     # via
     #   cyclopts
@@ -211,6 +211,7 @@ typing-extensions==4.15.0
     #   pydantic
     #   pydantic-core
     #   referencing
+    #   returns
     #   starlette
     #   typer
     #   typing-inspection
