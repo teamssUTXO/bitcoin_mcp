@@ -20,7 +20,7 @@ class MarketAnalyzer:
         self.coingecko = get_coingecko_client()
         self.alternative = get_alternative_client()
 
-    def get_global_cryptomarket_data(self) -> Optional[str]:
+    async def get_global_cryptomarket_data(self) -> Optional[str]:
         """
         Retrieves a global overview of the cryptocurrency market.
 
@@ -33,7 +33,7 @@ class MarketAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.coingecko.get_global_market_data()
+            data: dict = await self.coingecko.get_global_market_data()
             if not data:
                 return None
 
@@ -78,7 +78,7 @@ class MarketAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_btc_price_usd(self) -> Optional[str]:
+    async def get_btc_price_usd(self) -> Optional[str]:
         """
         Retrieves the current Bitcoin price in USD.
 
@@ -88,7 +88,7 @@ class MarketAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.coingecko.get_btc_price_usd()
+            data: dict = await self.coingecko.get_btc_price_usd()
             if not data:
                 return None
 
@@ -101,7 +101,7 @@ class MarketAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_btc_market_data(self) -> Optional[str]:
+    async def get_btc_market_data(self) -> Optional[str]:
         """
         Retrieves a technical and financial report for Bitcoin.
 
@@ -116,7 +116,7 @@ class MarketAnalyzer:
             Returns None if an API error occurs or data is missing
         """
         try:
-            data: dict = self.coingecko.get_btc_market_data()
+            data: dict = await self.coingecko.get_btc_market_data()
             if not data:
                 return None
 
@@ -179,7 +179,7 @@ class MarketAnalyzer:
             return None
 
 
-    def get_market_sentiment(self) -> Optional[str]:
+    async def get_market_sentiment(self) -> Optional[str]:
         """
         Analyzes current market psychology and sentiment.
 
@@ -190,8 +190,8 @@ class MarketAnalyzer:
             Returns None if API data from Alternative.me or CoinGecko is missing.
         """
         try:
-            alternative_data: dict = self.alternative.get_fear_greed_index()
-            coingecko_data: dict = self.coingecko.get_btc_market_data()
+            alternative_data: dict = await self.alternative.get_fear_greed_index()
+            coingecko_data: dict = await self.coingecko.get_btc_market_data()
             if not alternative_data or not coingecko_data:
                 return None
 
@@ -235,7 +235,7 @@ class MarketAnalyzer:
             return None
 
 
-    def get_trending_coins(self) -> Optional[str]:
+    async def get_trending_coins(self) -> Optional[str]:
         """
         Retrieves the list of currently trending cryptocurrencies.
 
@@ -249,7 +249,7 @@ class MarketAnalyzer:
             Returns None if an API error occurs or data is empty.
         """
         try:
-            data: dict = self.coingecko.get_market_trend()
+            data: dict = await self.coingecko.get_market_trend()
             if not data:
                 return None
 
@@ -275,7 +275,7 @@ class MarketAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_trending_categories(self) -> Optional[str]:
+    async def get_trending_categories(self) -> Optional[str]:
         """
         Retrieves the list of currently trending cryptocurrency categories.
 
@@ -288,7 +288,7 @@ class MarketAnalyzer:
             Returns None if an API error occurs or data is empty.
         """
         try:
-            data: dict = self.coingecko.get_market_trend()
+            data: dict = await self.coingecko.get_market_trend()
             if not data:
                 return None
 
@@ -312,7 +312,7 @@ class MarketAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_trending_nfts(self) -> Optional[str]:
+    async def get_trending_nfts(self) -> Optional[str]:
         """
         Retrieves the list of currently trending NFT collections.
 
@@ -325,7 +325,7 @@ class MarketAnalyzer:
             Returns None if an API error occurs or data is empty.
         """
         try:
-            data: dict = self.coingecko.get_market_trend()
+            data: dict = await self.coingecko.get_market_trend()
             if not data:
                 return None
 

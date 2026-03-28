@@ -18,7 +18,7 @@ class AddressAnalyzer:
         self.blockchain = get_blockchain_client()
         self.mempool = get_mempool_client()
 
-    def get_address_info(self, address: str) -> Optional[str]:
+    async def get_address_info(self, address: str) -> Optional[str]:
         """
         Retrieves a complete summary of a Bitcoin address.
 
@@ -34,7 +34,7 @@ class AddressAnalyzer:
             Returns None if an API error occurs or the address is not found.
         """
         try:
-            data: dict = self.mempool.get_address_info(address)
+            data: dict = await self.mempool.get_address_info(address)
             if not data:
                 return None
 
@@ -91,7 +91,7 @@ class AddressAnalyzer:
             logger.error(f"Failed to process: {e}", extra={"address": address}, exc_info=True)
             return None
 
-    def get_address_info_overview(self, address: str) -> Optional[str]:
+    async def get_address_info_overview(self, address: str) -> Optional[str]:
         """
         Retrieves a high-level overview of a Bitcoin address.
 
@@ -106,7 +106,7 @@ class AddressAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.blockchain.get_address_info(address)
+            data: dict = await self.blockchain.get_address_info(address)
             if not data:
                 return None
 

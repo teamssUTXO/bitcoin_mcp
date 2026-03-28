@@ -6,7 +6,7 @@ from src.core.addresses import get_addresses_analyser_client
 
 logger = logging.getLogger(__name__)
 
-def get_info_about_address(address: str) -> Optional[str]:
+async def get_info_about_address(address: str) -> Optional[str]:
     """
     Use this to get comprehensive information about a Bitcoin address including balance, transaction activity, and spending patterns.
 
@@ -25,7 +25,7 @@ def get_info_about_address(address: str) -> Optional[str]:
         logger.info("Tool called : get_info_about_address")
 
         addresses_analyzer = get_addresses_analyser_client()
-        data: str = addresses_analyzer.get_address_info(address)
+        data: str = await addresses_analyzer.get_address_info(address)
 
         logger.info("Tool get_info_about_address succeeded")
 
@@ -40,7 +40,7 @@ def get_info_about_address(address: str) -> Optional[str]:
         return None
 
 
-def get_address_overview(address: str) -> Optional[str]:
+async def get_address_overview(address: str) -> Optional[str]:
     """
     Use this to get a simplified overview of a Bitcoin address focusing on balance and cumulative transaction totals.
 
@@ -58,7 +58,7 @@ def get_address_overview(address: str) -> Optional[str]:
         logger.info("Tool called : get_address_overview")
 
         addresses_analyzer = get_addresses_analyser_client()
-        data: str = addresses_analyzer.get_address_info_overview(address)
+        data: str = await addresses_analyzer.get_address_info_overview(address)
 
         logger.info("Tool get_address_overview succeeded")
 

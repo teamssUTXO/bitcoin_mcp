@@ -6,7 +6,7 @@ from src.core.market import get_market_analyser_client
 
 logger = logging.getLogger(__name__)
 
-def get_cryptomarket_overview() -> Optional[str]:
+async def get_cryptomarket_overview() -> Optional[str]:
     """
     Use this to get a comprehensive overview of the global cryptocurrency market conditions and metrics.
 
@@ -25,7 +25,7 @@ def get_cryptomarket_overview() -> Optional[str]:
         logger.info("Tool called : get_cryptomarket_overview")
 
         market_analyzer = get_market_analyser_client()
-        data: str = market_analyzer.get_global_cryptomarket_data()
+        data: str = await market_analyzer.get_global_cryptomarket_data()
 
         logger.info("Tool get_global_cryptomarket_overview succeeded")
 
@@ -36,7 +36,7 @@ def get_cryptomarket_overview() -> Optional[str]:
         return None
 
 
-def get_bitcoin_price_usd() -> Optional[str]:
+async def get_bitcoin_price_usd() -> Optional[str]:
     """
     Use this to get Bitcoin's current USD price and essential market indicators.
 
@@ -55,7 +55,7 @@ def get_bitcoin_price_usd() -> Optional[str]:
         logger.info("Tool called : get_bitcoin_price_usd")
 
         market_analyzer = get_market_analyser_client()
-        data: str = market_analyzer.get_btc_price_usd()
+        data: str = await market_analyzer.get_btc_price_usd()
 
         logger.info("Tool get_btc_price_usd succeeded")
 
@@ -66,7 +66,7 @@ def get_bitcoin_price_usd() -> Optional[str]:
         return None
 
 
-def get_bitcoin_market_data() -> Optional[str]:
+async def get_bitcoin_market_data() -> Optional[str]:
     """
     Use this to get a comprehensive technical and financial report on Bitcoin with extensive historical data and market analysis.
 
@@ -105,7 +105,7 @@ def get_bitcoin_market_data() -> Optional[str]:
         logger.info("Tool called : get_bitcoin_market_data")
 
         market_analyzer = get_market_analyser_client()
-        data: str = market_analyzer.get_btc_market_data()
+        data: str = await market_analyzer.get_btc_market_data()
 
         logger.info("Tool get_btc_market_data succeeded")
 
@@ -115,7 +115,7 @@ def get_bitcoin_market_data() -> Optional[str]:
         logger.error(f"Unexpected error in tool get_bitcoin_market_data : {e}", exc_info=True)
         return None
 
-def get_bitcoin_market_sentiment() -> Optional[str]:
+async def get_bitcoin_market_sentiment() -> Optional[str]:
     """
     Use this to get a comprehensive sentiment analysis of the Bitcoin market based on community voting and the Fear & Greed Index.
 
@@ -137,7 +137,7 @@ def get_bitcoin_market_sentiment() -> Optional[str]:
         logger.info("Tool called : get_bitcoin_market_sentiment")
 
         market_analyzer = get_market_analyser_client()
-        data: str = market_analyzer.get_market_sentiment()
+        data: str = await market_analyzer.get_market_sentiment()
 
         logger.info("Tool get_bitcoin_market_sentiment succeeded")
         return data
@@ -147,7 +147,7 @@ def get_bitcoin_market_sentiment() -> Optional[str]:
         return None
 
 
-def get_trending_coins() -> Optional[str]:
+async def get_trending_coins() -> Optional[str]:
     """
     Use this to get the top 15 trending cryptocurrencies sorted by the most popular user searches on CoinGecko.
 
@@ -167,7 +167,7 @@ def get_trending_coins() -> Optional[str]:
         logger.info("Tool called : get_trending_coins")
 
         market_analyzer = get_market_analyser_client()
-        data: str = market_analyzer.get_trending_coins()
+        data: str = await market_analyzer.get_trending_coins()
 
         logger.info("Tool get_trending_coins succeeded")
 
@@ -178,7 +178,7 @@ def get_trending_coins() -> Optional[str]:
         return None
 
 
-def get_trending_categories() -> Optional[str]:
+async def get_trending_categories() -> Optional[str]:
     """
     Use this to get the top 6 trending cryptocurrency categories sorted by the most popular user searches on CoinGecko.
 
@@ -197,7 +197,7 @@ def get_trending_categories() -> Optional[str]:
         logger.info("Tool called : get_trending_categories")
 
         market_analyzer = get_market_analyser_client()
-        data: str = market_analyzer.get_trending_categories()
+        data: str = await market_analyzer.get_trending_categories()
 
         logger.info("Tool get_trending_categories succeeded")
 
@@ -207,7 +207,7 @@ def get_trending_categories() -> Optional[str]:
         logger.error(f"Unexpected error in tool get_trending_categories : {e}", exc_info=True)
         return None
 
-def get_trending_nfts() -> Optional[str]:
+async def get_trending_nfts() -> Optional[str]:
     """
     Use this to get the top 7 trending NFT collections sorted by the most popular user searches on CoinGecko.
 
@@ -226,7 +226,7 @@ def get_trending_nfts() -> Optional[str]:
         logger.info("Tool called : get_trending_nfts")
 
         market_analyzer = get_market_analyser_client()
-        data: str = market_analyzer.get_trending_nfts()
+        data: str = await market_analyzer.get_trending_nfts()
 
         logger.info("Tool get_trending_nfts succeeded")
 

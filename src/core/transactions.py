@@ -23,7 +23,7 @@ class TransactionAnalyzer:
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
-    def get_tx_info(self, txid: str) -> Optional[str]:
+    async def get_tx_info(self, txid: str) -> Optional[str]:
         """
         Retrieves detailed information for a specific Bitcoin transaction.
 
@@ -39,7 +39,7 @@ class TransactionAnalyzer:
             Returns None if the transaction is not found or an API error occurs.
         """
         try:
-            data: dict = self.mempool.get_tx_info(txid)
+            data: dict = await self.mempool.get_tx_info(txid)
             if not data:
                 return None
 
@@ -90,7 +90,7 @@ class TransactionAnalyzer:
             return None
 
 
-    def get_tx_inputs_outputs(self, txid: str) -> Optional[str]:
+    async def get_tx_inputs_outputs(self, txid: str) -> Optional[str]:
         """
         Retrieves the detailed input and output flow of a transaction.
 
@@ -105,7 +105,7 @@ class TransactionAnalyzer:
             Returns None if the transaction is not found or an API error occurs.
         """
         try:
-            data: dict = self.mempool.get_tx_info(txid)
+            data: dict = await self.mempool.get_tx_info(txid)
             if not data:
                 return None
 
@@ -168,7 +168,7 @@ class TransactionAnalyzer:
             return None
 
 
-    def get_address_transactions(self, address: str) -> Optional[str]:
+    async def get_address_transactions(self, address: str) -> Optional[str]:
         """
         Retrieves the transaction history for a specific Bitcoin address.
 
@@ -183,7 +183,7 @@ class TransactionAnalyzer:
             Returns None if the address has no history or an API error occurs.
         """
         try:
-            data: dict = self.blockchain.get_address_info(address)
+            data: dict = await self.blockchain.get_address_info(address)
             if not data:
                 return None
 

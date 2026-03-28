@@ -6,7 +6,7 @@ from src.core.transactions import get_transactions_analyser_client
 
 logger = logging.getLogger(__name__)
 
-def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
+async def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
     """
     Use this to get comprehensive information about a specific Bitcoin transaction using its transaction ID (txid).
 
@@ -38,7 +38,7 @@ def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
         logger.info(f"Tool Called : get_bitcoin_transaction_infos ({txid})")
 
         transactions_analyzer = get_transactions_analyser_client()
-        data: str = transactions_analyzer.get_tx_info(txid)
+        data: str = await transactions_analyzer.get_tx_info(txid)
 
         logger.info("Tool get_bitcoin_transaction_infos succeeded")
         return data
@@ -51,7 +51,7 @@ def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
         return None
 
 
-def get_transaction_input_output(txid: str) -> Optional[str]:
+async def get_transaction_input_output(txid: str) -> Optional[str]:
     """
     Use this to get detailed input and output breakdown of a Bitcoin transaction, including all addresses and amounts involved.
 
@@ -84,7 +84,7 @@ def get_transaction_input_output(txid: str) -> Optional[str]:
         logger.info(f"Tool Called : get_transaction_input_output ({txid})")
 
         transactions_analyzer = get_transactions_analyser_client()
-        data: str = transactions_analyzer.get_tx_inputs_outputs(txid)
+        data: str = await transactions_analyzer.get_tx_inputs_outputs(txid)
 
         logger.info("Tool get_transaction_input_output succeeded")
 
@@ -98,7 +98,7 @@ def get_transaction_input_output(txid: str) -> Optional[str]:
         return None
 
 
-def get_transactions_of_address(address: str) -> Optional[str]:
+async def get_transactions_of_address(address: str) -> Optional[str]:
     """
     Use this to get the complete transaction history of a Bitcoin address.
 
@@ -117,7 +117,7 @@ def get_transactions_of_address(address: str) -> Optional[str]:
         logger.info(f"Tool Called : get_transactions_of_address ({address})")
 
         transactions_analyzer = get_transactions_analyser_client()
-        data: str = transactions_analyzer.get_address_transactions(address)
+        data: str = await transactions_analyzer.get_address_transactions(address)
 
         logger.info("Tool get_transactions_of_address succeeded")
 
