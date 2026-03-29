@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import Optional
 
@@ -190,8 +191,10 @@ class MarketAnalyzer:
             Returns None if API data from Alternative.me or CoinGecko is missing.
         """
         try:
-            alternative_data: dict = await self.alternative.get_fear_greed_index()
-            coingecko_data: dict = await self.coingecko.get_btc_market_data()
+            alternative_data, coingecko_data = await asyncio.gather(
+                self.alternative.get_fear_greed_index(),
+                self.coingecko.get_btc_market_data(),
+            )
             if not alternative_data or not coingecko_data:
                 return None
 
