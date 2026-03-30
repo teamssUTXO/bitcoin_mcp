@@ -18,7 +18,7 @@ class NetworkAnalyzer:
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
-    def get_network_stats(self) -> Optional[str]:
+    async def get_network_stats(self) -> Optional[str]:
         """
         Retrieves current recommended Bitcoin transaction fees.
 
@@ -29,7 +29,7 @@ class NetworkAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.blockchain.get_network_stats()
+            data: dict = await self.blockchain.get_network_stats()
             if not data:
                 return None
 
@@ -64,7 +64,7 @@ class NetworkAnalyzer:
             return None
 
 
-    def get_network_recommended_fees(self) -> Optional[str]:
+    async def get_network_recommended_fees(self) -> Optional[str]:
         """
         Retrieves current recommended Bitcoin transaction fees.
 
@@ -75,7 +75,7 @@ class NetworkAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.mempool.get_recommended_fees()
+            data: dict = await self.mempool.get_recommended_fees()
             if not data:
                 return None
 
@@ -104,7 +104,7 @@ class NetworkAnalyzer:
             return None
 
 
-    def get_network_health(self) -> Optional[str]:
+    async def get_network_health(self) -> Optional[str]:
         """
         Evaluates the overall health and stability of the Bitcoin network.
 
@@ -116,7 +116,7 @@ class NetworkAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.blockchain.get_network_stats()
+            data: dict = await self.blockchain.get_network_stats()
             if not data:
                 return None
 

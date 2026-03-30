@@ -12,18 +12,18 @@ class CoinGeckoClient(APIClient):
 
     # === GLOBAL MARKET INFORMATIONS ===
 
-    def get_global_market_data(self) -> Optional[dict]:
+    async def get_global_market_data(self) -> Optional[dict]:
         """
         Returns global data on the cryptocurrency market
         Docs : https://docs.coingecko.com/reference/crypto-global
         """
         try:
-            return self.get("/global")
+            return await self.get("/global")
         except Exception as e:
             logger.error(f"Failed to fetch data from CoinGecko : {e}")
             return None
 
-    def get_market_trend(self) -> Optional[dict]:
+    async def get_market_trend(self) -> Optional[dict]:
         """
         Returns cryptocurrency market trends sorted by the most popular user searches :
         - Top 15 trending coins
@@ -32,7 +32,7 @@ class CoinGeckoClient(APIClient):
         Docs : https://docs.coingecko.com/reference/trending-search
         """
         try:
-            return self.get("/search/trending")
+            return await self.get("/search/trending")
         except Exception as e:
             logger.error(f"Failed to fetch data from CoinGecko : {e}")
             return None
@@ -40,24 +40,24 @@ class CoinGeckoClient(APIClient):
 
     # === GLOBAL INFORMATIONS ABOUT BITCOIN ===
 
-    def get_btc_market_data(self) -> Optional[dict]:
+    async def get_btc_market_data(self) -> Optional[dict]:
         """
         Returns general information about Bitcoin
         Docs : https://docs.coingecko.com/reference/coins-id
         """
         try:
-            return self.get("/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false")
+            return await self.get("/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false")
         except Exception as e:
             logger.error(f"Failed to fetch data from CoinGecko : {e}")
             return None
 
-    def get_btc_price_usd(self) -> Optional[dict]:
+    async def get_btc_price_usd(self) -> Optional[dict]:
         """
         Returns the price of Bitcoin in USD
         Docs : https://docs.coingecko.com/reference/simple-price
         """
         try:
-            return self.get("/simple/price?ids=bitcoin&vs_currencies=usd")
+            return await self.get("/simple/price?ids=bitcoin&vs_currencies=usd")
         except Exception as e:
             logger.error(f"Failed to fetch data from CoinGecko : {e}")
             return None

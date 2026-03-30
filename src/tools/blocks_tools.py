@@ -5,7 +5,7 @@ from src.core.blocks import get_blocks_analyser_client
 
 logger = logging.getLogger(__name__)
 
-def get_summary_of_latest_block() -> Optional[str]:
+async def get_summary_of_latest_block() -> Optional[str]:
     """
     Use this to get a summary of the most recently mined block on the Bitcoin blockchain.
 
@@ -21,7 +21,7 @@ def get_summary_of_latest_block() -> Optional[str]:
         logger.info("Tool called : get_summary_of_latest_block")
 
         blocks_analyzer = get_blocks_analyser_client()
-        data: str = blocks_analyzer.get_latest_block_summary()
+        data: str = await blocks_analyzer.get_latest_block_summary()
 
         logger.info("Tool get_summary_of_latest_block succeeded")
 
@@ -32,7 +32,7 @@ def get_summary_of_latest_block() -> Optional[str]:
         return None
 
 
-def get_block_hash_with_height(height: int) -> Optional[str]:
+async def get_block_hash_with_height(height: int) -> Optional[str]:
     """
     Use this to retrieve the unique hash identifier of a Bitcoin block by specifying its height (position in the blockchain).
 
@@ -46,7 +46,7 @@ def get_block_hash_with_height(height: int) -> Optional[str]:
         logger.info("Tool called : get_block_hash_with_height")
 
         blocks_analyzer = get_blocks_analyser_client()
-        data: str = blocks_analyzer.get_block_by_height(height)
+        data: str = await blocks_analyzer.get_block_by_height(height)
 
         logger.info("Tool get_block_hash_with_height succeeded")
         return data
@@ -60,7 +60,7 @@ def get_block_hash_with_height(height: int) -> Optional[str]:
         return None
 
 
-def get_10_latest_blocks_informations() -> Optional[str]:
+async def get_10_latest_blocks_informations() -> Optional[str]:
     """
     Use this to get detailed information and statistics about the 10 most recently mined Bitcoin blocks.
 
@@ -86,7 +86,7 @@ def get_10_latest_blocks_informations() -> Optional[str]:
         logger.info("Tool called : get_10_latest_blocks_informations")
 
         blocks_analyzer = get_blocks_analyser_client()
-        data: str = blocks_analyzer.get_latest_blocks_info()
+        data: str = await blocks_analyzer.get_latest_blocks_info()
 
         logger.info("Tool get_10_latest_blocks_informations succeeded")
 

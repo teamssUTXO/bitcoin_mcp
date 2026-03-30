@@ -6,7 +6,7 @@ from src.core.network import get_network_analyser_client
 
 logger = logging.getLogger(__name__)
 
-def get_bitcoin_network_overview() -> Optional[str]:
+async def get_bitcoin_network_overview() -> Optional[str]:
     """
     Use this for general Bitcoin blockchain questions about current state, health, or status.
 
@@ -41,7 +41,7 @@ def get_bitcoin_network_overview() -> Optional[str]:
         logger.info("Tool Called : get_bitcoin_network_overview")
 
         network_analyzer = get_network_analyser_client()
-        data: str = network_analyzer.get_network_stats()
+        data: str = await network_analyzer.get_network_stats()
 
         logger.info("Tool get_bitcoin_network_overview succeeded")
 
@@ -51,7 +51,7 @@ def get_bitcoin_network_overview() -> Optional[str]:
         logger.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}", exc_info=True)
         return None
 
-def get_bitcoin_network_recommended_fees() -> Optional[str]:
+async def get_bitcoin_network_recommended_fees() -> Optional[str]:
     """
     Use this to get current recommended Bitcoin transaction fees for different confirmation speed priorities.
 
@@ -74,7 +74,7 @@ def get_bitcoin_network_recommended_fees() -> Optional[str]:
         logger.info("Tool Called : get_bitcoin_network_recommended_fees")
 
         network_analyzer = get_network_analyser_client()
-        data: str = network_analyzer.get_network_recommended_fees()
+        data: str = await network_analyzer.get_network_recommended_fees()
 
         logger.info("Tool get_bitcoin_network_recommended_fees succeeded")
 
@@ -84,7 +84,7 @@ def get_bitcoin_network_recommended_fees() -> Optional[str]:
         logger.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}", exc_info=True)
         return None
 
-def get_bitcoin_network_health() -> Optional[str]:
+async def get_bitcoin_network_health() -> Optional[str]:
     """
     Use this to get a simplified health assessment of the Bitcoin network with a single score and status label.
 
@@ -98,7 +98,7 @@ def get_bitcoin_network_health() -> Optional[str]:
         logger.info("Tool Called : get_bitcoin_network_health")
 
         network_analyzer = get_network_analyser_client()
-        data: str = network_analyzer.get_network_health()
+        data: str = await network_analyzer.get_network_health()
 
         logger.info("Tool get_bitcoin_network_health succeeded")
 

@@ -1,4 +1,5 @@
 import random
+import asyncio
 import httpx
 from typing import Optional, Dict, Any
 import time
@@ -7,8 +8,8 @@ from src.config import Config
 
 # docs = https://www.python-httpx.org/
 class APIClient:
-    """Basic HTTP Client"""
-    
+    """Basic async HTTP Client"""
+
     def __init__(self, base_url: str):
         self.base_url: str = base_url
 
@@ -26,7 +27,17 @@ class APIClient:
 
         self._cache: Dict[str, tuple] = {}
 
-        self.client = httpx.Client(timeout=self.timeout)
+        self.client = httpx.AsyncClient(timeout=self.timeout)
+
+    async def close(self):
+        """Close the underlying HTTP client."""
+        await self.client.aclose()
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
 
     def _get_from_cache(self, key: str):
         if not self.enable_cache:
@@ -45,8 +56,8 @@ class APIClient:
     def _save_to_cache(self, key: str, data: Any):
         if self.enable_cache:
             self._cache[key] = (data, time.time())
-    
-    def get(self, endpoint: str) -> Optional[Dict[Any, Any]]:
+
+    async def get(self, endpoint: str) -> Optional[Dict[Any, Any]]:
         """GET with TTL cache"""
         url = f"{self.base_url}{endpoint}"
 
@@ -57,7 +68,7 @@ class APIClient:
         for attempts in range(self.max_retry + 1):
             retryable = False
             try:
-                response = self.client.get(url)
+                response = await self.client.get(url)
                 response.raise_for_status()
 
                 try:
@@ -79,6 +90,6 @@ class APIClient:
                 return None
 
             sleep_time = min(10, random.randint(0, 2**attempts)) # Exponential Backoff with Full Jitter
-            time.sleep(sleep_time)
+            await asyncio.sleep(sleep_time)
 
         return None

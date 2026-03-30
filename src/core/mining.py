@@ -18,7 +18,7 @@ class MiningPoolAnalyzer:
         self.mempool = get_mempool_client()
 
 
-    def get_mining_pools_ranking(self) -> Optional[str]:
+    async def get_mining_pools_ranking(self) -> Optional[str]:
         """
         Retrieves the top 10 Bitcoin mining pools based on 3-month performance.
 
@@ -30,7 +30,7 @@ class MiningPoolAnalyzer:
             Returns None if an API error occurs or data is empty.
         """
         try:
-            data: dict = self.mempool.get_mining_pools_rank()
+            data: dict = await self.mempool.get_mining_pools_rank()
             if not data:
                 return None
 
@@ -55,7 +55,7 @@ class MiningPoolAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_mining_pool_hashrates(self) -> Optional[str]:
+    async def get_mining_pool_hashrates(self) -> Optional[str]:
         """
         Retrieves the estimated hashrate for the top 10 mining pools over 3 months.
 
@@ -67,7 +67,7 @@ class MiningPoolAnalyzer:
             Returns None if an API error occurs or data is empty.
         """
         try:
-            data: list = self.mempool.get_mining_pools_hashrate()
+            data: list = await self.mempool.get_mining_pools_hashrate()
             if not data:
                 return None
 
@@ -93,7 +93,7 @@ class MiningPoolAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_top_pool(self) -> Optional[str]:
+    async def get_top_pool(self) -> Optional[str]:
         """
         Retrieves detailed information for the #1 ranked Bitcoin mining pool.
 
@@ -106,7 +106,7 @@ class MiningPoolAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.mempool.get_mining_pools_rank()
+            data: dict = await self.mempool.get_mining_pools_rank()
             if not data:
                 return None
 
@@ -136,7 +136,7 @@ class MiningPoolAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_pool_by_slug(self, pool_slug: str) -> Optional[str]:
+    async def get_pool_by_slug(self, pool_slug: str) -> Optional[str]:
         """
         Retrieves detailed information for a specific mining pool using its slug.
 
@@ -152,7 +152,7 @@ class MiningPoolAnalyzer:
             Returns None if the pool is not found or an API error occurs.
         """
         try:
-            data: dict = self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
+            data: dict = await self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
             if not data:
                 return None
 
@@ -190,7 +190,7 @@ class MiningPoolAnalyzer:
             return None
 
 
-    def get_mining_statistics(self) -> Optional[str]:
+    async def get_mining_statistics(self) -> Optional[str]:
         """
         Retrieves global statistics and distribution metrics for Bitcoin mining.
 
@@ -202,7 +202,7 @@ class MiningPoolAnalyzer:
             Returns None if an API error occurs or data is empty.
         """
         try:
-            data: dict = self.mempool.get_mining_pools_rank()
+            data: dict = await self.mempool.get_mining_pools_rank()
             if not data:
                 return None
 

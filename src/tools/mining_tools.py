@@ -6,7 +6,7 @@ from src.core.mining import get_mining_analyser_client
 
 logger = logging.getLogger(__name__)
 
-def get_top_10_mining_pools_rank() -> Optional[str]:
+async def get_top_10_mining_pools_rank() -> Optional[str]:
     """
     Use this to get the ranking of the top 10 Bitcoin mining pools based on the number of blocks mined.
 
@@ -24,7 +24,7 @@ def get_top_10_mining_pools_rank() -> Optional[str]:
         logger.info("Tool Called : get_top_10_mining_pools_ranking")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = mining_analyzer.get_mining_pools_ranking()
+        data: str = await mining_analyzer.get_mining_pools_ranking()
 
         logger.info("Tool get_top_10_mining_pools_ranking succeeded")
 
@@ -35,7 +35,7 @@ def get_top_10_mining_pools_rank() -> Optional[str]:
         return None
 
 
-def get_mining_pools_hashrates_3month() -> Optional[str]:
+async def get_mining_pools_hashrates_3month() -> Optional[str]:
     """
     Use this to get the top 10 Bitcoin mining pools ranked by their average hashrate over the last 3 months.
 
@@ -52,7 +52,7 @@ def get_mining_pools_hashrates_3month() -> Optional[str]:
     try:
         logger.info("Tool Called : get_top_10_mining_pools_hashrates_3month")
         mining_analyzer = get_mining_analyser_client()
-        data: str = mining_analyzer.get_mining_pool_hashrates()
+        data: str = await mining_analyzer.get_mining_pool_hashrates()
 
         logger.info("Tool get_top_10_mining_pools_hashrates_3month succeeded")
 
@@ -63,7 +63,7 @@ def get_mining_pools_hashrates_3month() -> Optional[str]:
         return None
 
 
-def get_top1_mining_pool() -> Optional[str]:
+async def get_top1_mining_pool() -> Optional[str]:
     """
     Use this to get information about the current #1 ranked Bitcoin mining pool based on blocks mined over the last 3 months.
 
@@ -82,7 +82,7 @@ def get_top1_mining_pool() -> Optional[str]:
         logger.info("Tool Called : get_top1_mining_pool")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = mining_analyzer.get_top_pool()
+        data: str = await mining_analyzer.get_top_pool()
 
         logger.info("Tool get_top1_mining_pool succeeded")
 
@@ -92,7 +92,7 @@ def get_top1_mining_pool() -> Optional[str]:
         logger.error(f"Unexpected error in tool get_top1_mining_pool : {e}", exc_info=True)
         return None
 
-def get_mining_pool_by_slug(slug: str) -> Optional[str]:
+async def get_mining_pool_by_slug(slug: str) -> Optional[str]:
     """
     Use this to get comprehensive information about a specific Bitcoin mining pool using its unique slug identifier.
 
@@ -112,7 +112,7 @@ def get_mining_pool_by_slug(slug: str) -> Optional[str]:
         logger.info("Tool Called : get_mining_pool_by_slug")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = mining_analyzer.get_pool_by_slug(slug)
+        data: str = await mining_analyzer.get_pool_by_slug(slug)
 
         logger.info("Tool get_mining_pool_by_slug succeeded")
 
@@ -125,7 +125,7 @@ def get_mining_pool_by_slug(slug: str) -> Optional[str]:
         logger.error(f"Unexpected error in tool get_mining_pool_by_slug : {e}", exc_info=True)
         return None
 
-def get_bitcoin_network_mining_pools_statistics() -> Optional[str]:
+async def get_bitcoin_network_mining_pools_statistics() -> Optional[str]:
     """
     Use this to get aggregate statistics and analysis of the Bitcoin mining pool ecosystem.
 
@@ -153,7 +153,7 @@ def get_bitcoin_network_mining_pools_statistics() -> Optional[str]:
         logger.info("Tool Called : get_bitcoin_network_mining_pools_statistics")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = mining_analyzer.get_mining_statistics()
+        data: str = await mining_analyzer.get_mining_statistics()
 
         logger.info("Tool get_bitcoin_network_mining_pools_statistics succeeded")
 

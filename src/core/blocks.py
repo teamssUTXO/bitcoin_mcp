@@ -20,7 +20,7 @@ class BlockAnalyzer:
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
-    def get_latest_block_summary(self) -> Optional[str]:
+    async def get_latest_block_summary(self) -> Optional[str]:
         """
         Retrieves a summary of the most recently mined block.
 
@@ -32,7 +32,7 @@ class BlockAnalyzer:
             Returns None if an API error occurs or data is missing.
         """
         try:
-            data: dict = self.blockchain.get_latest_block()
+            data: dict = await self.blockchain.get_latest_block()
             if not data:
                 return None
 
@@ -56,7 +56,7 @@ class BlockAnalyzer:
             logger.error(f"Failed to process: {e}", exc_info=True)
             return None
 
-    def get_block_by_height(self, height: int) -> Optional[str]:
+    async def get_block_by_height(self, height: int) -> Optional[str]:
         """
         Retrieves the block hash for a specific block height.
 
@@ -68,7 +68,7 @@ class BlockAnalyzer:
             Returns None if the block is not found or an API error occurs.
         """
         try:
-            block_hash: str = self.mempool.get_block_height(height)
+            block_hash: str = await self.mempool.get_block_height(height)
             if not block_hash:
                 return None
 
@@ -79,7 +79,7 @@ class BlockAnalyzer:
             logger.error(f"Failed to process: {e}", extra={"height": height}, exc_info=True)
             return None
 
-    def get_latest_blocks_info(self) -> Optional[str]:
+    async def get_latest_blocks_info(self) -> Optional[str]:
         """
         Retrieves detailed information and statistics for the last 10 mined blocks.
 
@@ -91,7 +91,7 @@ class BlockAnalyzer:
             Returns None if an API error occurs or data is empty.
         """
         try:
-            data: list = self.mempool.get_blocks_info()
+            data: list = await self.mempool.get_blocks_info()
             if not data:
                 return None
 

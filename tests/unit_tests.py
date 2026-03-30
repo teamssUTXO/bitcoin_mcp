@@ -33,7 +33,7 @@ import time
 import tempfile
 import shutil
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, AsyncMock, patch
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -347,7 +347,7 @@ class TestLogger(unittest.TestCase):
 # ============================================================================
 # TEST 4: Test API Client (cache, retry, HTTP operations)
 # ============================================================================
-class TestAPIClient(unittest.TestCase):
+class TestAPIClient(unittest.IsolatedAsyncioTestCase):
     """Test APIClient base class functionality"""
 
     def setUp(self):
@@ -413,21 +413,21 @@ class TestAPIClient(unittest.TestCase):
         cached_data = self.client._get_from_cache(test_key)
         self.assertIsNone(cached_data)
 
-    @patch("httpx.Client.get")
-    def test_get_successful_request(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_get_successful_request(self, mock_get):
         """Test successful GET request"""
         mock_response = Mock()
         mock_response.json.return_value = {"success": True}
         mock_response.raise_for_status = Mock()
         mock_get.return_value = mock_response
 
-        result = self.client.get("/test")
+        result = await self.client.get("/test")
 
         self.assertEqual(result, {"success": True})
         mock_get.assert_called_once()
 
-    @patch("httpx.Client.get")
-    def test_get_uses_cache(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_get_uses_cache(self, mock_get):
         """Test that GET uses cache for subsequent requests"""
         mock_response = Mock()
         mock_response.json.return_value = {"success": True}
@@ -435,34 +435,39 @@ class TestAPIClient(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # First call
-        result1 = self.client.get("/test")
+        result1 = await self.client.get("/test")
         # Second call - should use cache
-        result2 = self.client.get("/test")
+        result2 = await self.client.get("/test")
 
         self.assertEqual(result1, result2)
         # Should only call API once
         self.assertEqual(mock_get.call_count, 1)
 
-    @patch("httpx.Client.get")
-    def test_get_retry_on_5xx_error(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_get_retry_on_5xx_error(self, mock_get):
         """Test retry logic on 5xx server errors"""
-        mock_response = Mock()
-        mock_response.status_code = 500
-        mock_get.side_effect = [
-            Mock(side_effect=Exception("Server error")),
-            Mock(json=lambda: {"success": True}, raise_for_status=Mock()),
-        ]
+        mock_response_ok = Mock()
+        mock_response_ok.json.return_value = {"success": True}
+        mock_response_ok.raise_for_status = Mock()
+
+        mock_response_err = Mock()
+        mock_response_err.status_code = 500
+        http_error = __import__("httpx").HTTPStatusError(
+            "Server error", request=Mock(), response=mock_response_err
+        )
+
+        mock_get.side_effect = [http_error, mock_response_ok]
 
         # Disable actual sleep for testing
-        with patch("time.sleep"):
+        with patch("asyncio.sleep", new_callable=AsyncMock):
             self.client.enable_retry = True
-            result = self.client.get("/test")
+            result = await self.client.get("/test")
 
         # Should eventually succeed after retry
         self.assertIsNotNone(result)
 
-    @patch("httpx.Client.get")
-    def test_get_no_retry_when_disabled(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_get_no_retry_when_disabled(self, mock_get):
         """Test that retry doesn't happen when disabled"""
         import httpx
 
@@ -475,14 +480,14 @@ class TestAPIClient(unittest.TestCase):
         mock_get.side_effect = http_error
 
         self.client.enable_retry = False
-        result = self.client.get("/test")
+        result = await self.client.get("/test")
 
         self.assertIsNone(result)
         # Should only try once
         self.assertEqual(mock_get.call_count, 1)
 
-    @patch("httpx.Client.get")
-    def test_get_returns_text_on_json_error(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_get_returns_text_on_json_error(self, mock_get):
         """Test that GET returns text when JSON parsing fails"""
         mock_response = Mock()
         mock_response.json.side_effect = ValueError("Invalid JSON")
@@ -490,7 +495,7 @@ class TestAPIClient(unittest.TestCase):
         mock_response.raise_for_status = Mock()
         mock_get.return_value = mock_response
 
-        result = self.client.get("/test")
+        result = await self.client.get("/test")
 
         self.assertEqual(result, "Plain text response")
 
@@ -571,7 +576,7 @@ class TestDataClasses(unittest.TestCase):
 # ============================================================================
 # TEST 6: Test error handling with invalid inputs
 # ============================================================================
-class TestErrorHandling(unittest.TestCase):
+class TestErrorHandling(unittest.IsolatedAsyncioTestCase):
     """Test error handling with invalid inputs"""
 
     def test_api_client_invalid_url(self):
@@ -582,8 +587,8 @@ class TestErrorHandling(unittest.TestCase):
         client = APIClient("invalid-url")
         self.assertIsNotNone(client)
 
-    @patch("httpx.Client.get")
-    def test_api_client_network_timeout(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_api_client_network_timeout(self, mock_get):
         """Test APIClient handles network timeout"""
         import httpx
         from src.api.client import APIClient
@@ -591,13 +596,13 @@ class TestErrorHandling(unittest.TestCase):
         client = APIClient("https://test.example.com")
         mock_get.side_effect = httpx.TimeoutException("Request timeout")
 
-        with patch("time.sleep"):  # Don't actually sleep in tests
-            result = client.get("/test")
+        with patch("asyncio.sleep", new_callable=AsyncMock):
+            result = await client.get("/test")
 
         self.assertIsNone(result)
 
-    @patch("httpx.Client.get")
-    def test_api_client_network_error(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_api_client_network_error(self, mock_get):
         """Test APIClient handles network errors"""
         import httpx
         from src.api.client import APIClient
@@ -605,13 +610,13 @@ class TestErrorHandling(unittest.TestCase):
         client = APIClient("https://test.example.com")
         mock_get.side_effect = httpx.NetworkError("Network error")
 
-        with patch("time.sleep"):
-            result = client.get("/test")
+        with patch("asyncio.sleep", new_callable=AsyncMock):
+            result = await client.get("/test")
 
         self.assertIsNone(result)
 
-    @patch("httpx.Client.get")
-    def test_api_client_http_404_error(self, mock_get):
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_api_client_http_404_error(self, mock_get):
         """Test APIClient handles 404 errors without retry"""
         import httpx
         from src.api.client import APIClient
@@ -625,7 +630,7 @@ class TestErrorHandling(unittest.TestCase):
         )
         mock_get.side_effect = http_error
 
-        result = client.get("/test")
+        result = await client.get("/test")
 
         self.assertIsNone(result)
         # Should not retry on 4xx errors
