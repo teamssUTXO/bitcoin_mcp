@@ -160,3 +160,11 @@ def get_mempool_client() -> MempoolClient:
     if _mempool_instance is None:
         _mempool_instance = MempoolClient()
     return _mempool_instance
+
+
+async def close_mempool_client() -> None:
+    """Close and clear the Mempool API client singleton instance."""
+    global _mempool_instance
+    if _mempool_instance is not None:
+        await _mempool_instance.close()
+        _mempool_instance = None

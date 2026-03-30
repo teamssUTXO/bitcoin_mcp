@@ -31,7 +31,7 @@ class BlockchainClient(APIClient):
         Returns the current hashrate of the Bitcoin network miners
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        try :
+        try:
             result = await self.get("/q/hashrate")
             return int(result) if result else None
         except Exception as e:
@@ -135,3 +135,11 @@ def get_blockchain_client() -> BlockchainClient:
     if _blockchain_instance is None:
         _blockchain_instance = BlockchainClient()
     return _blockchain_instance
+
+
+async def close_blockchain_client() -> None:
+    """Close and clear the Blockchain.com API client singleton instance."""
+    global _blockchain_instance
+    if _blockchain_instance is not None:
+        await _blockchain_instance.close()
+        _blockchain_instance = None

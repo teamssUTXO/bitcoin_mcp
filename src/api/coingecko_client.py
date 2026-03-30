@@ -72,3 +72,11 @@ def get_coingecko_client() -> CoinGeckoClient:
     if _coingecko_instance is None:
         _coingecko_instance = CoinGeckoClient()
     return _coingecko_instance
+
+
+async def close_coingecko_client() -> None:
+    """Close and clear the CoinGecko API client singleton instance."""
+    global _coingecko_instance
+    if _coingecko_instance is not None:
+        await _coingecko_instance.close()
+        _coingecko_instance = None

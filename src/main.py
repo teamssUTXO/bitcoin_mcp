@@ -21,6 +21,7 @@ from src.tools.mining_tools import register_mining_tools
 from src.tools.blocks_tools import register_blocks_tools
 
 from src.log import get_logger
+from src.api import close_all_api_clients
 
 
 get_logger = get_logger()
@@ -51,6 +52,7 @@ if __name__ == "__main__":
     if args.port:
         logger.info(f"Server ready, starting HTTP MCP Server on port {args.port}...")
         app = mcp.sse_app()
+        app.add_event_handler("shutdown", close_all_api_clients)
 
         app.add_middleware(
             CORSMiddleware,
@@ -63,4 +65,9 @@ if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=args.port)
     else:
         logger.info("Server ready, starting STDIO MCP Server")
-        mcp.run()
+        try:
+            mcp.run()
+        finally:
+            import asyncio
+
+            asyncio.run(close_all_api_clients())

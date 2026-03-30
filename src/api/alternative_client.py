@@ -46,3 +46,11 @@ def get_alternative_client() -> AlternativeClient:
     if _alternative_instance is None:
         _alternative_instance = AlternativeClient()
     return _alternative_instance
+
+
+async def close_alternative_client() -> None:
+    """Close and clear the Alternative API client singleton instance."""
+    global _alternative_instance
+    if _alternative_instance is not None:
+        await _alternative_instance.close()
+        _alternative_instance = None
