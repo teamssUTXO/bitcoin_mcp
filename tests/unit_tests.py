@@ -3,13 +3,13 @@ Unit Tests for Bitcoin MCP Server
 ==================================
 
 This test suite covers:
-1. Test imports - Verify all modules import correctly
-2. Test the logger and write log files - Test LoggerMCP class functionality
-3. Test de l'endpoint /health - Test the /health HTTP endpoint
-4. Test de fonctions qui peuvent être testés - Test testable functions
-5. Test de l'appel de la fonction list_tools comme client - Test list_tools as MCP client
-6. Test gestion d'erreur avec invalid input - Test error handling with invalid inputs
-7. Test configuration - Test configuration loading and validation
+1. Test imports
+2. Test the logger and write log files
+3. Test the /health endpoint
+4. Test testable functions
+5. Test list_tools function as an MCP client
+6. Test error handling with invalid inputs
+7. Test configuration loading and validation
 
 Testing with MCP Inspector
 ---------------------------
