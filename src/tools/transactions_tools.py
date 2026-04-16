@@ -1,12 +1,12 @@
 import logging
 from typing import Optional
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
 from src.core.transactions import get_transactions_analyser_client
 
 
 logger = logging.getLogger(__name__)
 
-async def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
+async def get_bitcoin_transaction_infos(txid: str, ctx: Context) -> Optional[str]:
     """
     Use this to get comprehensive information about a specific Bitcoin transaction using its transaction ID (txid).
 
@@ -44,14 +44,14 @@ async def get_bitcoin_transaction_infos(txid: str) -> Optional[str]:
         return data
 
     except TypeError as e:
-        logger.error(f"Invalid call or missing parameter: {e}")
+        await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_bitcoin_transaction_infos: {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_transaction_infos: {e}", exc_info=True)
         return None
 
 
-async def get_transaction_input_output(txid: str) -> Optional[str]:
+async def get_transaction_input_output(txid: str, ctx: Context) -> Optional[str]:
     """
     Use this to get detailed input and output breakdown of a Bitcoin transaction, including all addresses and amounts involved.
 
@@ -91,14 +91,14 @@ async def get_transaction_input_output(txid: str) -> Optional[str]:
         return data
 
     except TypeError as e:
-        logger.error(f"Invalid call or missing parameter: {e}")
+        await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_transaction_input_output : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_transaction_input_output : {e}", exc_info=True)
         return None
 
 
-async def get_transactions_of_address(address: str) -> Optional[str]:
+async def get_transactions_of_address(address: str, ctx: Context) -> Optional[str]:
     """
     Use this to get the complete transaction history of a Bitcoin address.
 
@@ -124,10 +124,10 @@ async def get_transactions_of_address(address: str) -> Optional[str]:
         return data
 
     except TypeError as e:
-        logger.error(f"Invalid call or missing parameter: {e}")
+        await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_transactions_of_address : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_transactions_of_address : {e}", exc_info=True)
         return None
 
 

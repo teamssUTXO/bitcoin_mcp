@@ -1,12 +1,12 @@
 import logging
 from typing import Optional
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
 from src.core.addresses import get_addresses_analyser_client
 
 
 logger = logging.getLogger(__name__)
 
-async def get_info_about_address(address: str) -> Optional[str]:
+async def get_info_about_address(address: str, ctx: Context) -> Optional[str]:
     """
     Use this to get comprehensive information about a Bitcoin address including balance, transaction activity, and spending patterns.
 
@@ -33,14 +33,14 @@ async def get_info_about_address(address: str) -> Optional[str]:
 
 
     except TypeError as e:
-        logger.error(f"Invalid call or missing parameter: {e}")
+        await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
         return None
 
 
-async def get_address_overview(address: str) -> Optional[str]:
+async def get_address_overview(address: str, ctx: Context) -> Optional[str]:
     """
     Use this to get a simplified overview of a Bitcoin address focusing on balance and cumulative transaction totals.
 
@@ -66,10 +66,10 @@ async def get_address_overview(address: str) -> Optional[str]:
 
 
     except TypeError as e:
-        logger.error(f"Invalid call or missing parameter: {e}")
+        await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_address_overview : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_address_overview : {e}", exc_info=True)
         return None
 
 

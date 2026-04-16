@@ -1,12 +1,12 @@
 import logging
 from typing import Optional
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
 from src.core.network import get_network_analyser_client
 
 
 logger = logging.getLogger(__name__)
 
-async def get_bitcoin_network_overview() -> Optional[str]:
+async def get_bitcoin_network_overview(ctx: Context) -> Optional[str]:
     """
     Use this for general Bitcoin blockchain questions about current state, health, or status.
 
@@ -48,10 +48,10 @@ async def get_bitcoin_network_overview() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}", exc_info=True)
         return None
 
-async def get_bitcoin_network_recommended_fees() -> Optional[str]:
+async def get_bitcoin_network_recommended_fees(ctx: Context) -> Optional[str]:
     """
     Use this to get current recommended Bitcoin transaction fees for different confirmation speed priorities.
 
@@ -81,10 +81,10 @@ async def get_bitcoin_network_recommended_fees() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}", exc_info=True)
         return None
 
-async def get_bitcoin_network_health() -> Optional[str]:
+async def get_bitcoin_network_health(ctx: Context) -> Optional[str]:
     """
     Use this to get a simplified health assessment of the Bitcoin network with a single score and status label.
 
@@ -105,7 +105,7 @@ async def get_bitcoin_network_health() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_bitcoin_network_health : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_network_health : {e}", exc_info=True)
         return None
 
 def register_network_tools(mcp: FastMCP):

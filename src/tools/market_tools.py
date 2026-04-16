@@ -1,12 +1,12 @@
 import logging
 from typing import Optional
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
 from src.core.market import get_market_analyser_client
 
 
 logger = logging.getLogger(__name__)
 
-async def get_cryptomarket_overview() -> Optional[str]:
+async def get_cryptomarket_overview(ctx: Context) -> Optional[str]:
     """
     Use this to get a comprehensive overview of the global cryptocurrency market conditions and metrics.
 
@@ -32,11 +32,11 @@ async def get_cryptomarket_overview() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_cryptomarket_overview : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_cryptomarket_overview : {e}", exc_info=True)
         return None
 
 
-async def get_bitcoin_price_usd() -> Optional[str]:
+async def get_bitcoin_price_usd(ctx: Context) -> Optional[str]:
     """
     Use this to get Bitcoin's current USD price and essential market indicators.
 
@@ -62,11 +62,11 @@ async def get_bitcoin_price_usd() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_btc_price_usd : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_btc_price_usd : {e}", exc_info=True)
         return None
 
 
-async def get_bitcoin_market_data() -> Optional[str]:
+async def get_bitcoin_market_data(ctx: Context) -> Optional[str]:
     """
     Use this to get a comprehensive technical and financial report on Bitcoin with extensive historical data and market analysis.
 
@@ -112,10 +112,10 @@ async def get_bitcoin_market_data() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_bitcoin_market_data : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_market_data : {e}", exc_info=True)
         return None
 
-async def get_bitcoin_market_sentiment() -> Optional[str]:
+async def get_bitcoin_market_sentiment(ctx: Context) -> Optional[str]:
     """
     Use this to get a comprehensive sentiment analysis of the Bitcoin market based on community voting and the Fear & Greed Index.
 
@@ -143,11 +143,11 @@ async def get_bitcoin_market_sentiment() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_bitcoin_market_sentiment : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_market_sentiment : {e}", exc_info=True)
         return None
 
 
-async def get_trending_coins() -> Optional[str]:
+async def get_trending_coins(ctx: Context) -> Optional[str]:
     """
     Use this to get the top 15 trending cryptocurrencies sorted by the most popular user searches on CoinGecko.
 
@@ -174,11 +174,11 @@ async def get_trending_coins() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_trending_coins : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_trending_coins : {e}", exc_info=True)
         return None
 
 
-async def get_trending_categories() -> Optional[str]:
+async def get_trending_categories(ctx: Context) -> Optional[str]:
     """
     Use this to get the top 6 trending cryptocurrency categories sorted by the most popular user searches on CoinGecko.
 
@@ -204,10 +204,10 @@ async def get_trending_categories() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_trending_categories : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_trending_categories : {e}", exc_info=True)
         return None
 
-async def get_trending_nfts() -> Optional[str]:
+async def get_trending_nfts(ctx: Context) -> Optional[str]:
     """
     Use this to get the top 7 trending NFT collections sorted by the most popular user searches on CoinGecko.
 
@@ -233,7 +233,7 @@ async def get_trending_nfts() -> Optional[str]:
         return data
 
     except Exception as e:
-        logger.error(f"Unexpected error in tool get_trending_nfts : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_trending_nfts : {e}", exc_info=True)
         return None
 
 def register_market_tools(mcp: FastMCP):
