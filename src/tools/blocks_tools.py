@@ -1,11 +1,11 @@
 import logging
 from typing import Optional
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
 from src.core.blocks import get_blocks_analyser_client
 
 logger = logging.getLogger(__name__)
 
-async def get_summary_of_latest_block() -> Optional[str]:
+async def get_summary_of_latest_block(ctx: Context) -> Optional[str]:
     """
     Use this to get a summary of the most recently mined block on the Bitcoin blockchain.
 
@@ -19,20 +19,23 @@ async def get_summary_of_latest_block() -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_summary_of_latest_block")
+        await ctx.info("Tool called : get_summary_of_latest_block")
 
         blocks_analyzer = get_blocks_analyser_client()
         data: str = await blocks_analyzer.get_latest_block_summary()
 
         logger.info("Tool get_summary_of_latest_block succeeded")
+        await ctx.info("Tool get_summary_of_latest_block succeeded")
 
         return data
 
     except Exception as e:
+        await ctx.error(f"Unexpected error in tool get_summary_of_latest_block : {e}")
         logger.error(f"Unexpected error in tool get_summary_of_latest_block : {e}", exc_info=True)
         return None
 
 
-async def get_block_hash_with_height(height: int) -> Optional[str]:
+async def get_block_hash_with_height(height: int, ctx: Context) -> Optional[str]:
     """
     Use this to retrieve the unique hash identifier of a Bitcoin block by specifying its height (position in the blockchain).
 
@@ -44,23 +47,27 @@ async def get_block_hash_with_height(height: int) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_block_hash_with_height")
+        await ctx.info("Tool called : get_block_hash_with_height")
 
         blocks_analyzer = get_blocks_analyser_client()
         data: str = await blocks_analyzer.get_block_by_height(height)
 
         logger.info("Tool get_block_hash_with_height succeeded")
-        return data
+        await ctx.info("Tool get_block_hash_with_height succeeded")
 
+        return data
 
     except TypeError as e:
         logger.error(f"Invalid call or missing parameter: {e}")
+        await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
         logger.error(f"Unexpected error in tool get_block_hash_with_height : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_block_hash_with_height : {e}")
         return None
 
 
-async def get_10_latest_blocks_informations() -> Optional[str]:
+async def get_10_latest_blocks_informations(ctx: Context) -> Optional[str]:
     """
     Use this to get detailed information and statistics about the 10 most recently mined Bitcoin blocks.
 
@@ -84,16 +91,19 @@ async def get_10_latest_blocks_informations() -> Optional[str]:
     """
     try :
         logger.info("Tool called : get_10_latest_blocks_informations")
+        await ctx.info("Tool called : get_10_latest_blocks_informations")
 
         blocks_analyzer = get_blocks_analyser_client()
         data: str = await blocks_analyzer.get_latest_blocks_info()
 
         logger.info("Tool get_10_latest_blocks_informations succeeded")
+        await ctx.info("Tool get_10_latest_blocks_informations succeeded")
 
         return data
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_10_latest_blocks_informations : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_10_latest_blocks_informations : {e}")
         return None
 
 
