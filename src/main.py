@@ -1,7 +1,6 @@
 # manually add project root to sys.path => entire repo becomes usable
 import sys
 import os
-
 ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(ROOT)
 
@@ -65,9 +64,12 @@ if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=args.port)
     else:
         logger.info("Server ready, starting STDIO MCP Server")
-        try:
-            mcp.run()
-        finally:
-            import asyncio
 
-            asyncio.run(close_all_api_clients())
+        import anyio
+
+        async def run():
+            try:
+                await mcp.run_stdio_async()
+            finally:
+                await close_all_api_clients()
+        anyio.run(run)
