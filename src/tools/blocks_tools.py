@@ -28,7 +28,8 @@ async def get_summary_of_latest_block(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_summary_of_latest_block : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_summary_of_latest_block : {e}")
+        logger.error(f"Unexpected error in tool get_summary_of_latest_block : {e}", exc_info=True)
         return None
 
 
@@ -53,10 +54,12 @@ async def get_block_hash_with_height(height: int, ctx: Context) -> Optional[str]
 
 
     except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
         await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_block_hash_with_height : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_block_hash_with_height : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_block_hash_with_height : {e}")
         return None
 
 
@@ -93,7 +96,8 @@ async def get_10_latest_blocks_informations(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_10_latest_blocks_informations : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_10_latest_blocks_informations : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_10_latest_blocks_informations : {e}")
         return None
 
 

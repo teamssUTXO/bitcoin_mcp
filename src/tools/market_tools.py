@@ -32,7 +32,8 @@ async def get_cryptomarket_overview(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_cryptomarket_overview : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_cryptomarket_overview : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_cryptomarket_overview : {e}")
         return None
 
 
@@ -62,6 +63,7 @@ async def get_bitcoin_price_usd(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
+        logger.error(f"Unexpected error in tool get_btc_price_usd : {e}")
         await ctx.error(f"Unexpected error in tool get_btc_price_usd : {e}", exc_info=True)
         return None
 
@@ -112,7 +114,8 @@ async def get_bitcoin_market_data(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_bitcoin_market_data : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_bitcoin_market_data : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_market_data : {e}")
         return None
 
 async def get_bitcoin_market_sentiment(ctx: Context) -> Optional[str]:
@@ -143,6 +146,7 @@ async def get_bitcoin_market_sentiment(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
+        logger.error(f"Unexpected error in tool get_bitcoin_market_sentiment : {e}")
         await ctx.error(f"Unexpected error in tool get_bitcoin_market_sentiment : {e}", exc_info=True)
         return None
 
@@ -174,7 +178,9 @@ async def get_trending_coins(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_trending_coins : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_trending_coins : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_trending_coins : {e}")
+
         return None
 
 
@@ -204,7 +210,8 @@ async def get_trending_categories(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_trending_categories : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_trending_categories : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_trending_categories : {e}")
         return None
 
 async def get_trending_nfts(ctx: Context) -> Optional[str]:
@@ -233,7 +240,8 @@ async def get_trending_nfts(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_trending_nfts : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_trending_nfts : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_trending_nfts : {e}")
         return None
 
 def register_market_tools(mcp: FastMCP):

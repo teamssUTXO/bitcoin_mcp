@@ -44,10 +44,12 @@ async def get_bitcoin_transaction_infos(txid: str, ctx: Context) -> Optional[str
         return data
 
     except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
         await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_bitcoin_transaction_infos: {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_bitcoin_transaction_infos: {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_transaction_infos: {e}")
         return None
 
 
@@ -91,10 +93,12 @@ async def get_transaction_input_output(txid: str, ctx: Context) -> Optional[str]
         return data
 
     except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
         await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_transaction_input_output : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_transaction_input_output : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_transaction_input_output : {e}")
         return None
 
 
@@ -124,10 +128,12 @@ async def get_transactions_of_address(address: str, ctx: Context) -> Optional[st
         return data
 
     except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
         await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_transactions_of_address : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_transactions_of_address : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_transactions_of_address : {e}")
         return None
 
 

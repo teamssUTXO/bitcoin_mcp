@@ -31,7 +31,8 @@ async def get_top_10_mining_pools_rank(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_top_10_mining_pools_rank : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_top_10_mining_pools_rank : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_top_10_mining_pools_rank : {e}")
         return None
 
 
@@ -59,7 +60,8 @@ async def get_mining_pools_hashrates_3month(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_top_10_mining_pools_hashrates_3month : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_top_10_mining_pools_hashrates_3month : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_top_10_mining_pools_hashrates_3month : {e}")
         return None
 
 
@@ -89,7 +91,8 @@ async def get_top1_mining_pool(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_top1_mining_pool : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_top1_mining_pool : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_top1_mining_pool : {e}")
         return None
 
 async def get_mining_pool_by_slug(slug: str, ctx: Context) -> Optional[str]:
@@ -119,10 +122,12 @@ async def get_mining_pool_by_slug(slug: str, ctx: Context) -> Optional[str]:
         return data
 
     except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
         await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_mining_pool_by_slug : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_mining_pool_by_slug : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_mining_pool_by_slug : {e}")
         return None
 
 async def get_bitcoin_network_mining_pools_statistics(ctx: Context) -> Optional[str]:
@@ -160,7 +165,8 @@ async def get_bitcoin_network_mining_pools_statistics(ctx: Context) -> Optional[
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_info_about_address : {e}")
         return None
 
 def register_mining_tools(mcp: FastMCP):

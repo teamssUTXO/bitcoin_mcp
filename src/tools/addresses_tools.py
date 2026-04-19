@@ -33,10 +33,12 @@ async def get_info_about_address(address: str, ctx: Context) -> Optional[str]:
 
 
     except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
         await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_info_about_address : {e}")
         return None
 
 
@@ -66,10 +68,12 @@ async def get_address_overview(address: str, ctx: Context) -> Optional[str]:
 
 
     except TypeError as e:
+        logger.error(f"Invalid call or missing parameter: {e}")
         await ctx.error(f"Invalid call or missing parameter: {e}")
         return None
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_address_overview : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_address_overview : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_address_overview : {e}")
         return None
 
 

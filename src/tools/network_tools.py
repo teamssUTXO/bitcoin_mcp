@@ -48,7 +48,8 @@ async def get_bitcoin_network_overview(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}")
         return None
 
 async def get_bitcoin_network_recommended_fees(ctx: Context) -> Optional[str]:
@@ -81,7 +82,8 @@ async def get_bitcoin_network_recommended_fees(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}")
         return None
 
 async def get_bitcoin_network_health(ctx: Context) -> Optional[str]:
@@ -105,7 +107,8 @@ async def get_bitcoin_network_health(ctx: Context) -> Optional[str]:
         return data
 
     except Exception as e:
-        await ctx.error(f"Unexpected error in tool get_bitcoin_network_health : {e}", exc_info=True)
+        logger.error(f"Unexpected error in tool get_bitcoin_network_health : {e}", exc_info=True)
+        await ctx.error(f"Unexpected error in tool get_bitcoin_network_health : {e}")
         return None
 
 def register_network_tools(mcp: FastMCP):
