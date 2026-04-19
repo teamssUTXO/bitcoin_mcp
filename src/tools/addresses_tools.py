@@ -23,11 +23,13 @@ async def get_info_about_address(address: str, ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_info_about_address")
+        await ctx.info("Tool called : get_info_about_address")
 
         addresses_analyzer = get_addresses_analyser_client()
         data: str = await addresses_analyzer.get_address_info(address)
 
         logger.info("Tool get_info_about_address succeeded")
+        await ctx.info("Tool get_info_about_address succeeded")
 
         return data
 
@@ -58,11 +60,13 @@ async def get_address_overview(address: str, ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_address_overview")
+        await ctx.info("Tool called : get_address_overview")
 
         addresses_analyzer = get_addresses_analyser_client()
         data: str = await addresses_analyzer.get_address_info_overview(address)
 
         logger.info("Tool get_address_overview succeeded")
+        await ctx.info("Tool get_address_overview succeeded")
 
         return data
 

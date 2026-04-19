@@ -36,11 +36,14 @@ async def get_bitcoin_transaction_infos(txid: str, ctx: Context) -> Optional[str
     """
     try:
         logger.info(f"Tool Called : get_bitcoin_transaction_infos ({txid})")
+        await ctx.info(f"Tool Called : get_bitcoin_transaction_infos ({txid})")
 
         transactions_analyzer = get_transactions_analyser_client()
         data: str = await transactions_analyzer.get_tx_info(txid)
 
         logger.info("Tool get_bitcoin_transaction_infos succeeded")
+        await ctx.info("Tool get_bitcoin_transaction_infos succeeded")
+
         return data
 
     except TypeError as e:
@@ -84,11 +87,13 @@ async def get_transaction_input_output(txid: str, ctx: Context) -> Optional[str]
     """
     try:
         logger.info(f"Tool Called : get_transaction_input_output ({txid})")
+        await ctx.info(f"Tool Called : get_transaction_input_output ({txid})")
 
         transactions_analyzer = get_transactions_analyser_client()
         data: str = await transactions_analyzer.get_tx_inputs_outputs(txid)
 
         logger.info("Tool get_transaction_input_output succeeded")
+        await ctx.info("Tool get_transaction_input_output succeeded")
 
         return data
 
@@ -119,11 +124,13 @@ async def get_transactions_of_address(address: str, ctx: Context) -> Optional[st
     """
     try:
         logger.info(f"Tool Called : get_transactions_of_address ({address})")
+        await ctx.info(f"Tool Called : get_transactions_of_address ({address})")
 
         transactions_analyzer = get_transactions_analyser_client()
         data: str = await transactions_analyzer.get_address_transactions(address)
 
         logger.info("Tool get_transactions_of_address succeeded")
+        await ctx.info("Tool get_transactions_of_address succeeded")
 
         return data
 

@@ -39,11 +39,13 @@ async def get_bitcoin_network_overview(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool Called : get_bitcoin_network_overview")
+        await ctx.info("Tool Called : get_bitcoin_network_overview")
 
         network_analyzer = get_network_analyser_client()
         data: str = await network_analyzer.get_network_stats()
 
         logger.info("Tool get_bitcoin_network_overview succeeded")
+        await ctx.info("Tool get_bitcoin_network_overview succeeded")
 
         return data
 
@@ -73,11 +75,13 @@ async def get_bitcoin_network_recommended_fees(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool Called : get_bitcoin_network_recommended_fees")
+        await ctx.info("Tool Called : get_bitcoin_network_recommended_fees")
 
         network_analyzer = get_network_analyser_client()
         data: str = await network_analyzer.get_network_recommended_fees()
 
         logger.info("Tool get_bitcoin_network_recommended_fees succeeded")
+        await ctx.info("Tool get_bitcoin_network_recommended_fees succeeded")
 
         return data
 
@@ -98,11 +102,13 @@ async def get_bitcoin_network_health(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool Called : get_bitcoin_network_health")
+        await ctx.info("Tool Called : get_bitcoin_network_health")
 
         network_analyzer = get_network_analyser_client()
         data: str = await network_analyzer.get_network_health()
 
         logger.info("Tool get_bitcoin_network_health succeeded")
+        await ctx.info("Tool get_bitcoin_network_health succeeded")
 
         return data
 

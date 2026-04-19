@@ -19,11 +19,13 @@ async def get_summary_of_latest_block(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_summary_of_latest_block")
+        await ctx.info("Tool called : get_summary_of_latest_block")
 
         blocks_analyzer = get_blocks_analyser_client()
         data: str = await blocks_analyzer.get_latest_block_summary()
 
         logger.info("Tool get_summary_of_latest_block succeeded")
+        await ctx.info("Tool get_summary_of_latest_block succeeded")
 
         return data
 
@@ -45,13 +47,15 @@ async def get_block_hash_with_height(height: int, ctx: Context) -> Optional[str]
     """
     try:
         logger.info("Tool called : get_block_hash_with_height")
+        await ctx.info("Tool called : get_block_hash_with_height")
 
         blocks_analyzer = get_blocks_analyser_client()
         data: str = await blocks_analyzer.get_block_by_height(height)
 
         logger.info("Tool get_block_hash_with_height succeeded")
-        return data
+        await ctx.info("Tool get_block_hash_with_height succeeded")
 
+        return data
 
     except TypeError as e:
         logger.error(f"Invalid call or missing parameter: {e}")
@@ -87,11 +91,13 @@ async def get_10_latest_blocks_informations(ctx: Context) -> Optional[str]:
     """
     try :
         logger.info("Tool called : get_10_latest_blocks_informations")
+        await ctx.info("Tool called : get_10_latest_blocks_informations")
 
         blocks_analyzer = get_blocks_analyser_client()
         data: str = await blocks_analyzer.get_latest_blocks_info()
 
         logger.info("Tool get_10_latest_blocks_informations succeeded")
+        await ctx.info("Tool get_10_latest_blocks_informations succeeded")
 
         return data
 

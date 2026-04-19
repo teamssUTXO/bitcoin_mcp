@@ -22,11 +22,13 @@ async def get_top_10_mining_pools_rank(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool Called : get_top_10_mining_pools_ranking")
+        await ctx.info("Tool Called : get_top_10_mining_pools_ranking")
 
         mining_analyzer = get_mining_analyser_client()
         data: str = await mining_analyzer.get_mining_pools_ranking()
 
         logger.info("Tool get_top_10_mining_pools_ranking succeeded")
+        await ctx.info("Tool get_top_10_mining_pools_ranking succeeded")
 
         return data
 
@@ -52,10 +54,13 @@ async def get_mining_pools_hashrates_3month(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool Called : get_top_10_mining_pools_hashrates_3month")
+        await ctx.info("Tool Called : get_top_10_mining_pools_hashrates_3month")
+
         mining_analyzer = get_mining_analyser_client()
         data: str = await mining_analyzer.get_mining_pool_hashrates()
 
         logger.info("Tool get_top_10_mining_pools_hashrates_3month succeeded")
+        await ctx.info("Tool get_top_10_mining_pools_hashrates_3month succeeded")
 
         return data
 
@@ -82,11 +87,13 @@ async def get_top1_mining_pool(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool Called : get_top1_mining_pool")
+        await ctx.info("Tool Called : get_top1_mining_pool")
 
         mining_analyzer = get_mining_analyser_client()
         data: str = await mining_analyzer.get_top_pool()
 
         logger.info("Tool get_top1_mining_pool succeeded")
+        await ctx.info("Tool get_top1_mining_pool succeeded")
 
         return data
 
@@ -113,11 +120,13 @@ async def get_mining_pool_by_slug(slug: str, ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool Called : get_mining_pool_by_slug")
+        await ctx.info("Tool Called : get_mining_pool_by_slug")
 
         mining_analyzer = get_mining_analyser_client()
         data: str = await mining_analyzer.get_pool_by_slug(slug)
 
         logger.info("Tool get_mining_pool_by_slug succeeded")
+        await ctx.info("Tool get_mining_pool_by_slug succeeded")
 
         return data
 
@@ -156,11 +165,13 @@ async def get_bitcoin_network_mining_pools_statistics(ctx: Context) -> Optional[
     """
     try:
         logger.info("Tool Called : get_bitcoin_network_mining_pools_statistics")
+        await ctx.info("Tool Called : get_bitcoin_network_mining_pools_statistics")
 
         mining_analyzer = get_mining_analyser_client()
         data: str = await mining_analyzer.get_mining_statistics()
 
         logger.info("Tool get_bitcoin_network_mining_pools_statistics succeeded")
+        await ctx.info("Tool get_bitcoin_network_mining_pools_statistics succeeded")
 
         return data
 

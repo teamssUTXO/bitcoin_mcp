@@ -23,11 +23,13 @@ async def get_cryptomarket_overview(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_cryptomarket_overview")
+        await ctx.info("Tool called : get_cryptomarket_overview")
 
         market_analyzer = get_market_analyser_client()
         data: str = await market_analyzer.get_global_cryptomarket_data()
 
         logger.info("Tool get_global_cryptomarket_overview succeeded")
+        await ctx.info("Tool get_global_cryptomarket_overview succeeded")
 
         return data
 
@@ -54,11 +56,13 @@ async def get_bitcoin_price_usd(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_bitcoin_price_usd")
+        await ctx.info("Tool called : get_bitcoin_price_usd")
 
         market_analyzer = get_market_analyser_client()
         data: str = await market_analyzer.get_btc_price_usd()
 
         logger.info("Tool get_btc_price_usd succeeded")
+        await ctx.info("Tool get_btc_price_usd succeeded")
 
         return data
 
@@ -105,11 +109,13 @@ async def get_bitcoin_market_data(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_bitcoin_market_data")
+        await ctx.info("Tool called : get_bitcoin_market_data")
 
         market_analyzer = get_market_analyser_client()
         data: str = await market_analyzer.get_btc_market_data()
 
         logger.info("Tool get_btc_market_data succeeded")
+        await ctx.info("Tool get_btc_market_data succeeded")
 
         return data
 
@@ -138,11 +144,14 @@ async def get_bitcoin_market_sentiment(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_bitcoin_market_sentiment")
+        await ctx.info("Tool called : get_bitcoin_market_sentiment")
 
         market_analyzer = get_market_analyser_client()
         data: str = await market_analyzer.get_market_sentiment()
 
         logger.info("Tool get_bitcoin_market_sentiment succeeded")
+        await ctx.info("Tool get_bitcoin_market_sentiment succeeded")
+
         return data
 
     except Exception as e:
@@ -169,11 +178,13 @@ async def get_trending_coins(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_trending_coins")
+        await ctx.info("Tool called : get_trending_coins")
 
         market_analyzer = get_market_analyser_client()
         data: str = await market_analyzer.get_trending_coins()
 
         logger.info("Tool get_trending_coins succeeded")
+        await ctx.info("Tool get_trending_coins succeeded")
 
         return data
 
@@ -201,11 +212,13 @@ async def get_trending_categories(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_trending_categories")
+        await ctx.info("Tool called : get_trending_categories")
 
         market_analyzer = get_market_analyser_client()
         data: str = await market_analyzer.get_trending_categories()
 
         logger.info("Tool get_trending_categories succeeded")
+        await ctx.info("Tool get_trending_categories succeeded")
 
         return data
 
@@ -231,11 +244,13 @@ async def get_trending_nfts(ctx: Context) -> Optional[str]:
     """
     try:
         logger.info("Tool called : get_trending_nfts")
+        await ctx.info("Tool called : get_trending_nfts")
 
         market_analyzer = get_market_analyser_client()
         data: str = await market_analyzer.get_trending_nfts()
 
         logger.info("Tool get_trending_nfts succeeded")
+        await ctx.info("Tool get_trending_nfts succeeded")
 
         return data
 
