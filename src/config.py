@@ -18,7 +18,6 @@ class Config:
     ENABLE_RETRY: bool = True
 
     # APIs Management
-
     CACHE_TTL_TIME: int = 60
     MAX_RETRIES: int = 3
 
