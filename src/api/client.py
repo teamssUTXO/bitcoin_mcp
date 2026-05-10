@@ -5,6 +5,16 @@ from typing import Optional, Dict, Any
 import time
 
 from src.config import Config
+from returns.result import Result, Success, Failure
+
+from src.errors import (
+    Error,
+    HTTPError,
+    NetworkError,
+    NotFoundError,
+    RateLimitError,
+    TimeoutError,
+)
 
 # docs = https://www.python-httpx.org/
 class APIClient:
@@ -14,7 +24,7 @@ class APIClient:
         self.base_url: str = base_url
 
         self.timeout: httpx.Timeout = httpx.Timeout(
-            connect= Config.API_CONNECT_TIMEOUT,
+            connect=Config.API_CONNECT_TIMEOUT,
             read=Config.API_READ_TIMEOUT,
             write=Config.API_WRITE_TIMEOUT,
             pool=Config.API_POOL_TIMEOUT
@@ -39,7 +49,7 @@ class APIClient:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
 
-    def _get_from_cache(self, key: str):
+    def _get_from_cache(self, key: str) -> Optional[Any]:
         if not self.enable_cache:
             return None
 
@@ -53,17 +63,19 @@ class APIClient:
 
         return None
 
-    def _save_to_cache(self, key: str, data: Any):
+    def _save_to_cache(self, key: str, data: Any) -> None:
         if self.enable_cache:
             self._cache[key] = (data, time.time())
 
-    async def get(self, endpoint: str) -> Optional[Dict[Any, Any]]:
-        """GET with TTL cache"""
+    async def get(self, endpoint: str) -> Result[Any, Error]:
+        """GET with TTL cache (Rust-style Result)."""
         url = f"{self.base_url}{endpoint}"
 
         cached = self._get_from_cache(url)
         if cached is not None:
-            return cached
+            return Success(cached)
+
+        last_error: Error = NetworkError(details="Unknown error")
 
         for attempts in range(self.max_retry + 1):
             retryable = False
@@ -77,19 +89,33 @@ class APIClient:
                     data = response.text
 
                 self._save_to_cache(url, data)
-                return data
+                return Success(data)
 
             except httpx.HTTPStatusError as e:
                 status = e.response.status_code
                 retryable = 500 <= status < 600
-            except (httpx.TimeoutException, httpx.NetworkError):
+                if status == 404:
+                    last_error = NotFoundError(details=str(e))
+                elif status == 429:
+                    retry_after = e.response.headers.get("Retry-After")
+                    last_error = RateLimitError(
+                        retry_after=int(retry_after) if retry_after else None,
+                        details=str(e),
+                    )
+                else:
+                    last_error = HTTPError(status_code=status, details=str(e))
+            except httpx.TimeoutException as e:
                 retryable = True
+                last_error = TimeoutError(details=str(e))
+            except httpx.NetworkError as e:
+                retryable = True
+                last_error = NetworkError(details=str(e))
 
 
             if not self.enable_retry or not retryable or attempts >= self.max_retry:
-                return None
+                return Failure(last_error)
 
             sleep_time = min(10, random.randint(0, 2**attempts)) # Exponential Backoff with Full Jitter
             await asyncio.sleep(sleep_time)
 
-        return None
+        return Failure(last_error)

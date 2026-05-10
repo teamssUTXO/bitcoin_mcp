@@ -1,7 +1,8 @@
 import logging
-from typing import Optional
 from src.api.client import APIClient
 from src.config import Config
+from returns.result import Result
+from src.errors import Error
 
 logger = logging.getLogger(__name__)
 
@@ -10,120 +11,83 @@ class BlockchainClient(APIClient):
         super().__init__(Config.BLOCKCHAIN_INFO_API_URL)
 
 
-    async def get_network_stats(self) -> Optional[dict]:
+    async def get_network_stats(self) -> Result[dict, Error]:
         """
         Returns current Bitcoin network stats
         Docs : https://blockchain.com/fr/explorer/api/blockchain_api
         """
-        try:
-            return await self.get("/stats?format=json")
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get("/stats?format=json")
 
 
     # === BITCOIN NETWORK INFORMATIONS ===
 
-    async def get_network_hashrate(self) -> Optional[int]:
+    async def get_network_hashrate(self) -> Result[int, Error]:
         """
         Unused
 
         Returns the current hashrate of the Bitcoin network miners
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        try:
-            result = await self.get("/q/hashrate")
-            return int(result) if result else None
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get("/q/hashrate")
 
-    async def get_network_difficulty(self) -> Optional[float]:
+    async def get_network_difficulty(self) -> Result[float, Error]:
         """
         Unused
 
         Returns the current difficulty of the bitcoin network
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        try:
-            result = await self.get("/q/getdifficulty")
-            return float(result) if result else None
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get("/q/getdifficulty")
 
 
     # === BITCOIN TRANSACTIONS INFORMATIONS ===
 
-    async def get_nb_tx_day(self) -> Optional[int]:
+    async def get_nb_tx_day(self) -> Result[int, Error]:
         """
         Unused
 
         Returns the number of transactions in the Bitcoin network over 24 hours
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        try:
-            result = await self.get("/q/24hrtransactioncount")
-            return int(result) if result else None
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get("/q/24hrtransactioncount")
 
-    async def get_nb_stc_day(self) -> Optional[int]:
+    async def get_nb_stc_day(self) -> Result[int, Error]:
         """
         Unused
 
         Returns the number of satoshis sent on the Bitcoin network in 24 hours
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        try:
-            result = await self.get("/q/24hrbtcsent")
-            return int(result) if result else None
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get("/q/24hrbtcsent")
 
-    async def get_unconfirmed_tx(self) -> Optional[int]:
+    async def get_unconfirmed_tx(self) -> Result[int, Error]:
         """
         Unused
 
         Returns the number of unconfirmed transactions on the Bitcoin network
         Docs : https://www.blockchain.com/fr/explorer/api/q
         """
-        try:
-            result = await self.get("/q/unconfirmedcount")
-            return int(result) if result else None
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get("/q/unconfirmedcount")
 
 
     # === BITCOIN BLOCKS INFORMATIONS ===
 
-    async def get_latest_block(self) -> Optional[dict]:
+    async def get_latest_block(self) -> Result[dict, Error]:
         """
         Returns information about the last mined block on the Bitcoin network
         Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
         """
-        try:
-            return await self.get(f"/latestblock")
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get("/latestblock")
 
 
     # === BITCOIN ADDRESSES INFORMATIONS ===
 
-    async def get_address_info(self, address: str) -> Optional[dict]:
+    async def get_address_info(self, address: str) -> Result[dict, Error]:
         """
         Returns the information for a Bitcoin address (param address in base58 or hash160)
         Docs : "https://www.blockchain.com/fr/explorer/api/blockchain_api"
         """
-        try:
-            return await self.get(f"/rawaddr/{address}")
-        except Exception as e:
-            logger.error(f"Failed to fetch data from Blockchain.com : {e}")
-            return None
+        return await self.get(f"/rawaddr/{address}")
 
 
 # Singleton instance for the client

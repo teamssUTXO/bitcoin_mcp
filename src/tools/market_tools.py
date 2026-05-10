@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 from mcp.server.fastmcp import FastMCP, Context
 from src.core.market import get_market_analyser_client
+from returns.result import Failure
 
 
 logger = logging.getLogger(__name__)
@@ -26,12 +27,17 @@ async def get_cryptomarket_overview(ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_cryptomarket_overview")
 
         market_analyzer = get_market_analyser_client()
-        data: str = await market_analyzer.get_global_cryptomarket_data()
+        result = await market_analyzer.get_global_cryptomarket_data()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_cryptomarket_overview failed: {err}", exc_info=True)
+            await ctx.error(f"Tool get_cryptomarket_overview failed: {err}")
+            return None
 
         logger.info("Tool get_global_cryptomarket_overview succeeded")
         await ctx.info("Tool get_global_cryptomarket_overview succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_cryptomarket_overview : {e}", exc_info=True)
@@ -59,12 +65,17 @@ async def get_bitcoin_price_usd(ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_bitcoin_price_usd")
 
         market_analyzer = get_market_analyser_client()
-        data: str = await market_analyzer.get_btc_price_usd()
+        result = await market_analyzer.get_btc_price_usd()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_price_usd failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_price_usd failed: {err}")
+            return None
 
         logger.info("Tool get_btc_price_usd succeeded")
         await ctx.info("Tool get_btc_price_usd succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_btc_price_usd : {e}")
@@ -112,12 +123,17 @@ async def get_bitcoin_market_data(ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_bitcoin_market_data")
 
         market_analyzer = get_market_analyser_client()
-        data: str = await market_analyzer.get_btc_market_data()
+        result = await market_analyzer.get_btc_market_data()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_market_data failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_market_data failed: {err}")
+            return None
 
         logger.info("Tool get_btc_market_data succeeded")
         await ctx.info("Tool get_btc_market_data succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_bitcoin_market_data : {e}", exc_info=True)
@@ -147,12 +163,17 @@ async def get_bitcoin_market_sentiment(ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_bitcoin_market_sentiment")
 
         market_analyzer = get_market_analyser_client()
-        data: str = await market_analyzer.get_market_sentiment()
+        result = await market_analyzer.get_market_sentiment()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_market_sentiment failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_market_sentiment failed: {err}")
+            return None
 
         logger.info("Tool get_bitcoin_market_sentiment succeeded")
         await ctx.info("Tool get_bitcoin_market_sentiment succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_bitcoin_market_sentiment : {e}")
@@ -181,12 +202,17 @@ async def get_trending_coins(ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_trending_coins")
 
         market_analyzer = get_market_analyser_client()
-        data: str = await market_analyzer.get_trending_coins()
+        result = await market_analyzer.get_trending_coins()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_trending_coins failed: {err}")
+            await ctx.error(f"Tool get_trending_coins failed: {err}")
+            return None
 
         logger.info("Tool get_trending_coins succeeded")
         await ctx.info("Tool get_trending_coins succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_trending_coins : {e}", exc_info=True)
@@ -215,12 +241,17 @@ async def get_trending_categories(ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_trending_categories")
 
         market_analyzer = get_market_analyser_client()
-        data: str = await market_analyzer.get_trending_categories()
+        result = await market_analyzer.get_trending_categories()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_trending_categories failed: {err}")
+            await ctx.error(f"Tool get_trending_categories failed: {err}")
+            return None
 
         logger.info("Tool get_trending_categories succeeded")
         await ctx.info("Tool get_trending_categories succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_trending_categories : {e}", exc_info=True)
@@ -247,12 +278,17 @@ async def get_trending_nfts(ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_trending_nfts")
 
         market_analyzer = get_market_analyser_client()
-        data: str = await market_analyzer.get_trending_nfts()
+        result = await market_analyzer.get_trending_nfts()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_trending_nfts failed: {err}")
+            await ctx.error(f"Tool get_trending_nfts failed: {err}")
+            return None
 
         logger.info("Tool get_trending_nfts succeeded")
         await ctx.info("Tool get_trending_nfts succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_trending_nfts : {e}", exc_info=True)
@@ -272,7 +308,6 @@ def register_market_tools(mcp: FastMCP):
     mcp.add_tool(get_trending_nfts)
 
     logger.info("Market Tools Registered")
-
 
 
 

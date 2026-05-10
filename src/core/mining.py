@@ -1,9 +1,11 @@
 import logging
-from typing import Optional
+from typing import Any
 
 from src.api.mempool_client import get_mempool_client
 
 from src.data.mining_dataclasses import DataRankingMiningPools, DataHashratesMiningPools, DataMiningPoolBySlug
+from returns.result import Result, Success, Failure
+from src.errors import Error, DataValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +20,7 @@ class MiningPoolAnalyzer:
         self.mempool = get_mempool_client()
 
 
-    async def get_mining_pools_ranking(self) -> Optional[str]:
+    async def get_mining_pools_ranking(self) -> Result[str, Error]:
         """
         Retrieves the top 10 Bitcoin mining pools based on 3-month performance.
 
@@ -29,33 +31,35 @@ class MiningPoolAnalyzer:
             - Total blocks mined by the top 10 pools combined.
             Returns None if an API error occurs or data is empty.
         """
+        data_result = await self.mempool.get_mining_pools_rank()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
+
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
         try:
-            data: dict = await self.mempool.get_mining_pools_rank()
-            if not data:
-                return None
-
             infos: DataRankingMiningPools = DataRankingMiningPools.from_data(data)
-
-            total_blocks = sum(p.get("blockCount", 0) for p in infos.top10_pools)
-
-            result: str = "## Top Mining Pools (3-Month Hashrate)\n"
-
-            for i, pool in enumerate(infos.top10_pools, 1):
-                name: str = pool.get('name', 'Unknown')
-                block_count: int = pool.get('blockCount', 0)
-                percentage: float = (block_count / total_blocks * 100) if total_blocks > 0 else 0
-
-                result += f"#{i} {name}\n"
-                result += f"Blocks: {block_count} ({percentage:.2f}%)\n"
-            result += f"\nTotal Blocks: {total_blocks}\n"
-
-            return result
-
         except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+            return Failure(DataValidationError(details=str(e)))
 
-    async def get_mining_pool_hashrates(self) -> Optional[str]:
+        total_blocks = sum(p.get("blockCount", 0) for p in infos.top10_pools)
+
+        result: str = "## Top Mining Pools (3-Month Hashrate)\n"
+
+        for i, pool in enumerate(infos.top10_pools, 1):
+            name: str = pool.get("name", "Unknown")
+            block_count: int = pool.get("blockCount", 0)
+            percentage: float = (block_count / total_blocks * 100) if total_blocks > 0 else 0
+
+            result += f"#{i} {name}\n"
+            result += f"Blocks: {block_count} ({percentage:.2f}%)\n"
+        result += f"\nTotal Blocks: {total_blocks}\n"
+
+        return Success(result)
+
+    async def get_mining_pool_hashrates(self) -> Result[str, Error]:
         """
         Retrieves the estimated hashrate for the top 10 mining pools over 3 months.
 
@@ -66,12 +70,18 @@ class MiningPoolAnalyzer:
             - Each pool's percentage share of the total network hashrate.
             Returns None if an API error occurs or data is empty.
         """
-        try:
-            data: list = await self.mempool.get_mining_pools_hashrate()
-            if not data:
-                return None
+        data_result = await self.mempool.get_mining_pools_hashrate()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataHashratesMiningPools = DataHashratesMiningPools.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             result: str = "=== Hashrates Mining Pools (3 mois) ===\n"
 
@@ -87,13 +97,9 @@ class MiningPoolAnalyzer:
                 result += f"#{i} {pool_name}\n"
                 result += f"Hashrate: {hashrate:.2f} EH/s | Network Share: {share:.2f}%\n"
 
-            return str(result)
+            return Success(str(result))
 
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-    async def get_top_pool(self) -> Optional[str]:
+    async def get_top_pool(self) -> Result[str, Error]:
         """
         Retrieves detailed information for the #1 ranked Bitcoin mining pool.
 
@@ -105,12 +111,18 @@ class MiningPoolAnalyzer:
             - Official website link for the pool.
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.mempool.get_mining_pools_rank()
-            if not data:
-                return None
+        data_result = await self.mempool.get_mining_pools_rank()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataRankingMiningPools = DataRankingMiningPools.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             top_pool: dict = infos.pools[0]
 
@@ -130,13 +142,9 @@ class MiningPoolAnalyzer:
                 f"Network Dominance: {dominance_percentage:.2f}%\n"
                 f"Link: {top_pool_link}\n"
             )
-            return result
+            return Success(result)
 
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-    async def get_pool_by_slug(self, pool_slug: str) -> Optional[str]:
+    async def get_pool_by_slug(self, pool_slug: str) -> Result[str, Error]:
         """
         Retrieves detailed information for a specific mining pool using its slug.
 
@@ -151,12 +159,18 @@ class MiningPoolAnalyzer:
             - A list of known Bitcoin addresses associated with the pool.
             Returns None if the pool is not found or an API error occurs.
         """
-        try:
-            data: dict = await self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
-            if not data:
-                return None
+        data_result = await self.mempool.get_mining_pool_info_by_slug(pool_slug.lower())
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataMiningPoolBySlug = DataMiningPoolBySlug.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             unit: str = "H/s"
             for u in ["H/s", "KH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s"]:
@@ -183,14 +197,10 @@ class MiningPoolAnalyzer:
                 f"## Pool Addresses\n"
                 f"{addr_list}"
             )
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", extra={"pool_slug": pool_slug},  exc_info=True)
-            return None
+            return Success(result)
 
 
-    async def get_mining_statistics(self) -> Optional[str]:
+    async def get_mining_statistics(self) -> Result[str, Error]:
         """
         Retrieves global statistics and distribution metrics for Bitcoin mining.
 
@@ -201,12 +211,18 @@ class MiningPoolAnalyzer:
             - Power distribution (Comparison between the leader and average pools).
             Returns None if an API error occurs or data is empty.
         """
-        try:
-            data: dict = await self.mempool.get_mining_pools_rank()
-            if not data:
-                return None
+        data_result = await self.mempool.get_mining_pools_rank()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataRankingMiningPools = DataRankingMiningPools.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             num_pools: int = len(infos.pools)
 
@@ -235,11 +251,7 @@ class MiningPoolAnalyzer:
                 f"Leader/Average Ratio: {(top_pool_blocks / avg_blocks_per_pool):.1f}x\n"
             )
 
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+            return Success(result)
 
 
 # Singleton instance for the analyzer

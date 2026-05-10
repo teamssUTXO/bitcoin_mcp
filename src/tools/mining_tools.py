@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 from mcp.server.fastmcp import FastMCP, Context
 from src.core.mining import get_mining_analyser_client
+from returns.result import Failure
 
 
 logger = logging.getLogger(__name__)
@@ -25,12 +26,17 @@ async def get_top_10_mining_pools_rank(ctx: Context) -> Optional[str]:
         await ctx.info("Tool Called : get_top_10_mining_pools_ranking")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = await mining_analyzer.get_mining_pools_ranking()
+        result = await mining_analyzer.get_mining_pools_ranking()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_top_10_mining_pools_rank failed: {err}")
+            await ctx.error(f"Tool get_top_10_mining_pools_rank failed: {err}")
+            return None
 
         logger.info("Tool get_top_10_mining_pools_ranking succeeded")
         await ctx.info("Tool get_top_10_mining_pools_ranking succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_top_10_mining_pools_rank : {e}", exc_info=True)
@@ -57,12 +63,17 @@ async def get_mining_pools_hashrates_3month(ctx: Context) -> Optional[str]:
         await ctx.info("Tool Called : get_top_10_mining_pools_hashrates_3month")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = await mining_analyzer.get_mining_pool_hashrates()
+        result = await mining_analyzer.get_mining_pool_hashrates()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_mining_pools_hashrates_3month failed: {err}")
+            await ctx.error(f"Tool get_mining_pools_hashrates_3month failed: {err}")
+            return None
 
         logger.info("Tool get_top_10_mining_pools_hashrates_3month succeeded")
         await ctx.info("Tool get_top_10_mining_pools_hashrates_3month succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_top_10_mining_pools_hashrates_3month : {e}", exc_info=True)
@@ -90,12 +101,17 @@ async def get_top1_mining_pool(ctx: Context) -> Optional[str]:
         await ctx.info("Tool Called : get_top1_mining_pool")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = await mining_analyzer.get_top_pool()
+        result = await mining_analyzer.get_top_pool()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_top1_mining_pool failed: {err}")
+            await ctx.error(f"Tool get_top1_mining_pool failed: {err}")
+            return None
 
         logger.info("Tool get_top1_mining_pool succeeded")
         await ctx.info("Tool get_top1_mining_pool succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_top1_mining_pool : {e}", exc_info=True)
@@ -123,12 +139,17 @@ async def get_mining_pool_by_slug(slug: str, ctx: Context) -> Optional[str]:
         await ctx.info("Tool Called : get_mining_pool_by_slug")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = await mining_analyzer.get_pool_by_slug(slug)
+        result = await mining_analyzer.get_pool_by_slug(slug)
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_mining_pool_by_slug failed: {err}")
+            await ctx.error(f"Tool get_mining_pool_by_slug failed: {err}")
+            return None
 
         logger.info("Tool get_mining_pool_by_slug succeeded")
         await ctx.info("Tool get_mining_pool_by_slug succeeded")
 
-        return data
+        return result.unwrap()
 
     except TypeError as e:
         logger.error(f"Invalid call or missing parameter: {e}")
@@ -168,12 +189,17 @@ async def get_bitcoin_network_mining_pools_statistics(ctx: Context) -> Optional[
         await ctx.info("Tool Called : get_bitcoin_network_mining_pools_statistics")
 
         mining_analyzer = get_mining_analyser_client()
-        data: str = await mining_analyzer.get_mining_statistics()
+        result = await mining_analyzer.get_mining_statistics()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_network_mining_pools_statistics failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_network_mining_pools_statistics failed: {err}")
+            return None
 
         logger.info("Tool get_bitcoin_network_mining_pools_statistics succeeded")
         await ctx.info("Tool get_bitcoin_network_mining_pools_statistics succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_info_about_address : {e}", exc_info=True)
@@ -191,7 +217,6 @@ def register_mining_tools(mcp: FastMCP):
     mcp.add_tool(get_mining_pool_by_slug)
 
     logger.info("Mining Tools Registered")
-
 
 
 

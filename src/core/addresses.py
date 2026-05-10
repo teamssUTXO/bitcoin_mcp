@@ -1,9 +1,11 @@
 import logging
-from typing import Optional
+from typing import Any
 from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 from src.data.addresses_dataclasses import DataOverviewAddress, DataInfosAddress
 from src.config import Config
+from returns.result import Result, Success, Failure
+from src.errors import Error, DataValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +20,7 @@ class AddressAnalyzer:
         self.blockchain = get_blockchain_client()
         self.mempool = get_mempool_client()
 
-    async def get_address_info(self, address: str) -> Optional[str]:
+    async def get_address_info(self, address: str) -> Result[str, Error]:
         """
         Retrieves a complete summary of a Bitcoin address.
 
@@ -33,12 +35,18 @@ class AddressAnalyzer:
             - Transaction counts and output history.
             Returns None if an API error occurs or the address is not found.
         """
-        try:
-            data: dict = await self.mempool.get_address_info(address)
-            if not data:
-                return None
+        data_result = await self.mempool.get_address_info(address)
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataInfosAddress = DataInfosAddress.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             funded_txo_sum: int = infos.chain_stats.get("funded_txo_sum")
             spent_txo_sum: int = infos.chain_stats.get('spent_txo_sum')
@@ -85,13 +93,9 @@ class AddressAnalyzer:
                 f"Received: {funded_txo_count} outputs | {funded_txo_sum / 100_000_000:.8f} BTC\n"
                 f"Spent: {spent_txo_count} outputs | {spent_txo_sum / 100_000_000:.8f} BTC"
             )
-            return result
+            return Success(result)
 
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", extra={"address": address}, exc_info=True)
-            return None
-
-    async def get_address_info_overview(self, address: str) -> Optional[str]:
+    async def get_address_info_overview(self, address: str) -> Result[str, Error]:
         """
         Retrieves a high-level overview of a Bitcoin address.
 
@@ -105,12 +109,18 @@ class AddressAnalyzer:
             - Total number of transactions.
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.blockchain.get_address_info(address)
-            if not data:
-                return None
+        data_result = await self.blockchain.get_address_info(address)
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataOverviewAddress = DataOverviewAddress.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             balance_btc: float = infos.final_balance / Config.SATOSHI
             received_btc: float = infos.total_received / Config.SATOSHI
@@ -126,12 +136,7 @@ class AddressAnalyzer:
                 f"Total Sent: {sent_btc:.8f} BTC\n"
                 f"Transactions: {infos.n_tx}"
             )
-            return result
-
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", extra={"address": address}, exc_info=True)
-            return None
+            return Success(result)
 
 
 # Singleton instance for the analyzer
