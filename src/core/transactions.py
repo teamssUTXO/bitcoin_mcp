@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Optional, Any
 from datetime import datetime
 
 from src.api.mempool_client import get_mempool_client
@@ -9,6 +9,8 @@ from src.data.transactions_dataclasses import DataTransactionInfo, DataTxInOut, 
 from src.data.transactions_dataclasses import DataTransactionsAddress
 
 from src.config import Config
+from returns.result import Result, Success, Failure
+from src.errors import Error, DataValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -23,7 +25,7 @@ class TransactionAnalyzer:
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
-    async def get_tx_info(self, txid: str) -> Optional[str]:
+    async def get_tx_info(self, txid: str) -> Result[str, Error]:
         """
         Retrieves detailed information for a specific Bitcoin transaction.
 
@@ -38,12 +40,18 @@ class TransactionAnalyzer:
             - Block information (Height and block hash if confirmed).
             Returns None if the transaction is not found or an API error occurs.
         """
-        try:
-            data: dict = await self.mempool.get_tx_info(txid)
-            if not data:
-                return None
+        data_result = await self.mempool.get_tx_info(txid)
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataTransactionInfo = DataTransactionInfo.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             nb_inputs: int = len(infos.vin)
             nb_outputs: int = len(infos.vout)
@@ -82,15 +90,10 @@ class TransactionAnalyzer:
                 f"Block Hash: {transaction_block_hash}\n"
             )
 
-            return result
+            return Success(result)
 
 
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", extra={"txid": txid}, exc_info=True)
-            return None
-
-
-    async def get_tx_inputs_outputs(self, txid: str) -> Optional[str]:
+    async def get_tx_inputs_outputs(self, txid: str) -> Result[str, Error]:
         """
         Retrieves the detailed input and output flow of a transaction.
 
@@ -104,12 +107,18 @@ class TransactionAnalyzer:
             - Participant registry (List of all sender and recipient addresses).
             Returns None if the transaction is not found or an API error occurs.
         """
-        try:
-            data: dict = await self.mempool.get_tx_info(txid)
-            if not data:
-                return None
+        data_result = await self.mempool.get_tx_info(txid)
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataTxInOut = DataTxInOut.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             inputs: list[DataTxInput] = [DataTxInput.from_data(v) for v in infos.vin]
             outputs: list[DataTxOutput] = [DataTxOutput.from_data(v) for v in infos.vout]
@@ -161,14 +170,10 @@ class TransactionAnalyzer:
                 f"{list_out_txt}\n"
             )
 
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", extra={"txid": txid}, exc_info=True)
-            return None
+            return Success(result)
 
 
-    async def get_address_transactions(self, address: str) -> Optional[str]:
+    async def get_address_transactions(self, address: str) -> Result[str, Error]:
         """
         Retrieves the transaction history for a specific Bitcoin address.
 
@@ -182,12 +187,18 @@ class TransactionAnalyzer:
             - The specific amount sent by this address in each transaction (sats).
             Returns None if the address has no history or an API error occurs.
         """
-        try:
-            data: dict = await self.blockchain.get_address_info(address)
-            if not data:
-                return None
+        data_result = await self.blockchain.get_address_info(address)
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataTransactionsAddress = DataTransactionsAddress.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             len_txs: int = len(infos.txs)
 
@@ -224,12 +235,7 @@ class TransactionAnalyzer:
                 #     result += f"  → {addr} : {value} sats\n"
                 # result += "\n"
 
-            return result
-
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", extra={"address": address}, exc_info=True)
-            return None
+            return Success(result)
 
 
 # Singleton instance for the analyzer

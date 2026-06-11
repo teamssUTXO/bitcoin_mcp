@@ -1,9 +1,11 @@
 import logging
-from typing import Optional
+from typing import Any
 
 from src.api.mempool_client import get_mempool_client
 from src.api.blockchain_client import get_blockchain_client
 from src.data.network_dataclasses import DataNetworkFees, DataNetworkStats
+from returns.result import Result, Success, Failure
+from src.errors import Error, DataValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +20,7 @@ class NetworkAnalyzer:
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
-    async def get_network_stats(self) -> Optional[str]:
+    async def get_network_stats(self) -> Result[str, Error]:
         """
         Retrieves current recommended Bitcoin transaction fees.
 
@@ -28,12 +30,18 @@ class NetworkAnalyzer:
             - Estimated total cost in BTC for a standard transaction (250 vBytes).
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.blockchain.get_network_stats()
-            if not data:
-                return None
+        data_result = await self.blockchain.get_network_stats()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataNetworkStats = DataNetworkStats.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             result: str = (
                 f"## Bitcoin Network Statistics\n"
@@ -57,14 +65,10 @@ class NetworkAnalyzer:
                 f"## Supply Information\n"
                 f"Circulating Supply: {infos.totalbc:.2f} BTC"
             )
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+            return Success(result)
 
 
-    async def get_network_recommended_fees(self) -> Optional[str]:
+    async def get_network_recommended_fees(self) -> Result[str, Error]:
         """
         Retrieves current recommended Bitcoin transaction fees.
 
@@ -74,13 +78,19 @@ class NetworkAnalyzer:
             - Estimated total cost in BTC for a standard transaction (250 vBytes).
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.mempool.get_recommended_fees()
-            if not data:
-                return None
+        data_result = await self.mempool.get_recommended_fees()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
-            tx_size: int = 250 # standard transaction size
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        tx_size: int = 250 # standard transaction size
+        try:
             infos: DataNetworkFees = DataNetworkFees.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             costs: dict = {
                 'Fast (~10 min)': infos.fastest * tx_size,
@@ -97,14 +107,10 @@ class NetworkAnalyzer:
                 f"Economy: {infos.economy} sat/vB | Cost: ~{list(costs.values())[3]} sats\n"
             )
 
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+            return Success(result)
 
 
-    async def get_network_health(self) -> Optional[str]:
+    async def get_network_health(self) -> Result[str, Error]:
         """
         Evaluates the overall health and stability of the Bitcoin network.
 
@@ -115,12 +121,18 @@ class NetworkAnalyzer:
             - A confirmation message if no issues are detected.
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.blockchain.get_network_stats()
-            if not data:
-                return None
+        data_result = await self.blockchain.get_network_stats()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataNetworkStats = DataNetworkStats.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             health_score: int = 100
             issues: list[str] = []
@@ -150,11 +162,7 @@ class NetworkAnalyzer:
             else:
                 result += "No issues detected"
 
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+            return Success(result)
 
 
 # Singleton instance for the analyzer

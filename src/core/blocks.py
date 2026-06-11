@@ -1,11 +1,13 @@
 import logging
-from typing import Optional
+from typing import Optional, Any
 from datetime import datetime, timedelta
 
 from src.api.blockchain_client import get_blockchain_client
 from src.api.mempool_client import get_mempool_client
 
 from src.data.blocks_dataclasses import DataLatestBlock, DataLatestBlocks
+from returns.result import Result, Success, Failure
+from src.errors import Error, DataValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +22,7 @@ class BlockAnalyzer:
         self.mempool = get_mempool_client()
         self.blockchain = get_blockchain_client()
 
-    async def get_latest_block_summary(self) -> Optional[str]:
+    async def get_latest_block_summary(self) -> Result[str, Error]:
         """
         Retrieves a summary of the most recently mined block.
 
@@ -31,12 +33,18 @@ class BlockAnalyzer:
             - Internal block index.
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.blockchain.get_latest_block()
-            if not data:
-                return None
+        data_result = await self.blockchain.get_latest_block()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataLatestBlock = DataLatestBlock.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             date_str: str = datetime.fromtimestamp(infos.timestamp).strftime('%Y-%m-%d %H:%M:%S') if infos.timestamp else 'N/A'
             time_ago: Optional[timedelta] = datetime.now() - datetime.fromtimestamp(infos.timestamp) if infos.timestamp else None
@@ -49,14 +57,9 @@ class BlockAnalyzer:
                 f"Timestamp: {date_str} ({time_ago_str} ago)\n"
                 f"Block Index: {infos.block_index}"
             )
-            return result
+            return Success(result)
 
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-    async def get_block_by_height(self, height: int) -> Optional[str]:
+    async def get_block_by_height(self, height: int) -> Result[str, Error]:
         """
         Retrieves the block hash for a specific block height.
 
@@ -67,19 +70,17 @@ class BlockAnalyzer:
             A formatted string containing the block height and its corresponding hash.
             Returns None if the block is not found or an API error occurs.
         """
-        try:
-            block_hash: str = await self.mempool.get_block_height(height)
-            if not block_hash:
-                return None
+        data_result = await self.mempool.get_block_height(height)
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
-            return f"Block Hash #{height:,}: {block_hash}"
+        block_hash: Any = data_result.unwrap()
+        if not block_hash:
+            return Failure(DataValidationError(details="Empty response"))
 
+        return Success(f"Block Hash #{height:,}: {str(block_hash)}")
 
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", extra={"height": height}, exc_info=True)
-            return None
-
-    async def get_latest_blocks_info(self) -> Optional[str]:
+    async def get_latest_blocks_info(self) -> Result[str, Error]:
         """
         Retrieves detailed information and statistics for the last 10 mined blocks.
 
@@ -90,50 +91,53 @@ class BlockAnalyzer:
             - Aggregate statistics (Total/average transactions, average size, and average block time).
             Returns None if an API error occurs or data is empty.
         """
+        data_result = await self.mempool.get_blocks_info()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
+
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
         try:
-            data: list = await self.mempool.get_blocks_info()
-            if not data:
-                return None
-
             infos: DataLatestBlocks = DataLatestBlocks.from_data(data)
-
-            result: list = ["## Last 10 Blocks Details"]
-
-            total_tx: int = sum(infos.txs_count)
-            avg_tx: float = total_tx / len(data)
-            total_size: int = sum(infos.sizes)
-            avg_size: float = total_size / len(data)
-
-            if len(infos.timestamps) >= 2:
-                time_diffs: list[int] = [infos.timestamps[i] - infos.timestamps[i + 1] for i in
-                                    range(len(infos.timestamps) - 1)]
-                avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # in minutes
-            else:
-                avg_time: float = 0.0
-
-            for i in range(len(data)):
-                result.append(
-                    f"#### Block {infos.heights[i]} | {infos.ids[i]}\n"
-                    f"Time: {infos.timestamps[i]}\n"
-                    f"Transactions: {infos.txs_count[i]}\n"
-                    f"Size: {infos.sizes[i]:.2f} MB | Weight: {infos.weights[i]}\n"
-                    f"Fees: {infos.totalsFees[i]} sat total | {infos.avgsFeeRate[i]} sat/vB avg\n"
-                    f"Reward: {infos.rewards[i]} sat\n"
-                    f"Pool: {infos.pools_slug[i]}\n"
-                    f"Nonce: {infos.nonces[i]}\n\n"
-                    f"## Aggregate Statistics\n"
-                    f"Total Transactions: {total_tx}\n"
-                    f"Average per Block: {avg_tx:.0f}\n"
-                    f"Average Size: {avg_size / 1_000_000:.2f} MB\n"
-                    f"Average Block Time: {avg_time:.2f} min"
-                )
-
-            return "\n".join(result)
-
-
         except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+            return Failure(DataValidationError(details=str(e)))
+
+        result: list[str] = ["## Last 10 Blocks Details"]
+
+        total_tx: int = sum(infos.txs_count)
+        avg_tx: float = total_tx / len(data)
+        total_size: int = sum(infos.sizes)
+        avg_size: float = total_size / len(data)
+
+        if len(infos.timestamps) >= 2:
+            time_diffs: list[int] = [
+                infos.timestamps[i] - infos.timestamps[i + 1]
+                for i in range(len(infos.timestamps) - 1)
+            ]
+            avg_time: float = sum(time_diffs) / len(time_diffs) / 60  # in minutes
+        else:
+            avg_time = 0.0
+
+        for i in range(len(data)):
+            result.append(
+                f"#### Block {infos.heights[i]} | {infos.ids[i]}\n"
+                f"Time: {infos.timestamps[i]}\n"
+                f"Transactions: {infos.txs_count[i]}\n"
+                f"Size: {infos.sizes[i]:.2f} MB | Weight: {infos.weights[i]}\n"
+                f"Fees: {infos.totalsFees[i]} sat total | {infos.avgsFeeRate[i]} sat/vB avg\n"
+                f"Reward: {infos.rewards[i]} sat\n"
+                f"Pool: {infos.pools_slug[i]}\n"
+                f"Nonce: {infos.nonces[i]}\n\n"
+                f"## Aggregate Statistics\n"
+                f"Total Transactions: {total_tx}\n"
+                f"Average per Block: {avg_tx:.0f}\n"
+                f"Average Size: {avg_size / 1_000_000:.2f} MB\n"
+                f"Average Block Time: {avg_time:.2f} min"
+            )
+
+        return Success("\n".join(result))
 
 
 # Singleton instance for the analyzer

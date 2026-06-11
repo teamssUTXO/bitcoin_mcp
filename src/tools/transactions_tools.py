@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 from mcp.server.fastmcp import FastMCP, Context
 from src.core.transactions import get_transactions_analyser_client
+from returns.result import Failure
 
 
 logger = logging.getLogger(__name__)
@@ -39,12 +40,17 @@ async def get_bitcoin_transaction_infos(txid: str, ctx: Context) -> Optional[str
         await ctx.info(f"Tool Called : get_bitcoin_transaction_infos ({txid})")
 
         transactions_analyzer = get_transactions_analyser_client()
-        data: str = await transactions_analyzer.get_tx_info(txid)
+        result = await transactions_analyzer.get_tx_info(txid)
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_transaction_infos failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_transaction_infos failed: {err}")
+            return None
 
         logger.info("Tool get_bitcoin_transaction_infos succeeded")
         await ctx.info("Tool get_bitcoin_transaction_infos succeeded")
 
-        return data
+        return result.unwrap()
 
     except TypeError as e:
         logger.error(f"Invalid call or missing parameter: {e}")
@@ -90,12 +96,17 @@ async def get_transaction_input_output(txid: str, ctx: Context) -> Optional[str]
         await ctx.info(f"Tool Called : get_transaction_input_output ({txid})")
 
         transactions_analyzer = get_transactions_analyser_client()
-        data: str = await transactions_analyzer.get_tx_inputs_outputs(txid)
+        result = await transactions_analyzer.get_tx_inputs_outputs(txid)
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_transaction_input_output failed: {err}")
+            await ctx.error(f"Tool get_transaction_input_output failed: {err}")
+            return None
 
         logger.info("Tool get_transaction_input_output succeeded")
         await ctx.info("Tool get_transaction_input_output succeeded")
 
-        return data
+        return result.unwrap()
 
     except TypeError as e:
         logger.error(f"Invalid call or missing parameter: {e}")
@@ -127,12 +138,17 @@ async def get_transactions_of_address(address: str, ctx: Context) -> Optional[st
         await ctx.info(f"Tool Called : get_transactions_of_address ({address})")
 
         transactions_analyzer = get_transactions_analyser_client()
-        data: str = await transactions_analyzer.get_address_transactions(address)
+        result = await transactions_analyzer.get_address_transactions(address)
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_transactions_of_address failed: {err}")
+            await ctx.error(f"Tool get_transactions_of_address failed: {err}")
+            return None
 
         logger.info("Tool get_transactions_of_address succeeded")
         await ctx.info("Tool get_transactions_of_address succeeded")
 
-        return data
+        return result.unwrap()
 
     except TypeError as e:
         logger.error(f"Invalid call or missing parameter: {e}")
@@ -153,7 +169,6 @@ def register_transactions_tools(mcp: FastMCP):
     mcp.add_tool(get_transactions_of_address)
 
     logger.info("Transactions Tools Registered")
-
 
 
 

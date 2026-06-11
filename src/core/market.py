@@ -1,12 +1,14 @@
 import asyncio
 import logging
-from typing import Optional
+from typing import Any
 
 from src.api.coingecko_client import get_coingecko_client
 from src.api.alternative_client import get_alternative_client
 
 from src.data.market_dataclasses import DataMarketOverview, DataBitcoinOverview, DataBitcoinMarket, \
     DataBitcoinMarketSentiment, DataTrendingCategories, DataTrendingCoins, DataTrendingNFTs, DataBitcoinPriceUSD
+from returns.result import Result, Success, Failure
+from src.errors import Error, DataValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -21,7 +23,7 @@ class MarketAnalyzer:
         self.coingecko = get_coingecko_client()
         self.alternative = get_alternative_client()
 
-    async def get_global_cryptomarket_data(self) -> Optional[str]:
+    async def get_global_cryptomarket_data(self) -> Result[str, Error]:
         """
         Retrieves a global overview of the cryptocurrency market.
 
@@ -33,12 +35,18 @@ class MarketAnalyzer:
             - Top 5 Market Dominance percentages.
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.coingecko.get_global_market_data()
-            if not data:
-                return None
+        data_result = await self.coingecko.get_global_market_data()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataMarketOverview = DataMarketOverview.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             market_cap: dict = {"usd": infos.data.get("total_market_cap", {}).get("usd", {}),
                                      "eur": infos.data.get("total_market_cap", {}).get("eur", {}),
@@ -72,14 +80,9 @@ class MarketAnalyzer:
                 f"## Top 5 Market Dominance\n"
                 f"{fmt_dom}"
             )
-            return result
+            return Success(result)
 
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-    async def get_btc_price_usd(self) -> Optional[str]:
+    async def get_btc_price_usd(self) -> Result[str, Error]:
         """
         Retrieves the current Bitcoin price in USD.
 
@@ -88,21 +91,23 @@ class MarketAnalyzer:
             - Current Price data.
             Returns None if an API error occurs or data is missing.
         """
-        try:
-            data: dict = await self.coingecko.get_btc_price_usd()
-            if not data:
-                return None
+        data_result = await self.coingecko.get_btc_price_usd()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataBitcoinPriceUSD = DataBitcoinPriceUSD.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             result: str = f"Current Bitcoin Price in USD: ${infos.price_usd:,.2f}"
-            return result
+            return Success(result)
 
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-    async def get_btc_market_data(self) -> Optional[str]:
+    async def get_btc_market_data(self) -> Result[str, Error]:
         """
         Retrieves a technical and financial report for Bitcoin.
 
@@ -116,12 +121,18 @@ class MarketAnalyzer:
             - Resource links (GitHub, Whitepaper, and Description).
             Returns None if an API error occurs or data is missing
         """
-        try:
-            data: dict = await self.coingecko.get_btc_market_data()
-            if not data:
-                return None
+        data_result = await self.coingecko.get_btc_market_data()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataBitcoinMarket = DataBitcoinMarket.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             if infos.max_supply and infos.max_supply > 0:
                 supply_minted_pct: float = (infos.total_supply / infos.max_supply) * 100
@@ -173,14 +184,10 @@ class MarketAnalyzer:
                 f"Description: {infos.description}"
             )
 
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+            return Success(result)
 
 
-    async def get_market_sentiment(self) -> Optional[str]:
+    async def get_market_sentiment(self) -> Result[str, Error]:
         """
         Analyzes current market psychology and sentiment.
 
@@ -190,15 +197,26 @@ class MarketAnalyzer:
             - 7-day Fear & Greed Index history (Values and Classifications).
             Returns None if API data from Alternative.me or CoinGecko is missing.
         """
-        try:
-            alternative_data, coingecko_data = await asyncio.gather(
-                self.alternative.get_fear_greed_index(),
-                self.coingecko.get_btc_market_data(),
-            )
-            if not alternative_data or not coingecko_data:
-                return None
+        alternative_result, coingecko_result = await asyncio.gather(
+            self.alternative.get_fear_greed_index(),
+            self.coingecko.get_btc_market_data(),
+        )
+        if isinstance(alternative_result, Failure):
+            return Failure(alternative_result.failure())
+        if isinstance(coingecko_result, Failure):
+            return Failure(coingecko_result.failure())
 
-            infos: DataBitcoinMarketSentiment = DataBitcoinMarketSentiment.from_data(alternative_data, coingecko_data)
+        alternative_data: Any = alternative_result.unwrap()
+        coingecko_data: Any = coingecko_result.unwrap()
+        if not alternative_data or not coingecko_data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
+            infos: DataBitcoinMarketSentiment = DataBitcoinMarketSentiment.from_data(
+                alternative_data, coingecko_data
+            )
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             fg_lines: list = []
 
@@ -230,15 +248,10 @@ class MarketAnalyzer:
                 f"{fg_history_txt}\n"
             )
 
-            return result
+            return Success(result)
 
 
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-
-    async def get_trending_coins(self) -> Optional[str]:
+    async def get_trending_coins(self) -> Result[str, Error]:
         """
         Retrieves the list of currently trending cryptocurrencies.
 
@@ -251,12 +264,18 @@ class MarketAnalyzer:
             - A brief description of each trending coin.
             Returns None if an API error occurs or data is empty.
         """
-        try:
-            data: dict = await self.coingecko.get_market_trend()
-            if not data:
-                return None
+        data_result = await self.coingecko.get_market_trend()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataTrendingCoins = DataTrendingCoins.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             result: list = ["=== Trending Coins ==="]
 
@@ -272,13 +291,9 @@ class MarketAnalyzer:
                 )
 
             return "\n".join(result)
+        return Success("\n".join(result))
 
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-    async def get_trending_categories(self) -> Optional[str]:
+    async def get_trending_categories(self) -> Result[str, Error]:
         """
         Retrieves the list of currently trending cryptocurrency categories.
 
@@ -290,12 +305,18 @@ class MarketAnalyzer:
             - 24h trading volume for the entire category.
             Returns None if an API error occurs or data is empty.
         """
-        try:
-            data: dict = await self.coingecko.get_market_trend()
-            if not data:
-                return None
+        data_result = await self.coingecko.get_market_trend()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataTrendingCategories = DataTrendingCategories.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             result: list = ["=== Trending Categories ==="]
 
@@ -309,13 +330,9 @@ class MarketAnalyzer:
                 )
 
             return "\n".join(result)
+        return Success("\n".join(result))
 
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
-
-    async def get_trending_nfts(self) -> Optional[str]:
+    async def get_trending_nfts(self) -> Result[str, Error]:
         """
         Retrieves the list of currently trending NFT collections.
 
@@ -327,12 +344,18 @@ class MarketAnalyzer:
             - Native currency used for the collection.
             Returns None if an API error occurs or data is empty.
         """
-        try:
-            data: dict = await self.coingecko.get_market_trend()
-            if not data:
-                return None
+        data_result = await self.coingecko.get_market_trend()
+        if isinstance(data_result, Failure):
+            return Failure(data_result.failure())
 
+        data: Any = data_result.unwrap()
+        if not data:
+            return Failure(DataValidationError(details="Empty response"))
+
+        try:
             infos: DataTrendingNFTs = DataTrendingNFTs.from_data(data)
+        except Exception as e:
+            return Failure(DataValidationError(details=str(e)))
 
             result: list = ["=== Trending NFTs ==="]
 
@@ -346,11 +369,7 @@ class MarketAnalyzer:
                 )
 
             return "\n".join(result)
-
-
-        except Exception as e:
-            logger.error(f"Failed to process: {e}", exc_info=True)
-            return None
+        return Success("\n".join(result))
 
 
 # Singleton instance for the analyzer

@@ -416,6 +416,8 @@ class TestAPIClient(unittest.IsolatedAsyncioTestCase):
     @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
     async def test_get_successful_request(self, mock_get):
         """Test successful GET request"""
+        from returns.result import Success
+
         mock_response = Mock()
         mock_response.json.return_value = {"success": True}
         mock_response.raise_for_status = Mock()
@@ -423,12 +425,15 @@ class TestAPIClient(unittest.IsolatedAsyncioTestCase):
 
         result = await self.client.get("/test")
 
-        self.assertEqual(result, {"success": True})
+        self.assertIsInstance(result, Success)
+        self.assertEqual(result.unwrap(), {"success": True})
         mock_get.assert_called_once()
 
     @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
     async def test_get_uses_cache(self, mock_get):
         """Test that GET uses cache for subsequent requests"""
+        from returns.result import Success
+
         mock_response = Mock()
         mock_response.json.return_value = {"success": True}
         mock_response.raise_for_status = Mock()
@@ -439,13 +444,17 @@ class TestAPIClient(unittest.IsolatedAsyncioTestCase):
         # Second call - should use cache
         result2 = await self.client.get("/test")
 
-        self.assertEqual(result1, result2)
+        self.assertIsInstance(result1, Success)
+        self.assertIsInstance(result2, Success)
+        self.assertEqual(result1.unwrap(), result2.unwrap())
         # Should only call API once
         self.assertEqual(mock_get.call_count, 1)
 
     @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
     async def test_get_retry_on_5xx_error(self, mock_get):
         """Test retry logic on 5xx server errors"""
+        from returns.result import Success
+
         mock_response_ok = Mock()
         mock_response_ok.json.return_value = {"success": True}
         mock_response_ok.raise_for_status = Mock()
@@ -464,12 +473,14 @@ class TestAPIClient(unittest.IsolatedAsyncioTestCase):
             result = await self.client.get("/test")
 
         # Should eventually succeed after retry
-        self.assertIsNotNone(result)
+        self.assertIsInstance(result, Success)
 
     @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
     async def test_get_no_retry_when_disabled(self, mock_get):
         """Test that retry doesn't happen when disabled"""
         import httpx
+        from returns.result import Failure
+        from src.errors import HTTPError
 
         # Create a proper exception that won't crash
         mock_response = Mock()
@@ -482,13 +493,16 @@ class TestAPIClient(unittest.IsolatedAsyncioTestCase):
         self.client.enable_retry = False
         result = await self.client.get("/test")
 
-        self.assertIsNone(result)
+        self.assertIsInstance(result, Failure)
+        self.assertIsInstance(result.failure(), HTTPError)
         # Should only try once
         self.assertEqual(mock_get.call_count, 1)
 
     @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
     async def test_get_returns_text_on_json_error(self, mock_get):
         """Test that GET returns text when JSON parsing fails"""
+        from returns.result import Success
+
         mock_response = Mock()
         mock_response.json.side_effect = ValueError("Invalid JSON")
         mock_response.text = "Plain text response"
@@ -497,7 +511,8 @@ class TestAPIClient(unittest.IsolatedAsyncioTestCase):
 
         result = await self.client.get("/test")
 
-        self.assertEqual(result, "Plain text response")
+        self.assertIsInstance(result, Success)
+        self.assertEqual(result.unwrap(), "Plain text response")
 
 
 # ============================================================================
@@ -592,6 +607,8 @@ class TestErrorHandling(unittest.IsolatedAsyncioTestCase):
         """Test APIClient handles network timeout"""
         import httpx
         from src.api.client import APIClient
+        from returns.result import Failure
+        from src.errors import TimeoutError
 
         client = APIClient("https://test.example.com")
         mock_get.side_effect = httpx.TimeoutException("Request timeout")
@@ -599,13 +616,16 @@ class TestErrorHandling(unittest.IsolatedAsyncioTestCase):
         with patch("asyncio.sleep", new_callable=AsyncMock):
             result = await client.get("/test")
 
-        self.assertIsNone(result)
+        self.assertIsInstance(result, Failure)
+        self.assertIsInstance(result.failure(), TimeoutError)
 
     @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
     async def test_api_client_network_error(self, mock_get):
         """Test APIClient handles network errors"""
         import httpx
         from src.api.client import APIClient
+        from returns.result import Failure
+        from src.errors import NetworkError
 
         client = APIClient("https://test.example.com")
         mock_get.side_effect = httpx.NetworkError("Network error")
@@ -613,13 +633,16 @@ class TestErrorHandling(unittest.IsolatedAsyncioTestCase):
         with patch("asyncio.sleep", new_callable=AsyncMock):
             result = await client.get("/test")
 
-        self.assertIsNone(result)
+        self.assertIsInstance(result, Failure)
+        self.assertIsInstance(result.failure(), NetworkError)
 
     @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
     async def test_api_client_http_404_error(self, mock_get):
         """Test APIClient handles 404 errors without retry"""
         import httpx
         from src.api.client import APIClient
+        from returns.result import Failure
+        from src.errors import NotFoundError
 
         client = APIClient("https://test.example.com")
         mock_response = Mock()
@@ -632,7 +655,8 @@ class TestErrorHandling(unittest.IsolatedAsyncioTestCase):
 
         result = await client.get("/test")
 
-        self.assertIsNone(result)
+        self.assertIsInstance(result, Failure)
+        self.assertIsInstance(result.failure(), NotFoundError)
         # Should not retry on 4xx errors
         self.assertEqual(mock_get.call_count, 1)
 

@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 from mcp.server.fastmcp import FastMCP, Context
 from src.core.addresses import get_addresses_analyser_client
+from returns.result import Failure
 
 
 logger = logging.getLogger(__name__)
@@ -26,12 +27,17 @@ async def get_info_about_address(address: str, ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_info_about_address")
 
         addresses_analyzer = get_addresses_analyser_client()
-        data: str = await addresses_analyzer.get_address_info(address)
+        result = await addresses_analyzer.get_address_info(address)
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_info_about_address failed: {err}")
+            await ctx.error(f"Tool get_info_about_address failed: {err}")
+            return None
 
         logger.info("Tool get_info_about_address succeeded")
         await ctx.info("Tool get_info_about_address succeeded")
 
-        return data
+        return result.unwrap()
 
 
     except TypeError as e:
@@ -63,12 +69,17 @@ async def get_address_overview(address: str, ctx: Context) -> Optional[str]:
         await ctx.info("Tool called : get_address_overview")
 
         addresses_analyzer = get_addresses_analyser_client()
-        data: str = await addresses_analyzer.get_address_info_overview(address)
+        result = await addresses_analyzer.get_address_info_overview(address)
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_address_overview failed: {err}")
+            await ctx.error(f"Tool get_address_overview failed: {err}")
+            return None
 
         logger.info("Tool get_address_overview succeeded")
         await ctx.info("Tool get_address_overview succeeded")
 
-        return data
+        return result.unwrap()
 
 
     except TypeError as e:
@@ -89,7 +100,6 @@ def register_addresses_tools(mcp: FastMCP):
     mcp.add_tool(get_address_overview)
 
     logger.info("Addresses Tools Registered")
-
 
 
 

@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 from mcp.server.fastmcp import FastMCP, Context
 from src.core.network import get_network_analyser_client
+from returns.result import Failure
 
 
 logger = logging.getLogger(__name__)
@@ -42,12 +43,17 @@ async def get_bitcoin_network_overview(ctx: Context) -> Optional[str]:
         await ctx.info("Tool Called : get_bitcoin_network_overview")
 
         network_analyzer = get_network_analyser_client()
-        data: str = await network_analyzer.get_network_stats()
+        result = await network_analyzer.get_network_stats()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_network_overview failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_network_overview failed: {err}")
+            return None
 
         logger.info("Tool get_bitcoin_network_overview succeeded")
         await ctx.info("Tool get_bitcoin_network_overview succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_bitcoin_network_overview : {e}", exc_info=True)
@@ -78,12 +84,17 @@ async def get_bitcoin_network_recommended_fees(ctx: Context) -> Optional[str]:
         await ctx.info("Tool Called : get_bitcoin_network_recommended_fees")
 
         network_analyzer = get_network_analyser_client()
-        data: str = await network_analyzer.get_network_recommended_fees()
+        result = await network_analyzer.get_network_recommended_fees()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_network_recommended_fees failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_network_recommended_fees failed: {err}")
+            return None
 
         logger.info("Tool get_bitcoin_network_recommended_fees succeeded")
         await ctx.info("Tool get_bitcoin_network_recommended_fees succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_bitcoin_network_recommended_fees : {e}", exc_info=True)
@@ -105,12 +116,17 @@ async def get_bitcoin_network_health(ctx: Context) -> Optional[str]:
         await ctx.info("Tool Called : get_bitcoin_network_health")
 
         network_analyzer = get_network_analyser_client()
-        data: str = await network_analyzer.get_network_health()
+        result = await network_analyzer.get_network_health()
+        if isinstance(result, Failure):
+            err = result.failure()
+            logger.error(f"Tool get_bitcoin_network_health failed: {err}")
+            await ctx.error(f"Tool get_bitcoin_network_health failed: {err}")
+            return None
 
         logger.info("Tool get_bitcoin_network_health succeeded")
         await ctx.info("Tool get_bitcoin_network_health succeeded")
 
-        return data
+        return result.unwrap()
 
     except Exception as e:
         logger.error(f"Unexpected error in tool get_bitcoin_network_health : {e}", exc_info=True)
